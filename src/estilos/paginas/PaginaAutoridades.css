@@ -1,0 +1,31 @@
+.pagina-autoridades {
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+  }
+  
+  .pagina-autoridades h2 {
+    font-size: 28px;
+    font-weight: bold;
+    color: #007bff;
+    margin-bottom: 20px;
+  }
+  
+  .pagina-autoridades .autoridad {
+    background-color: white;
+    margin: 10px 0;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .pagina-autoridades .autoridad h3 {
+    font-size: 20px;
+    font-weight: bold;
+  }
+  
+  .pagina-autoridades .autoridad p {
+    font-size: 16px;
+    margin: 5px 0;
+  }
+  
