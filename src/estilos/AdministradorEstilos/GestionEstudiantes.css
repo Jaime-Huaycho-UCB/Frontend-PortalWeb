@@ -1,0 +1,95 @@
+.gestion-estudiantes-container {
+    padding: 20px !important;
+    background-color: #f8f9fa !important;
+}
+
+.header {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    margin-bottom: 20px !important;
+}
+
+h2 {
+    color: #343a40 !important;
+    font-size: 28px !important;
+    font-weight: bold !important;
+    text-transform: uppercase !important;
+}
+
+.add-estudiante-btn {
+    transition: all 0.3s ease !important;
+    background-color: #007bff !important;
+    border: none !important;
+}
+
+.add-estudiante-btn:hover {
+    background-color: #0056b3 !important;
+    transform: scale(1.05) !important;
+}
+
+.estudiantes-table {
+    background-color: white !important;
+    border-radius: 8px !important;
+    overflow: hidden !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15) !important;
+    transition: box-shadow 0.3s ease !important;
+}
+
+.estudiantes-table:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25) !important;
+}
+
+.estudiante-row {
+    transition: background-color 0.3s ease !important;
+}
+
+.estudiante-row:hover {
+    background-color: #f1f1f1 !important;
+}
+
+.modal-content {
+    border-radius: 10px !important;
+}
+
+.modal-header {
+    background-color: #007bff !important;
+    color: white !important;
+    border-top-left-radius: 10px !important;
+    border-top-right-radius: 10px !important;
+}
+
+.modal-title {
+    font-size: 24px !important;
+    font-weight: bold !important;
+}
+
+.modal-body input {
+    transition: border-color 0.3s ease !important;
+}
+
+.modal-body input:focus {
+    border-color: #007bff !important;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5) !important;
+}
+.estudiantes-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  
+  .estudiante-card {
+    width: 300px;
+    transition: transform 0.3s ease-in-out;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .estudiante-card:hover {
+    transform: translateY(-10px);
+  }
+  
+  .preview-image img {
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  

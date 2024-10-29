@@ -1,3 +1,24 @@
+/* Global adjustments for layout */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Toda la altura de la pantalla */
+}
+
+.main-content {
+  flex: 1; /* El contenido principal se expande para llenar el espacio disponible */
+  padding: 20px;
+}
+
+/* Footer styles */
 footer {
   background-color: #f8f9fa;
   padding: 40px 0;

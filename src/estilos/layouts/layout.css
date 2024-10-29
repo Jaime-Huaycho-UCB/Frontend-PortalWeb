@@ -1,0 +1,53 @@
+/* layout.css */
+
+/* Encabezado */
+.encabezado {
+    background-color: #007bff !important;
+    padding: 20px !important;
+    color: white !important;
+    text-align: center !important;
+}
+
+.encabezado a {
+    color: white !important;
+}
+
+.encabezado .nav {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+}
+
+/* Pie de página */
+.pie-de-pagina {
+    background-color: #343a40 !important;
+    color: white !important;
+    padding: 20px 0 !important;
+    text-align: center !important;
+    font-size: 14px !important;
+}
+
+.pie-de-pagina a {
+    color: #999 !important;
+}
+
+.pie-de-pagina a:hover {
+    color: white !important;
+}
+
+/* Contenido principal */
+.contenido {
+    padding: 40px 0 !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .encabezado, .pie-de-pagina {
+        padding: 10px !important;
+        text-align: center !important;
+    }
+
+    .container {
+        padding: 0 10px !important;
+    }
+}

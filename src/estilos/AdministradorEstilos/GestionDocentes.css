@@ -1,0 +1,83 @@
+.gestion-docentes-container {
+    padding: 20px !important;
+    background-color: #f8f9fa !important;
+  }
+  
+  .header {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    margin-bottom: 20px !important;
+  }
+  
+  h2 {
+    color: #343a40 !important;
+    font-size: 28px !important;
+    font-weight: bold !important;
+    text-transform: uppercase !important;
+  }
+  
+  .add-docente-btn {
+    transition: all 0.3s ease !important;
+    background-color: #007bff !important;
+    border: none !important;
+  }
+  
+  .add-docente-btn:hover {
+    background-color: #0056b3 !important;
+    transform: scale(1.05) !important;
+  }
+  
+  .docente-card {
+    background-color: white !important;
+    border-radius: 8px !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15) !important;
+    transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+  }
+  
+  .docente-card:hover {
+    transform: scale(1.03) !important;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25) !important;
+  }
+  
+  .docente-foto {
+    height: 200px !important;
+    object-fit: cover !important;
+  }
+  
+  .modal-content {
+    border-radius: 10px !important;
+  }
+  
+  .modal-header {
+    background-color: #007bff !important;
+    color: white !important;
+    border-top-left-radius: 10px !important;
+    border-top-right-radius: 10px !important;
+  }
+  
+  .modal-title {
+    font-size: 24px !important;
+    font-weight: bold !important;
+  }
+  
+  .vista-previa {
+    margin-top: 10px !important;
+  }
+  
+  .foto-previa {
+    max-width: 100px !important;
+    max-height: 100px !important;
+    border-radius: 8px !important;
+    object-fit: cover !important;
+  }
+  
+  .modal-body input {
+    transition: border-color 0.3s ease !important;
+  }
+  
+  .modal-body input:focus {
+    border-color: #007bff !important;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5) !important;
+  }
+  

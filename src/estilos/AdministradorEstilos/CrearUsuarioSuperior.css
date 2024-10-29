@@ -1,0 +1,31 @@
+/* src/estilos/AdministradorEstilos/CrearUsuarioSuperior.css */
+.crear-usuario-superior-container {
+    max-width: 500px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #ffffff !important;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.titulo {
+    text-align: center;
+    font-size: 24px;
+    color: #343a40;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+button[type="submit"] {
+    width: 100%;
+    background-color: #007bff !important;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: #0056b3 !important;
+}

@@ -1,0 +1,84 @@
+/* Fondo de pantalla */
+.login-background {
+    background-image: url('https://img.freepik.com/vector-gratis/fondo-azul-dorado-lujo_23-2149329427.jpg?ga=GA1.1.1816608191.1713734926&semt=ais_hybrid') !important;
+    background-size: cover !important;
+    background-position: center !important;
+    height: 100vh !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+  
+.login-container {
+    background: rgba(255, 255, 255, 0.1) !important;
+    backdrop-filter: blur(10px) !important;
+    padding: 40px !important;
+    border-radius: 15px !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.37) !important;
+    max-width: 400px !important;
+    width: 100% !important;
+    color: white !important;
+}
+  
+.login-title {
+    font-size: 32px !important;
+    text-align: center !important;
+    margin-bottom: 20px !important;
+    font-weight: bold !important;
+}
+  
+.input-container {
+    position: relative !important;
+    margin-bottom: 20px !important;
+}
+  
+.input-container .form-control {
+    padding-left: 40px !important;
+    border-radius: 30px !important;
+    background: rgba(255, 255, 255, 0.2) !important;
+    border: none !important;
+    color: white !important;
+}
+  
+.input-container .icon {
+    position: absolute !important;
+    left: 15px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    color: white !important;
+    font-size: 18px !important;
+}
+  
+.form-options {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    margin-bottom: 20px !important;
+}
+  
+.login-button {
+    width: 100% !important;
+    background-color: #6a5acd !important;
+    border: none !important;
+    border-radius: 30px !important;
+    padding: 10px !important;
+    font-size: 16px !important;
+    transition: background-color 0.3s ease !important;
+}
+  
+.login-button:hover {
+    background-color: #483d8b !important;
+}
+  
+.register-link {
+    text-align: center !important;
+}
+  
+.register-link a {
+    color: #00aced !important;
+    text-decoration: underline !important;
+}
+  
+.register-link a:hover {
+    color: #0084b4 !important;
+}

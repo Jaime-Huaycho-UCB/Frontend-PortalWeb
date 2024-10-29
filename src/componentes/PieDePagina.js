@@ -1,37 +1,36 @@
 import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
-import '../estilos/componentesEstilos/PieDePagina.css'; // Asegurarse de que la ruta sea correcta
 
 const PieDePagina = () => {
   return (
-    <footer className="pie-de-pagina bg-light text-center text-lg-start">
+    <footer className="bg-light text-center text-lg-start">
       <Container className="p-4">
         <Row>
           <Col lg="6" md="12" className="mb-4 mb-md-0">
-            <h5 className="text-uppercase titulo-footer">Footer Content</h5>
-            <p className="texto-footer">
+            <h5 className="text-uppercase">Footer Content</h5>
+            <p>
               Aquí puedes usar filas y columnas para organizar tu contenido.
             </p>
           </Col>
           <Col lg="3" md="6" className="mb-4 mb-md-0">
-            <h5 className="text-uppercase titulo-footer">Enlaces</h5>
+            <h5 className="text-uppercase">Enlaces</h5>
             <ul className="list-unstyled">
               <li>
-                <a href="/" className="enlace-footer">Inicio</a>
+                <a href="/" className="text-dark">Inicio</a>
               </li>
               <li>
-                <a href="/contacto" className="enlace-footer">Contacto</a>
+                <a href="/contacto" className="text-dark">Contacto</a>
               </li>
             </ul>
           </Col>
           <Col lg="3" md="6" className="mb-4 mb-md-0">
-            <h5 className="text-uppercase titulo-footer">Redes Sociales</h5>
+            <h5 className="text-uppercase">Acceso Administrador</h5>
             <ul className="list-unstyled">
               <li>
-                <a href="#!" className="enlace-footer">Facebook</a>
+                <a href="/iniciar-sesion" className="text-dark">Iniciar Sesión</a>
               </li>
               <li>
-                <a href="#!" className="enlace-footer">Twitter</a>
+                <a href="/registro" className="text-dark">Registrarse</a>
               </li>
             </ul>
           </Col>

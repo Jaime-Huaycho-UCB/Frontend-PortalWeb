@@ -1,0 +1,33 @@
+.recuperar-container {
+    max-width: 500px !important;
+    margin: 50px auto !important;
+    padding: 20px !important;
+    border-radius: 10px !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15) !important;
+    background-color: #fff !important;
+  }
+  
+  h2 {
+    color: #343a40 !important;
+    font-size: 28px !important;
+    font-weight: bold !important;
+    margin-bottom: 30px !important;
+  }
+  
+  .form-control {
+    border-radius: 8px !important;
+  }
+  
+  .btn-recuperar {
+    width: 100% !important;
+    background-color: #007bff !important;
+    border: none !important;
+    padding: 10px !important;
+    font-size: 16px !important;
+    font-weight: bold !important;
+  }
+  
+  .btn-recuperar:hover {
+    background-color: #0056b3 !important;
+  }
+  
