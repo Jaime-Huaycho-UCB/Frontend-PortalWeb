@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Modal, Card, Row, Col, Form } from 'react-bootstrap';
 import axios from 'axios';
 import '../../estilos/AdministradorEstilos/GestionDocentes.css';
@@ -13,6 +13,20 @@ const GestionDocentes = () => {
     frase: '',
     foto: null,
   });
+
+  
+  useEffect(() => {
+    const obtenerDocentes = async () => {
+      try {
+        const response = await axios.get('http://localhost:8000/docente/obtener'); 
+        setDocentes(response.data);
+      } catch (error) {
+        console.error("Error al obtener los docentes:", error);
+      }
+    };
+
+    obtenerDocentes();
+  }, []);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -65,10 +79,12 @@ const GestionDocentes = () => {
         {docentes.map((docente) => (
           <Col md={4} key={docente.id}>
             <Card className="docente-card mb-4">
-              <Card.Img variant="top" src={docente.foto} alt="Foto del Docente" className="docente-foto" />
+              <Card.Img variant="top" src={docente.foto || '/ruta/a/foto-placeholder.jpg'} alt="Foto del Docente" className="docente-foto" />
               <Card.Body>
                 <Card.Title>{docente.nombre}</Card.Title>
-                <Card.Text>Email: {docente.email}</Card.Text>
+                <Card.Text>Email: {docente.correo}</Card.Text>
+                <Card.Text>Título: {docente.titulo}</Card.Text>
+                <Card.Text>Frase: {docente.frase}</Card.Text>
               </Card.Body>
             </Card>
           </Col>

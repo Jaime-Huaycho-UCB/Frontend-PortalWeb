@@ -23,7 +23,6 @@ import { AuthContext, AuthProvider } from './contextos/ContextoAutenticacion';
 import CrearUsuarioSuperior from './paginas/Administrador/CrearUsuarioSuperior';
 import './estilos/layouts/global.css';
 
-// Componente para verificar el rol y proteger las rutas
 const RutaProtegida = ({ children, rolesPermitidos }) => {
   const { permiso } = useContext(AuthContext);
 
