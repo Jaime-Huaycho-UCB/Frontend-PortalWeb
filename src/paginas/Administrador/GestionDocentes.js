@@ -18,15 +18,21 @@ const GestionDocentes = () => {
   useEffect(() => {
     const obtenerDocentes = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/docente/obtener'); 
-        setDocentes(response.data);
+        const response = await axios.get('http://localhost:8000/docente/obtener');
+  
+        if (response.data.salida) {
+          setDocentes(response.data.docentes);
+        } else {
+          console.error("Error: salida es false en la respuesta.");
+        }
       } catch (error) {
         console.error("Error al obtener los docentes:", error);
       }
     };
-
+  
     obtenerDocentes();
   }, []);
+  
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
