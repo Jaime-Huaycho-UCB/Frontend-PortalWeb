@@ -12,29 +12,30 @@ const IniciarSesion = () => {
   const navigate = useNavigate();
   const { iniciarSesion } = useContext(AuthContext); 
 
-  
   const manejarInicioSesion = async (e) => {
     e.preventDefault();
 
     try {
+    
       const response = await axios.post('http://localhost:8000/usuario/inicioSesion', {
         correo: email,
         contrasena: password
       });
 
-      const { permiso } = response.data;
+      const { salida, mensaje, id , permiso } = response.data;
 
-      if (permiso !== undefined) {
+      if (salida) {
         iniciarSesion(permiso); 
-        navigate('/admin'); 
+        navigate('/admin');
       } else {
-        setError('Credenciales incorrectas');
+        setError(mensaje || 'Credenciales incorrectas');
       }
     } catch (err) {
       setError('Error en la autenticación. Inténtalo nuevamente.');
       console.error(err);
     }
   };
+
   return (
     <div className="login-background">
       <Container className="login-container">
