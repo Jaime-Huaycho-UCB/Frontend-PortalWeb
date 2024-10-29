@@ -21,7 +21,7 @@ const GestionDocentes = () => {
     const rutaFoto = nuevoDocente.foto ? `docentes/${nuevoDocente.foto.name}` : '';
 
     try {
-      const response = await axios.post('http://localhost:8000/docentes/agregar', {
+      const response = await axios.post('http://localhost:8000/docente/agregar', {
         nombre: nuevoDocente.nombre,
         correo: nuevoDocente.email,
         titulo: nuevoDocente.titulo,
