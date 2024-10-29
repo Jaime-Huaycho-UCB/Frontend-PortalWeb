@@ -36,67 +36,60 @@ function App() {
   return (
     <AuthProvider>
       <Router>
-        <Routes>
-          {/* Rutas de autenticación SIN encabezado ni pie de página */}
-          <Route path="/iniciar-sesion" element={<IniciarSesion />} />
-          <Route path="/registro" element={<Registro />} />
+        <Encabezado />
+        <div className="wrapper">
+          <div className="main-content">
+            <BarraDeBusqueda />
+            <Routes>
+              {/* Rutas de autenticación sin encabezado ni pie de página */}
+              <Route path="/iniciar-sesion" element={<IniciarSesion />} />
+              <Route path="/registro" element={<Registro />} />
 
-          {/* Rutas generales del portal */}
-          <Route
-            path="*"
-            element={
-              <div className="wrapper">
-                <Encabezado />
-                <div className="main-content">
-                  <BarraDeBusqueda />
-                  <Routes>
-                    <Route path="/docentes" element={<ListaDocentes />} />
-                    <Route path="/egresados" element={<ListaEgresados />} />
-                    <Route path="/eventos" element={<ListaEventos />} />
-                    <Route path="/noticias" element={<ListaNoticias />} />
-                    <Route path="/carrera" element={<PaginaCarrera />} />
-                    <Route path="/autoridades" element={<PaginaAutoridades />} />
-                    <Route path="/perfil" element={<Perfil />} />
-                    <Route path="/" element={<h2>Bienvenido al Portal</h2>} />
+              {/* Rutas generales del portal */}
+              <Route path="/" element={<h2>Bienvenido al Portal</h2>} />
+              <Route path="/docentes" element={<ListaDocentes />} />
+              <Route path="/egresados" element={<ListaEgresados />} />
+              <Route path="/eventos" element={<ListaEventos />} />
+              <Route path="/noticias" element={<ListaNoticias />} />
+              <Route path="/carrera" element={<PaginaCarrera />} />
+              <Route path="/autoridades" element={<PaginaAutoridades />} />
+              <Route path="/perfil" element={<Perfil />} />
 
-                    {/* Rutas protegidas */}
-                    <Route path="/admin" element={
-                      <RutaProtegida rolesPermitidos={[1, 0]}>
-                        <PanelAdministrador />
-                      </RutaProtegida>
-                    } />
-                    <Route path="/admin/gestion-docentes" element={
-                      <RutaProtegida rolesPermitidos={[1]}>
-                        <GestionDocentes />
-                      </RutaProtegida>
-                    } />
-                    <Route path="/admin/gestion-estudiantes" element={
-                      <RutaProtegida rolesPermitidos={[1, 0]}>
-                        <GestionEstudiantes />
-                      </RutaProtegida>
-                    } />
-                    <Route path="/admin/gestion-noticias" element={
-                      <RutaProtegida rolesPermitidos={[1, 0]}>
-                        <GestionNoticias />
-                      </RutaProtegida>
-                    } />
-                    <Route path="/admin/gestion-eventos" element={
-                      <RutaProtegida rolesPermitidos={[1, 0]}>
-                        <GestionEventos />
-                      </RutaProtegida>
-                    } />
-                    <Route path="/admin/crear-usuario" element={
-                      <RutaProtegida rolesPermitidos={[1]}>
-                        <CrearUsuarioSuperior />
-                      </RutaProtegida>
-                    } />
-                  </Routes>
-                </div>
-                <PieDePagina />
-              </div>
-            }
-          />
-        </Routes>
+              {/* Rutas protegidas */}
+              <Route path="/admin" element={
+                <RutaProtegida rolesPermitidos={[1, 0]}>
+                  <PanelAdministrador />
+                </RutaProtegida>
+              } />
+              <Route path="/admin/gestion-docentes" element={
+                <RutaProtegida rolesPermitidos={[1]}>
+                  <GestionDocentes />
+                </RutaProtegida>
+              } />
+              <Route path="/admin/gestion-estudiantes" element={
+                <RutaProtegida rolesPermitidos={[1, 0]}>
+                  <GestionEstudiantes />
+                </RutaProtegida>
+              } />
+              <Route path="/admin/gestion-noticias" element={
+                <RutaProtegida rolesPermitidos={[1, 0]}>
+                  <GestionNoticias />
+                </RutaProtegida>
+              } />
+              <Route path="/admin/gestion-eventos" element={
+                <RutaProtegida rolesPermitidos={[1, 0]}>
+                  <GestionEventos />
+                </RutaProtegida>
+              } />
+              <Route path="/admin/crear-usuario" element={
+                <RutaProtegida rolesPermitidos={[1]}>
+                  <CrearUsuarioSuperior />
+                </RutaProtegida>
+              } />
+            </Routes>
+          </div>
+          <PieDePagina />
+        </div>
       </Router>
     </AuthProvider>
   );
