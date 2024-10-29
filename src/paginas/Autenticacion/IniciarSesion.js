@@ -16,7 +16,6 @@ const IniciarSesion = () => {
     e.preventDefault();
 
     try {
-    
       const response = await axios.post('http://localhost:8000/usuario/inicioSesion', {
         correo: email,
         contrasena: password
@@ -25,7 +24,7 @@ const IniciarSesion = () => {
       const { salida, mensaje, id , permiso } = response.data;
 
       if (salida) {
-        iniciarSesion(permiso); 
+        iniciarSesion(parseInt(permiso, 10)); 
         navigate('/admin');
       } else {
         setError(mensaje || 'Credenciales incorrectas');
@@ -34,7 +33,8 @@ const IniciarSesion = () => {
       setError('Error en la autenticación. Inténtalo nuevamente.');
       console.error(err);
     }
-  };
+};
+
 
   return (
     <div className="login-background">
