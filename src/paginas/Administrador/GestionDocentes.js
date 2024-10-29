@@ -1,52 +1,36 @@
 import React, { useState } from 'react';
 import { Button, Modal, Card, Row, Col, Form } from 'react-bootstrap';
-import axios from 'axios';
 import '../../estilos/AdministradorEstilos/GestionDocentes.css';
 
 const GestionDocentes = () => {
-  const [docentes, setDocentes] = useState([]);
+  const [docentes, setDocentes] = useState([
+    { id: 1, nombre: 'Juan Pérez', departamento: 'Matemáticas', email: 'juan.perez@example.com', foto:'https://ichef.bbci.co.uk/ace/ws/800/cpsprodpb/4ef8/live/970bbd30-c0fa-11ee-897d-3950f2e7afa7.jpg.webp' },
+    { id: 2, nombre: 'María Rodríguez', departamento: 'Física', email: 'maria.rodriguez@example.com', foto:'https://ichef.bbci.co.uk/ace/ws/800/cpsprodpb/4ef8/live/970bbd30-c0fa-11ee-897d-3950f2e7afa7.jpg.webp' }
+  ]);
+
   const [show, setShow] = useState(false);
   const [nuevoDocente, setNuevoDocente] = useState({
     nombre: '',
+    departamento: '',
     email: '',
-    titulo: '',
-    frase: '',
-    foto: null,
+    foto: null
   });
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const agregarDocente = async () => {
-    const rutaFoto = nuevoDocente.foto ? `docentes/${nuevoDocente.foto.name}` : '';
-
-    try {
-      const response = await axios.post('http://localhost:8000/docentes/agregar', {
-        nombre: nuevoDocente.nombre,
-        correo: nuevoDocente.email,
-        titulo: nuevoDocente.titulo,
-        frase: nuevoDocente.frase,
-        ruta: rutaFoto,
-      });
-
-      setDocentes([...docentes, { ...response.data, foto: rutaFoto }]);
-      setNuevoDocente({ nombre: '', email: '', titulo: '', frase: '', foto: null });
-      handleClose();
-    } catch (error) {
-      console.error("Error al agregar docente:", error);
-    }
+  const agregarDocente = () => {
+    setDocentes([...docentes, { id: docentes.length + 1, ...nuevoDocente }]);
+    setNuevoDocente({ nombre: '', departamento: '', email: '', foto: null });
+    handleClose();
   };
 
   const manejarCambioFoto = (e) => {
     const file = e.target.files[0];
     if (file) {
-      const rutaFoto = `docentes/${file.name}`;
-      setNuevoDocente({ ...nuevoDocente, foto: rutaFoto });
-
       const reader = new FileReader();
       reader.onloadend = () => {
-        const url = URL.createObjectURL(file);
-        setNuevoDocente({ ...nuevoDocente, foto: url });
+        setNuevoDocente({ ...nuevoDocente, foto: reader.result });
       };
       reader.readAsDataURL(file);
     }
@@ -65,9 +49,10 @@ const GestionDocentes = () => {
         {docentes.map((docente) => (
           <Col md={4} key={docente.id}>
             <Card className="docente-card mb-4">
-              <Card.Img variant="top" src={docente.foto} alt="Foto del Docente" className="docente-foto" />
+              <Card.Img variant="top" src={docente.foto || '/ruta/a/foto-placeholder.jpg'} alt="Foto del Docente" className="docente-foto" />
               <Card.Body>
                 <Card.Title>{docente.nombre}</Card.Title>
+                <Card.Subtitle className="mb-2 text-muted">{docente.departamento}</Card.Subtitle>
                 <Card.Text>Email: {docente.email}</Card.Text>
               </Card.Body>
             </Card>
@@ -90,6 +75,14 @@ const GestionDocentes = () => {
               />
             </Form.Group>
             <Form.Group className="mb-3">
+              <Form.Label>Departamento</Form.Label>
+              <Form.Control
+                type="text"
+                value={nuevoDocente.departamento}
+                onChange={(e) => setNuevoDocente({ ...nuevoDocente, departamento: e.target.value })}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
               <Form.Label>Email</Form.Label>
               <Form.Control
                 type="email"
@@ -98,24 +91,12 @@ const GestionDocentes = () => {
               />
             </Form.Group>
             <Form.Group className="mb-3">
-              <Form.Label>Título</Form.Label>
-              <Form.Control
-                type="text"
-                value={nuevoDocente.titulo}
-                onChange={(e) => setNuevoDocente({ ...nuevoDocente, titulo: e.target.value })}
-              />
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>Frase</Form.Label>
-              <Form.Control
-                type="text"
-                value={nuevoDocente.frase}
-                onChange={(e) => setNuevoDocente({ ...nuevoDocente, frase: e.target.value })}
-              />
-            </Form.Group>
-            <Form.Group className="mb-3">
               <Form.Label>Foto del Docente</Form.Label>
-              <Form.Control type="file" accept="image/*" onChange={manejarCambioFoto} />
+              <Form.Control
+                type="file"
+                accept="image/*"
+                onChange={manejarCambioFoto}
+              />
               {nuevoDocente.foto && (
                 <div className="vista-previa">
                   <img src={nuevoDocente.foto} alt="Vista previa" className="foto-previa" />
