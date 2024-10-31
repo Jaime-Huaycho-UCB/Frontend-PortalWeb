@@ -5,15 +5,16 @@ import '../../estilos/AdministradorEstilos/GestionDocentes.css';
 
 const GestionDocentes = () => {
   const [docentes, setDocentes] = useState([]);
+  const [titulos, setTitulos] = useState([]); // Estado para almacenar los títulos disponibles
   const [show, setShow] = useState(false);
   const [showEliminarModal, setShowEliminarModal] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
   const [docenteIdActualizar, setDocenteIdActualizar] = useState(null);
-  const [docenteIdEliminar, setDocenteIdEliminar] = useState(null); // Para la eliminación lógica
+  const [docenteIdEliminar, setDocenteIdEliminar] = useState(null);
   const [nuevoDocente, setNuevoDocente] = useState({
     nombre: '',
     email: '',
-    titulo: '',
+    titulo: '',  // Almacena el ID del título seleccionado
     frase: '',
     foto: null,
   });
@@ -36,8 +37,18 @@ const GestionDocentes = () => {
     }
   };
 
+  const obtenerTitulos = async () => {
+    try {
+      const response = await axios.get('http://localhost:8000/titulo/obtener'); 
+      setTitulos(response.data.titulos); // Asumimos que `response.data.titulos` es un array de objetos { id, nombre }
+    } catch (error) {
+      console.error("Error al obtener los títulos:", error);
+    }
+  };
+
   useEffect(() => {
-    obtenerDocentes(); 
+    obtenerDocentes();
+    obtenerTitulos(); 
   }, []);
 
   const handleClose = () => {
@@ -55,7 +66,7 @@ const GestionDocentes = () => {
       const response = await axios.post('http://localhost:8000/docente/agregar', {
         nombre: nuevoDocente.nombre,
         correo: nuevoDocente.email,
-        titulo: nuevoDocente.titulo,
+        titulo: nuevoDocente.titulo,  // Enviamos el ID del título
         frase: nuevoDocente.frase,
         ruta: rutaFoto,
       });
@@ -126,6 +137,7 @@ const GestionDocentes = () => {
       reader.readAsDataURL(file);
     }
   };
+
   return (
     <div className="gestion-docentes-container">
       <div className="header">
@@ -178,10 +190,15 @@ const GestionDocentes = () => {
             <Form.Group className="mb-3">
               <Form.Label>Título</Form.Label>
               <Form.Control
-                type="text"
+                as="select"
                 value={nuevoDocente.titulo}
                 onChange={(e) => setNuevoDocente({ ...nuevoDocente, titulo: e.target.value })}
-              />
+              >
+                <option value="">Selecciona un título</option>
+                {titulos.map((titulo) => (
+                  <option key={titulo.id} value={titulo.id}>{titulo.nombre}</option>
+                ))}
+              </Form.Control>
             </Form.Group>
             <Form.Group className="mb-3">
               <Form.Label>Frase</Form.Label>
