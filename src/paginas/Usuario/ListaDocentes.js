@@ -64,11 +64,14 @@ const ListaDocentes = () => {
 
       <Modal show={showModal} onHide={handleCloseModal}>
         <Modal.Header closeButton>
-          <Modal.Title>{selectedDocente?.nombre}</Modal.Title>
+          <Modal.Title>Detalles de {selectedDocente?.nombre}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          <img src={selectedDocente?.foto || '/ruta/a/imagen-placeholder.jpg'} alt={selectedDocente?.nombre} className="img-fluid mb-3" />
+          <p><strong>Nombre:</strong> {selectedDocente?.nombre}</p>
+          <p><strong>Email:</strong> {selectedDocente?.email}</p>
+          <p><strong>Título:</strong> {selectedDocente?.titulo}</p>
           <p><strong>Frase:</strong> {selectedDocente?.frase}</p>
-          <img src={selectedDocente?.foto} alt={selectedDocente?.nombre} className="img-fluid" />
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleCloseModal}>
