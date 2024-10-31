@@ -133,7 +133,7 @@ const GestionDocentes = () => {
               <Card.Body>
                 <Card.Title>{docente.nombre}</Card.Title>
                 <Card.Text>Email: {docente.correo}</Card.Text>
-                <Card.Text>Título: {docente.titulo}</Card.Text>
+                <Card.Text>Título: {docente.titulo.nombre}</Card.Text>
                 <Card.Text>Frase: {docente.frase}</Card.Text>
                 <Button variant="warning" onClick={() => iniciarActualizacion(docente)} className="me-2">Actualizar</Button>
                 <Button variant="danger" onClick={() => iniciarEliminacion(docente.id)}>Eliminar</Button>
