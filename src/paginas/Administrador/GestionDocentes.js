@@ -6,6 +6,10 @@ import '../../estilos/AdministradorEstilos/GestionDocentes.css';
 const GestionDocentes = () => {
   const [docentes, setDocentes] = useState([]);
   const [show, setShow] = useState(false);
+  const [showEliminarModal, setShowEliminarModal] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [docenteIdActualizar, setDocenteIdActualizar] = useState(null);
+  const [docenteIdEliminar, setDocenteIdEliminar] = useState(null); // Para la eliminación lógica
   const [nuevoDocente, setNuevoDocente] = useState({
     nombre: '',
     email: '',
@@ -14,27 +18,34 @@ const GestionDocentes = () => {
     foto: null,
   });
 
-  
-  useEffect(() => {
-    const obtenerDocentes = async () => {
-      try {
-        const response = await axios.get('http://localhost:8000/docente/obtener');
-  
-        if (response.data.salida) {
-          setDocentes(response.data.docentes);
-        } else {
-          console.error("Error: salida es false en la respuesta.");
-        }
-      } catch (error) {
-        console.error("Error al obtener los docentes:", error);
+  const obtenerDocentes = async () => {
+    const idUsuario = '';  
+    const token = '';      
+    try {
+      const response = await axios.post('http://localhost:8000/docente/obtener', {
+        idUsuario,
+        token,
+      });
+      if (response.data.salida) {
+        setDocentes(response.data.docentes);
+      } else {
+        console.error("Error: salida es false en la respuesta.");
       }
-    };
-  
-    obtenerDocentes();
-  }, []);
-  
+    } catch (error) {
+      console.error("Error al obtener los docentes:", error);
+    }
+  };
 
-  const handleClose = () => setShow(false);
+  useEffect(() => {
+    obtenerDocentes(); 
+  }, []);
+
+  const handleClose = () => {
+    setShow(false);
+    setIsUpdating(false);
+    setNuevoDocente({ nombre: '', email: '', titulo: '', frase: '', foto: null });
+  };
+
   const handleShow = () => setShow(true);
 
   const agregarDocente = async () => {
@@ -49,11 +60,55 @@ const GestionDocentes = () => {
         ruta: rutaFoto,
       });
 
-      setDocentes([...docentes, { ...response.data, foto: rutaFoto }]);
-      setNuevoDocente({ nombre: '', email: '', titulo: '', frase: '', foto: null });
+      obtenerDocentes(); 
       handleClose();
     } catch (error) {
       console.error("Error al agregar docente:", error);
+    }
+  };
+
+  const iniciarEliminacion = (id) => {
+    setDocenteIdEliminar(id); 
+    setShowEliminarModal(true); 
+  };
+
+  const confirmarEliminacion = async () => {
+    try {
+      await axios.put('http://localhost:8000/docente/eliminar', {
+        docente: docenteIdEliminar
+      });
+      obtenerDocentes(); 
+      setShowEliminarModal(false); 
+      setDocenteIdEliminar(null); 
+    } catch (error) {
+      console.error("Error al eliminar docente:", error);
+    }
+  };
+
+  const iniciarActualizacion = (docente) => {
+    setIsUpdating(true);
+    setDocenteIdActualizar(docente.id);
+    setNuevoDocente({ nombre: docente.nombre, email: docente.correo, titulo: docente.titulo, frase: docente.frase, foto: docente.foto });
+    handleShow();
+  };
+
+  const actualizarDocente = async () => {
+    const rutaFoto = nuevoDocente.foto ? `docentes/${nuevoDocente.foto.name}` : '';
+    
+    try {
+      await axios.put('http://localhost:8000/docente/actualizar', {
+        id: docenteIdActualizar,
+        nombre: nuevoDocente.nombre,
+        correo: nuevoDocente.email,
+        titulo: nuevoDocente.titulo,
+        frase: nuevoDocente.frase,
+        ruta: rutaFoto,
+      });
+  
+      obtenerDocentes(); 
+      handleClose();
+    } catch (error) {
+      console.error("Error al actualizar docente:", error);
     }
   };
 
@@ -71,7 +126,6 @@ const GestionDocentes = () => {
       reader.readAsDataURL(file);
     }
   };
-
   return (
     <div className="gestion-docentes-container">
       <div className="header">
@@ -91,6 +145,8 @@ const GestionDocentes = () => {
                 <Card.Text>Email: {docente.correo}</Card.Text>
                 <Card.Text>Título: {docente.titulo}</Card.Text>
                 <Card.Text>Frase: {docente.frase}</Card.Text>
+                <Button variant="warning" onClick={() => iniciarActualizacion(docente)} className="me-2">Actualizar</Button>
+                <Button variant="danger" onClick={() => iniciarEliminacion(docente.id)}>Eliminar</Button>
               </Card.Body>
             </Card>
           </Col>
@@ -99,7 +155,7 @@ const GestionDocentes = () => {
 
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton className="modal-header">
-          <Modal.Title>Agregar Docente</Modal.Title>
+          <Modal.Title>{isUpdating ? 'Actualizar Docente' : 'Agregar Docente'}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
@@ -150,8 +206,23 @@ const GestionDocentes = () => {
           <Button variant="secondary" onClick={handleClose}>
             Cancelar
           </Button>
-          <Button className="add-docente-btn" onClick={agregarDocente}>
-            Agregar
+          <Button className="add-docente-btn" onClick={isUpdating ? actualizarDocente : agregarDocente}>
+            {isUpdating ? 'Actualizar' : 'Agregar'}
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      <Modal show={showEliminarModal} onHide={() => setShowEliminarModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirmar Eliminación</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>¿Estás seguro de que deseas eliminar este docente?</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowEliminarModal(false)}>
+            Cancelar
+          </Button>
+          <Button variant="danger" onClick={confirmarEliminacion}>
+            Eliminar
           </Button>
         </Modal.Footer>
       </Modal>
