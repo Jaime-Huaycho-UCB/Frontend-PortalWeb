@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Button, Modal, Form, Alert, Table } from 'react-bootstrap';
-import { obtenerDocentes, crearUsuario } from '../../librerias/PeticionesApi';
+import { obtenerDocentes, crearUsuario, obtenerUsuarios } from '../../librerias/PeticionesApi';
 import '../../estilos/AdministradorEstilos/CrearUsuarioSuperior.css';
 
 const CrearUsuarioSuperior = () => {
@@ -21,7 +21,17 @@ const CrearUsuarioSuperior = () => {
       }
     };
 
+    const cargarUsuarios = async () => {
+      try {
+        const usuariosData = await obtenerUsuarios(); 
+        setUsuarios(usuariosData);
+      } catch (error) {
+        console.error("Error al cargar usuarios:", error);
+      }
+    };
+
     cargarDocentes();
+    cargarUsuarios(); // Llamada para cargar los usuarios al inicio
   }, []);
 
   const manejarSeleccionDocente = (docente) => {
@@ -38,6 +48,9 @@ const CrearUsuarioSuperior = () => {
         setUsuarios((prev) => [...prev, nuevoUsuario]);
         setMensaje(`Usuario para ${docenteSeleccionado.nombre} creado exitosamente.`);
         
+        // Filtrar el docente ya seleccionado para que no aparezca en la lista
+        setDocentes((prev) => prev.filter((docente) => docente.id !== docenteSeleccionado.id));
+
         setDocenteSeleccionado(null);
         setPassword('');
         setOpenDialog(false);
@@ -65,7 +78,6 @@ const CrearUsuarioSuperior = () => {
                 <Card.Body>
                   <Card.Title>{docente.nombre}</Card.Title>
                   <Card.Text className="text-muted">{docente.correo}</Card.Text>
-                  <Card.Text><small>ID: {docente.id}</small></Card.Text>
                 </Card.Body>
                 <Card.Footer>
                   <Button 
@@ -82,7 +94,6 @@ const CrearUsuarioSuperior = () => {
         </Row>
       </div>
 
-      {/* Modal para crear usuario */}
       <Modal show={openDialog} onHide={() => setOpenDialog(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Crear Usuario para {docenteSeleccionado?.nombre}</Modal.Title>
@@ -119,7 +130,6 @@ const CrearUsuarioSuperior = () => {
         <Table striped bordered hover responsive>
           <thead>
             <tr>
-              <th>ID</th>
               <th>Nombre</th>
               <th>Email</th>
             </tr>
@@ -127,7 +137,6 @@ const CrearUsuarioSuperior = () => {
           <tbody>
             {usuarios.map((usuario) => (
               <tr key={usuario.id}>
-                <td>{usuario.id}</td>
                 <td>{usuario.nombre}</td>
                 <td>{usuario.correo}</td>
               </tr>
