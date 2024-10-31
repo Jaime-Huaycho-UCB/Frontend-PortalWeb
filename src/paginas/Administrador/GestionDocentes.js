@@ -50,7 +50,7 @@ const GestionDocentes = () => {
 
     try {
       await agregarDocente(docenteData);
-      obtenerDocentes().then((data) => setDocentes(data.docentes));
+      obtenerDocentesTodo().then((data) => setDocentes(data.docentes));
       handleClose();
     } catch (error) {
       console.error(error);
@@ -65,7 +65,7 @@ const GestionDocentes = () => {
   const confirmarEliminacion = async () => {
     try {
       await eliminarDocente(docenteIdEliminar);
-      obtenerDocentes().then((data) => setDocentes(data.docentes));
+      obtenerDocentesTodo().then((data) => setDocentes(data.docentes));
       setShowEliminarModal(false);
       setDocenteIdEliminar(null);
     } catch (error) {
@@ -98,7 +98,7 @@ const GestionDocentes = () => {
 
     try {
       await actualizarDocente(docenteIdActualizar, docenteData);
-      obtenerDocentes().then((data) => setDocentes(data.docentes));
+      obtenerDocentesTodo().then((data) => setDocentes(data.docentes));
       handleClose();
     } catch (error) {
       console.error(error);
