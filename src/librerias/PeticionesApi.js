@@ -71,12 +71,12 @@ export const crearUsuario = async (idDocente, password) => {
       throw error;
     }
   };
-  export const obtenerUsuarios = async () => {
+  export const obtenerUsuarios = async (idUsuario, token) => {
     try {
-      const response = await instance.post('/usuario/obtener'); 
-      return response.data.usuarios; 
+      const response = await instance.post('/usuario/obtener', { idUsuario, token });
+      return response.data;
     } catch (error) {
-      console.error("Error al obtener usuarios:", error);
+      console.error("Error al obtener docentes:", error);
       throw error;
     }
   };

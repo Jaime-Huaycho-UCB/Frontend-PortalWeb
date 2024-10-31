@@ -22,9 +22,16 @@ const CrearUsuarioSuperior = () => {
     };
 
     const cargarUsuarios = async () => {
+      const idUsuario="";
+      const token="";
       try {
-        const usuariosData = await obtenerUsuarios();
-        setUsuarios(usuariosData || []); // Asegura que usuarios siempre sea un array
+        const usuariosData = await obtenerUsuarios(idUsuario, token);
+        if(usuariosData.salida){
+        setUsuarios(usuariosData );
+        }else{
+          console.log(usuariosData.mensaje);
+        }
+
       } catch (error) {
         console.error("Error al cargar usuarios:", error);
       }
