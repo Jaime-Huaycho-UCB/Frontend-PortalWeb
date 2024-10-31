@@ -14,7 +14,7 @@ const GestionDocentes = () => {
   const [nuevoDocente, setNuevoDocente] = useState({
     nombre: '',
     email: '',
-    titulo: '',
+    titulo: '', 
     frase: '',
     foto: null,
   });
@@ -91,7 +91,7 @@ const GestionDocentes = () => {
     const docenteData = {
       nombre: nuevoDocente.nombre,
       correo: nuevoDocente.email,
-      titulo: nuevoDocente.titulo,
+      titulo: nuevoDocente.titulo, 
       frase: nuevoDocente.frase,
       ruta: rutaFoto,
     };
@@ -178,8 +178,8 @@ const GestionDocentes = () => {
                 onChange={(e) => setNuevoDocente({ ...nuevoDocente, titulo: e.target.value })}
               >
                 <option value="">Selecciona un título</option>
-                {titulos.map((titulo, index) => (
-                  <option key={index} value={titulo}>{titulo}</option>
+                {titulos.map((titulo) => (
+                  <option key={titulo.id} value={titulo.id}>{titulo.nombre}</option>
                 ))}
               </Form.Control>
             </Form.Group>
