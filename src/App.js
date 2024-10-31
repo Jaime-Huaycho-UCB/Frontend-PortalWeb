@@ -22,6 +22,8 @@ import GestionEventos from './paginas/Administrador/GestionEventos';
 import { AuthContext, AuthProvider } from './contextos/ContextoAutenticacion';
 import CrearUsuarioSuperior from './paginas/Administrador/CrearUsuarioSuperior';
 import './estilos/layouts/global.css';
+import Inicio from './componentes/Inicio';
+
 
 const RutaProtegida = ({ children, rolesPermitidos }) => {
   const { permiso } = useContext(AuthContext);
@@ -55,7 +57,8 @@ function App() {
                     <Route path="/noticias" element={<ListaNoticias />} />
                     <Route path="/carrera" element={<PaginaCarrera />} />
                     <Route path="/autoridades" element={<PaginaAutoridades />} />
-                    <Route path="/" element={<h2>Bienvenido al Portal</h2>} />
+                    <Route path="/" element={<Inicio />} />
+
 
                     {/* Rutas protegidas */}
                     <Route path="/admin" element={
