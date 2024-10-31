@@ -1,11 +1,9 @@
-// src/components/GestionDocentes.js
 import React, { useState, useEffect } from 'react';
 import { Button, Modal, Card, Row, Col, Form } from 'react-bootstrap';
 import { obtenerDocentes, agregarDocente, actualizarDocente, eliminarDocente, obtenerTitulos } from '../librerias/PeticionesApi';
 import '../../estilos/AdministradorEstilos/GestionDocentes.css';
 
 const GestionDocentes = () => {
-  const BASE_URL = 'http://localhost:8000'; 
   const [docentes, setDocentes] = useState([]);
   const [titulos, setTitulos] = useState([]);
   const [show, setShow] = useState(false);
@@ -25,14 +23,14 @@ const GestionDocentes = () => {
     const idUsuario = '';  
     const token = '';      
 
-    obtenerDocentes(BASE_URL, idUsuario, token).then((data) => {
+    obtenerDocentes(idUsuario, token).then((data) => {
       if (data.salida) setDocentes(data.docentes);
     }).catch(console.error);
 
-    obtenerTitulos(BASE_URL).then((titulos) => {
+    obtenerTitulos().then((titulos) => {
       setTitulos(titulos);
     }).catch(console.error);
-  }, [BASE_URL]);
+  }, []);
 
   const handleClose = () => {
     setShow(false);
@@ -47,8 +45,8 @@ const GestionDocentes = () => {
     const docenteData = { ...nuevoDocente, ruta: rutaFoto };
 
     try {
-      await agregarDocente(BASE_URL, docenteData);
-      obtenerDocentes(BASE_URL).then((data) => setDocentes(data.docentes));
+      await agregarDocente(docenteData);
+      obtenerDocentes().then((data) => setDocentes(data.docentes));
       handleClose();
     } catch (error) {
       console.error(error);
@@ -62,8 +60,8 @@ const GestionDocentes = () => {
 
   const confirmarEliminacion = async () => {
     try {
-      await eliminarDocente(BASE_URL, docenteIdEliminar);
-      obtenerDocentes(BASE_URL).then((data) => setDocentes(data.docentes));
+      await eliminarDocente(docenteIdEliminar);
+      obtenerDocentes().then((data) => setDocentes(data.docentes));
       setShowEliminarModal(false);
       setDocenteIdEliminar(null);
     } catch (error) {
@@ -95,8 +93,8 @@ const GestionDocentes = () => {
     };
 
     try {
-      await actualizarDocente(BASE_URL, docenteIdActualizar, docenteData);
-      obtenerDocentes(BASE_URL).then((data) => setDocentes(data.docentes));
+      await actualizarDocente(docenteIdActualizar, docenteData);
+      obtenerDocentes().then((data) => setDocentes(data.docentes));
       handleClose();
     } catch (error) {
       console.error(error);

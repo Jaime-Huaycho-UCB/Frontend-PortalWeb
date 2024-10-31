@@ -1,18 +1,18 @@
-
+// src/librerias/PeticionesApi.js
 import axios from 'axios';
 
+const BASE_URL = 'http://localhost:8000';  // Puedes actualizar esta URL cuando lo necesites
+
 const instance = axios.create({
+  baseURL: BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-export const obtenerDocentes = async (baseURL, idUsuario, token) => {
+export const obtenerDocentes = async (idUsuario, token) => {
   try {
-    const response = await instance.post(`${baseURL}/docente/obtener`, {
-      idUsuario,
-      token,
-    });
+    const response = await instance.post('/docente/obtener', { idUsuario, token });
     return response.data;
   } catch (error) {
     console.error("Error al obtener docentes:", error);
@@ -20,9 +20,9 @@ export const obtenerDocentes = async (baseURL, idUsuario, token) => {
   }
 };
 
-export const agregarDocente = async (baseURL, docenteData) => {
+export const agregarDocente = async (docenteData) => {
   try {
-    const response = await instance.post(`${baseURL}/docente/agregar`, docenteData);
+    const response = await instance.post('/docente/agregar', docenteData);
     return response.data;
   } catch (error) {
     console.error("Error al agregar docente:", error);
@@ -30,12 +30,9 @@ export const agregarDocente = async (baseURL, docenteData) => {
   }
 };
 
-export const actualizarDocente = async (baseURL, id, docenteData) => {
+export const actualizarDocente = async (id, docenteData) => {
   try {
-    const response = await instance.put(`${baseURL}/docente/actualizar`, {
-      id,
-      ...docenteData,
-    });
+    const response = await instance.put('/docente/actualizar', { id, ...docenteData });
     return response.data;
   } catch (error) {
     console.error("Error al actualizar docente:", error);
@@ -43,11 +40,9 @@ export const actualizarDocente = async (baseURL, id, docenteData) => {
   }
 };
 
-export const eliminarDocente = async (baseURL, id) => {
+export const eliminarDocente = async (id) => {
   try {
-    const response = await instance.put(`${baseURL}/docente/eliminar`, {
-      docente: id,
-    });
+    const response = await instance.put('/docente/eliminar', { docente: id });
     return response.data;
   } catch (error) {
     console.error("Error al eliminar docente:", error);
@@ -55,9 +50,9 @@ export const eliminarDocente = async (baseURL, id) => {
   }
 };
 
-export const obtenerTitulos = async (baseURL) => {
+export const obtenerTitulos = async () => {
   try {
-    const response = await instance.get(`${baseURL}/titulo/obtener`);
+    const response = await instance.get('/titulo/obtener');
     return response.data.titulos;
   } catch (error) {
     console.error("Error al obtener títulos:", error);
