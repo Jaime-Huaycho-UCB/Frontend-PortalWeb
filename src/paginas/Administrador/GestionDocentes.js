@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Modal, Card, Row, Col, Form } from 'react-bootstrap';
-import { obtenerDocentes, agregarDocente, actualizarDocente, eliminarDocente, obtenerTitulos } from 'src/librerias/PeticionesApi';
+import { obtenerDocentes, agregarDocente, actualizarDocente, eliminarDocente, obtenerTitulos } from '../librerias/PeticionesApi';
 import '../../estilos/AdministradorEstilos/GestionDocentes.css';
 
 const GestionDocentes = () => {
