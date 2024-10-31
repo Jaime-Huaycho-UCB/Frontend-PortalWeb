@@ -231,4 +231,3 @@ const GestionDocentes = () => {
 };
 
 export default GestionDocentes;
-quiero que haya un interuptor de que si quiere actualizar o consevar la foto
