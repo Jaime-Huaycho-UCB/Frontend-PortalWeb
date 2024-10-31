@@ -22,20 +22,20 @@ const CrearUsuarioSuperior = () => {
     };
 
     const cargarUsuarios = async () => {
-      const idUsuario="";
-      const token="";
+      const idUsuario = "";
+      const token = "";
       try {
         const usuariosData = await obtenerUsuarios(idUsuario, token);
-        if(usuariosData.salida){
-        setUsuarios(usuariosData.usuarios );
-        }else{
+        if (usuariosData.salida) {
+          setUsuarios(usuariosData.usuarios); 
+        } else {
           console.log(usuariosData.mensaje);
         }
-
       } catch (error) {
         console.error("Error al cargar usuarios:", error);
       }
     };
+    
 
     cargarDocentes();
     cargarUsuarios();
@@ -144,13 +144,14 @@ const CrearUsuarioSuperior = () => {
             </tr>
           </thead>
           <tbody>
-            {Array.isArray(usuarios) && usuarios.map((Usuarios) => (
-              <tr key={usuarios.id}>
-                <td>{usuarios.nombre}</td>  
-                <td>{usuarios.correo}</td>           
-              </tr>
-            ))}
-          </tbody>
+              {Array.isArray(usuarios) && usuarios.map((usuario) => (
+                <tr key={usuario.id}>
+                  <td>{usuario.nombre}</td>
+                  <td>{usuario.correo}</td>
+                </tr>
+              ))}
+            </tbody>
+
 
         </Table>
       </div>
