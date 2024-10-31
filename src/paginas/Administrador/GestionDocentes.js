@@ -163,11 +163,11 @@ const GestionDocentes = () => {
               />
             </Form.Group>
             <Form.Group className="mb-3">
-              <Form.Label>Email</Form.Label>
+              <Form.Label>correo</Form.Label>
               <Form.Control
                 type="email"
-                value={nuevoDocente.email}
-                onChange={(e) => setNuevoDocente({ ...nuevoDocente, email: e.target.value })}
+                value={nuevoDocente.correo}
+                onChange={(e) => setNuevoDocente({ ...nuevoDocente, correo: e.target.value })}
               />
             </Form.Group>
             <Form.Group className="mb-3">
@@ -231,3 +231,4 @@ const GestionDocentes = () => {
 };
 
 export default GestionDocentes;
+quiero que haya un interuptor de que si quiere actualizar o consevar la foto
