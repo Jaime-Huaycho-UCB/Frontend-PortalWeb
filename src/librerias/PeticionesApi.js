@@ -20,6 +20,17 @@ export const obtenerDocentes = async (idUsuario, token) => {
   }
 };
 
+export const obtenerDocentesTodo = async (idUsuario, token) => {
+    try {
+      const response = await instance.post('/docente/obtener/todo', { idUsuario, token });
+      return response.data;
+    } catch (error) {
+      console.error("Error al obtener docentes:", error);
+      throw error;
+    }
+  };
+  
+
 export const agregarDocente = async (docenteData) => {
   try {
     const response = await instance.post('/docente/agregar', docenteData);

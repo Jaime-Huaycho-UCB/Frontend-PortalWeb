@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Modal, Card, Row, Col, Form } from 'react-bootstrap';
-import { obtenerDocentes, agregarDocente, actualizarDocente, eliminarDocente, obtenerTitulos } from '../../librerias/PeticionesApi';
+import { obtenerDocentes, agregarDocente, actualizarDocente, eliminarDocente, obtenerTitulos, obtenerDocentesTodo } from '../../librerias/PeticionesApi';
 import '../../estilos/AdministradorEstilos/GestionDocentes.css';
 
 const GestionDocentes = () => {
@@ -23,7 +23,7 @@ const GestionDocentes = () => {
     const idUsuario = '';  
     const token = '';      
 
-    obtenerDocentes(idUsuario, token)
+    obtenerDocentesTodo(idUsuario, token)
       .then((data) => {
         if (data.salida) setDocentes(data.docentes);
       })
