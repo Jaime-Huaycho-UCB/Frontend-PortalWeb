@@ -1,11 +1,13 @@
+// src/components/GestionDocentes.js
 import React, { useState, useEffect } from 'react';
 import { Button, Modal, Card, Row, Col, Form } from 'react-bootstrap';
-import axios from 'axios';
+import { obtenerDocentes, agregarDocente, actualizarDocente, eliminarDocente, obtenerTitulos } from '../librerias/PeticionesApi';
 import '../../estilos/AdministradorEstilos/GestionDocentes.css';
 
 const GestionDocentes = () => {
+  const BASE_URL = 'http://localhost:8000'; 
   const [docentes, setDocentes] = useState([]);
-  const [titulos, setTitulos] = useState([]); // Estado para almacenar los títulos disponibles
+  const [titulos, setTitulos] = useState([]);
   const [show, setShow] = useState(false);
   const [showEliminarModal, setShowEliminarModal] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
@@ -14,42 +16,23 @@ const GestionDocentes = () => {
   const [nuevoDocente, setNuevoDocente] = useState({
     nombre: '',
     email: '',
-    titulo: '',  // Almacena el ID del título seleccionado
+    titulo: '',
     frase: '',
     foto: null,
   });
 
-  const obtenerDocentes = async () => {
+  useEffect(() => {
     const idUsuario = '';  
     const token = '';      
-    try {
-      const response = await axios.post('http://localhost:8000/docente/obtener', {
-        idUsuario,
-        token,
-      });
-      if (response.data.salida) {
-        setDocentes(response.data.docentes);
-      } else {
-        console.error("Error: salida es false en la respuesta.");
-      }
-    } catch (error) {
-      console.error("Error al obtener los docentes:", error);
-    }
-  };
 
-  const obtenerTitulos = async () => {
-    try {
-      const response = await axios.get('http://localhost:8000/titulo/obtener'); 
-      setTitulos(response.data.titulos); // Asumimos que `response.data.titulos` es un array de objetos { id, nombre }
-    } catch (error) {
-      console.error("Error al obtener los títulos:", error);
-    }
-  };
+    obtenerDocentes(BASE_URL, idUsuario, token).then((data) => {
+      if (data.salida) setDocentes(data.docentes);
+    }).catch(console.error);
 
-  useEffect(() => {
-    obtenerDocentes();
-    obtenerTitulos(); 
-  }, []);
+    obtenerTitulos(BASE_URL).then((titulos) => {
+      setTitulos(titulos);
+    }).catch(console.error);
+  }, [BASE_URL]);
 
   const handleClose = () => {
     setShow(false);
@@ -59,67 +42,64 @@ const GestionDocentes = () => {
 
   const handleShow = () => setShow(true);
 
-  const agregarDocente = async () => {
+  const agregarNuevoDocente = async () => {
     const rutaFoto = nuevoDocente.foto ? `docentes/${nuevoDocente.foto.name}` : '';
+    const docenteData = { ...nuevoDocente, ruta: rutaFoto };
 
     try {
-      const response = await axios.post('http://localhost:8000/docente/agregar', {
-        nombre: nuevoDocente.nombre,
-        correo: nuevoDocente.email,
-        titulo: nuevoDocente.titulo,  // Enviamos el ID del título
-        frase: nuevoDocente.frase,
-        ruta: rutaFoto,
-      });
-
-      obtenerDocentes(); 
+      await agregarDocente(BASE_URL, docenteData);
+      obtenerDocentes(BASE_URL).then((data) => setDocentes(data.docentes));
       handleClose();
     } catch (error) {
-      console.error("Error al agregar docente:", error);
+      console.error(error);
     }
   };
 
   const iniciarEliminacion = (id) => {
-    setDocenteIdEliminar(id); 
-    setShowEliminarModal(true); 
+    setDocenteIdEliminar(id);
+    setShowEliminarModal(true);
   };
 
   const confirmarEliminacion = async () => {
     try {
-      await axios.put('http://localhost:8000/docente/eliminar', {
-        docente: docenteIdEliminar
-      });
-      obtenerDocentes(); 
-      setShowEliminarModal(false); 
-      setDocenteIdEliminar(null); 
+      await eliminarDocente(BASE_URL, docenteIdEliminar);
+      obtenerDocentes(BASE_URL).then((data) => setDocentes(data.docentes));
+      setShowEliminarModal(false);
+      setDocenteIdEliminar(null);
     } catch (error) {
-      console.error("Error al eliminar docente:", error);
+      console.error(error);
     }
   };
 
   const iniciarActualizacion = (docente) => {
     setIsUpdating(true);
     setDocenteIdActualizar(docente.id);
-    setNuevoDocente({ nombre: docente.nombre, email: docente.correo, titulo: docente.titulo, frase: docente.frase, foto: docente.foto });
+    setNuevoDocente({
+      nombre: docente.nombre,
+      email: docente.correo,
+      titulo: docente.titulo,
+      frase: docente.frase,
+      foto: docente.foto,
+    });
     handleShow();
   };
 
-  const actualizarDocente = async () => {
+  const actualizarDocenteExistente = async () => {
     const rutaFoto = nuevoDocente.foto ? `docentes/${nuevoDocente.foto.name}` : '';
-    
+    const docenteData = {
+      nombre: nuevoDocente.nombre,
+      correo: nuevoDocente.email,
+      titulo: nuevoDocente.titulo,
+      frase: nuevoDocente.frase,
+      ruta: rutaFoto,
+    };
+
     try {
-      await axios.put('http://localhost:8000/docente/actualizar', {
-        id: docenteIdActualizar,
-        nombre: nuevoDocente.nombre,
-        correo: nuevoDocente.email,
-        titulo: nuevoDocente.titulo,
-        frase: nuevoDocente.frase,
-        ruta: rutaFoto,
-      });
-  
-      obtenerDocentes(); 
+      await actualizarDocente(BASE_URL, docenteIdActualizar, docenteData);
+      obtenerDocentes(BASE_URL).then((data) => setDocentes(data.docentes));
       handleClose();
     } catch (error) {
-      console.error("Error al actualizar docente:", error);
+      console.error(error);
     }
   };
 
@@ -195,8 +175,8 @@ const GestionDocentes = () => {
                 onChange={(e) => setNuevoDocente({ ...nuevoDocente, titulo: e.target.value })}
               >
                 <option value="">Selecciona un título</option>
-                {titulos.map((titulo) => (
-                  <option key={titulo.id} value={titulo.id}>{titulo.nombre}</option>
+                {titulos.map((titulo, index) => (
+                  <option key={index} value={titulo}>{titulo}</option>
                 ))}
               </Form.Control>
             </Form.Group>
@@ -223,7 +203,7 @@ const GestionDocentes = () => {
           <Button variant="secondary" onClick={handleClose}>
             Cancelar
           </Button>
-          <Button className="add-docente-btn" onClick={isUpdating ? actualizarDocente : agregarDocente}>
+          <Button className="add-docente-btn" onClick={isUpdating ? actualizarDocenteExistente : agregarNuevoDocente}>
             {isUpdating ? 'Actualizar' : 'Agregar'}
           </Button>
         </Modal.Footer>
