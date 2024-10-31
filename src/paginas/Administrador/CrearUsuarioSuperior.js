@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Container, Row, Col, Card, Button, Modal, Form, Alert, Table } from 'react-bootstrap';
 import { obtenerDocentes, crearUsuario } from '../../librerias/PeticionesApi';
 import '../../estilos/AdministradorEstilos/CrearUsuarioSuperior.css';
 
@@ -50,103 +51,91 @@ const CrearUsuarioSuperior = () => {
   };
 
   return (
-    <div className="container my-5">
+    <Container className="my-5">
       <h2 className="text-center mb-4">Crear Usuario Superior</h2>
 
-      {mensaje && <div className="alert alert-info">{mensaje}</div>}
+      {mensaje && <Alert variant="info">{mensaje}</Alert>}
 
       <div className="mb-5">
         <h4>Selecciona un Docente</h4>
-        <div className="row">
+        <Row>
           {docentes.map((docente) => (
-            <div className="col-md-4 mb-3" key={docente.id}>
-              <div className="card h-100">
-                <div className="card-body">
-                  <h5 className="card-title">{docente.nombre}</h5>
-                  <p className="card-text text-muted">{docente.correo}</p>
-                  <p className="card-text"><small>ID: {docente.id}</small></p>
-                </div>
-                <div className="card-footer">
-                  <button 
-                    className="btn btn-outline-primary w-100" 
+            <Col md={4} className="mb-3" key={docente.id}>
+              <Card className="h-100">
+                <Card.Body>
+                  <Card.Title>{docente.nombre}</Card.Title>
+                  <Card.Text className="text-muted">{docente.correo}</Card.Text>
+                  <Card.Text><small>ID: {docente.id}</small></Card.Text>
+                </Card.Body>
+                <Card.Footer>
+                  <Button 
+                    variant="outline-primary" 
                     onClick={() => manejarSeleccionDocente(docente)}
+                    className="w-100"
                   >
                     Crear Usuario
-                  </button>
-                </div>
-              </div>
-            </div>
+                  </Button>
+                </Card.Footer>
+              </Card>
+            </Col>
           ))}
-        </div>
+        </Row>
       </div>
 
       {/* Modal para crear usuario */}
-      {openDialog && (
-        <div className="modal show d-block" tabIndex="-1" role="dialog">
-          <div className="modal-dialog" role="document">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Crear Usuario para {docenteSeleccionado?.nombre}</h5>
-                <button type="button" className="close" onClick={() => setOpenDialog(false)}>
-                  <span>&times;</span>
-                </button>
-              </div>
-              <form onSubmit={manejarEnvio}>
-                <div className="modal-body">
-                  <div className="form-group">
-                    <label>Email</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      value={docenteSeleccionado?.correo || ''}
-                      readOnly
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Contraseña</label>
-                    <input
-                      type="password"
-                      className="form-control"
-                      placeholder="Ingresa una contraseña"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                    />
-                  </div>
-                </div>
-                <div className="modal-footer">
-                  <button type="button" className="btn btn-secondary" onClick={() => setOpenDialog(false)}>Cancelar</button>
-                  <button type="submit" className="btn btn-primary">Crear Usuario</button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-      )}
+      <Modal show={openDialog} onHide={() => setOpenDialog(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Crear Usuario para {docenteSeleccionado?.nombre}</Modal.Title>
+        </Modal.Header>
+        <Form onSubmit={manejarEnvio}>
+          <Modal.Body>
+            <Form.Group className="mb-3">
+              <Form.Label>Email</Form.Label>
+              <Form.Control
+                type="text"
+                value={docenteSeleccionado?.correo || ''}
+                readOnly
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Contraseña</Form.Label>
+              <Form.Control
+                type="password"
+                placeholder="Ingresa una contraseña"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </Form.Group>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={() => setOpenDialog(false)}>Cancelar</Button>
+            <Button type="submit" variant="primary">Crear Usuario</Button>
+          </Modal.Footer>
+        </Form>
+      </Modal>
 
       <div className="mt-5">
         <h4>Usuarios Creados</h4>
-        <div className="table-responsive">
-          <table className="table table-bordered">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Nombre</th>
-                <th>Email</th>
+        <Table striped bordered hover responsive>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Email</th>
+            </tr>
+          </thead>
+          <tbody>
+            {usuarios.map((usuario) => (
+              <tr key={usuario.id}>
+                <td>{usuario.id}</td>
+                <td>{usuario.nombre}</td>
+                <td>{usuario.correo}</td>
               </tr>
-            </thead>
-            <tbody>
-              {usuarios.map((usuario) => (
-                <tr key={usuario.id}>
-                  <td>{usuario.id}</td>
-                  <td>{usuario.nombre}</td>
-                  <td>{usuario.correo}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+            ))}
+          </tbody>
+        </Table>
       </div>
-    </div>
+    </Container>
   );
 };
 
