@@ -15,7 +15,7 @@ const CrearUsuarioSuperior = () => {
     const cargarDocentes = async () => {
       try {
         const data = await obtenerDocentes();
-        if (data.salida) setDocentes(data.docentes);
+        setDocentes(data?.docentes || []); // Asegura que docentes siempre sea un array
       } catch (error) {
         console.error("Error al cargar docentes:", error);
       }
@@ -23,15 +23,15 @@ const CrearUsuarioSuperior = () => {
 
     const cargarUsuarios = async () => {
       try {
-        const usuariosData = await obtenerUsuarios(); 
-        setUsuarios(usuariosData);
+        const usuariosData = await obtenerUsuarios();
+        setUsuarios(usuariosData || []); // Asegura que usuarios siempre sea un array
       } catch (error) {
         console.error("Error al cargar usuarios:", error);
       }
     };
 
     cargarDocentes();
-    cargarUsuarios(); // Llamada para cargar los usuarios al inicio
+    cargarUsuarios();
   }, []);
 
   const manejarSeleccionDocente = (docente) => {
@@ -48,7 +48,6 @@ const CrearUsuarioSuperior = () => {
         setUsuarios((prev) => [...prev, nuevoUsuario]);
         setMensaje(`Usuario para ${docenteSeleccionado.nombre} creado exitosamente.`);
         
-        // Filtrar el docente ya seleccionado para que no aparezca en la lista
         setDocentes((prev) => prev.filter((docente) => docente.id !== docenteSeleccionado.id));
 
         setDocenteSeleccionado(null);
@@ -61,6 +60,9 @@ const CrearUsuarioSuperior = () => {
     } else {
       setMensaje('Por favor selecciona un docente y completa la contraseña.');
     }
+
+    // Oculta el mensaje después de unos segundos
+    setTimeout(() => setMensaje(null), 3000);
   };
 
   return (
@@ -72,7 +74,7 @@ const CrearUsuarioSuperior = () => {
       <div className="mb-5">
         <h4>Selecciona un Docente</h4>
         <Row>
-          {docentes.map((docente) => (
+          {Array.isArray(docentes) && docentes.map((docente) => (
             <Col md={4} className="mb-3" key={docente.id}>
               <Card className="h-100">
                 <Card.Body>
@@ -135,7 +137,7 @@ const CrearUsuarioSuperior = () => {
             </tr>
           </thead>
           <tbody>
-            {usuarios.map((usuario) => (
+            {Array.isArray(usuarios) && usuarios.map((usuario) => (
               <tr key={usuario.id}>
                 <td>{usuario.nombre}</td>
                 <td>{usuario.correo}</td>
