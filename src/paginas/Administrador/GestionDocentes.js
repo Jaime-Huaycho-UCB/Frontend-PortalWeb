@@ -14,10 +14,11 @@ const GestionDocentes = () => {
   const [nuevoDocente, setNuevoDocente] = useState({
     nombre: '',
     email: '',
-    titulo: '', 
+    titulo: '',
     frase: '',
     foto: null,
   });
+  const [actualizarFoto, setActualizarFoto] = useState(false);
 
   useEffect(() => {
     const idUsuario = '';  
@@ -39,6 +40,7 @@ const GestionDocentes = () => {
   const handleClose = () => {
     setShow(false);
     setIsUpdating(false);
+    setActualizarFoto(false);
     setNuevoDocente({ nombre: '', email: '', titulo: '', frase: '', foto: null });
   };
 
@@ -83,15 +85,16 @@ const GestionDocentes = () => {
       frase: docente.frase,
       foto: docente.foto,
     });
+    setActualizarFoto(false);
     handleShow();
   };
 
   const actualizarDocenteExistente = async () => {
-    const rutaFoto = nuevoDocente.foto ? `docentes/${nuevoDocente.foto.name}` : '';
+    const rutaFoto = actualizarFoto && nuevoDocente.foto ? `docentes/${nuevoDocente.foto.name}` : nuevoDocente.foto;
     const docenteData = {
       nombre: nuevoDocente.nombre,
       correo: nuevoDocente.email,
-      titulo: nuevoDocente.titulo, 
+      titulo: nuevoDocente.titulo,
       frase: nuevoDocente.frase,
       ruta: rutaFoto,
     };
@@ -191,15 +194,27 @@ const GestionDocentes = () => {
                 onChange={(e) => setNuevoDocente({ ...nuevoDocente, frase: e.target.value })}
               />
             </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>Foto del Docente</Form.Label>
-              <Form.Control type="file" accept="image/*" onChange={manejarCambioFoto} />
-              {nuevoDocente.foto && (
-                <div className="vista-previa">
-                  <img src={nuevoDocente.foto} alt="Vista previa" className="foto-previa" />
-                </div>
-              )}
-            </Form.Group>
+            {isUpdating && (
+              <Form.Group className="mb-3">
+                <Form.Check
+                  type="switch"
+                  label="Actualizar Foto"
+                  checked={actualizarFoto}
+                  onChange={() => setActualizarFoto(!actualizarFoto)}
+                />
+              </Form.Group>
+            )}
+            {(!isUpdating || actualizarFoto) && (
+              <Form.Group className="mb-3">
+                <Form.Label>Foto del Docente</Form.Label>
+                <Form.Control type="file" accept="image/*" onChange={manejarCambioFoto} />
+                {nuevoDocente.foto && (
+                  <div className="vista-previa">
+                    <img src={nuevoDocente.foto} alt="Vista previa" className="foto-previa" />
+                  </div>
+                )}
+              </Form.Group>
+            )}
           </Form>
         </Modal.Body>
         <Modal.Footer>
