@@ -1,29 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Button, Modal } from 'react-bootstrap';
+import { obtenerDocentes } from '../../librerias/PeticionesApi';
 import '../../estilos/paginas/ListaDocentes.css';
 
-const docentesData = [
-  {
-    id: 1,
-    nombre: 'Pachequito',
-    departamento: 'Ingenieria',
-    email: 'pachquitoperez@example.com',
-    imagen: 'https://sesameworkshop.org/wp-content/uploads/2023/03/presskit_ss_bio_elmo-560x420.png',
-    bio: 'pacheuqito es profesor de siostemas con 10 años de experiencia en la enseñanza.',
-  },
-  {
-    id: 2,
-    nombre: 'la chavez',
-    departamento: 'matematica',
-    email: 'la.chavez@example.com',
-    imagen: 'https://sesameworkshop.org/wp-content/uploads/2023/03/presskit_ss_bio_elmo-560x420.png',
-    bio: 'la chavez es doctora en matematica  y tiene más de 15 años en la investigación científica.',
-  },
-];
-
 const ListaDocentes = () => {
+  const [docentes, setDocentes] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedDocente, setSelectedDocente] = useState(null);
+
+  useEffect(() => {
+    const idUsuario = '';  
+    const token = '';      
+
+    const cargarDocentes = async () => {
+      try {
+        const data = await obtenerDocentes(idUsuario, token); 
+        if (data.salida) {
+          setDocentes(data.docentes);
+        }
+      } catch (error) {
+        console.error("Error al cargar docentes:", error);
+      }
+    };
+
+    cargarDocentes();
+  }, []);
 
   const handleShowModal = (docente) => {
     setSelectedDocente(docente);
@@ -37,12 +38,17 @@ const ListaDocentes = () => {
 
   return (
     <Container className="mt-4">
-      <h2 className="titulo">Galeria De Docentes</h2>
+      <h2 className="titulo">Galería de Docentes</h2>
       <Row>
-        {docentesData.map((docente) => (
+        {docentes.map((docente) => (
           <Col key={docente.id} sm={12} md={6} lg={4} className="mb-4">
-            <Card className="card-docente" onClick={() => handleShowModal(docente)}>
-              <Card.Img variant="top" src={docente.imagen} className="foto-docente" />
+            <Card className="card-docente">
+              <Card.Img
+                variant="top"
+                src={docente.imagen || '/ruta/a/imagen-placeholder.jpg'}
+                className="foto-docente"
+                onClick={() => handleShowModal(docente)}
+              />
               <Card.Body>
                 <Card.Title>{docente.nombre}</Card.Title>
                 <Card.Text>{docente.departamento}</Card.Text>
@@ -61,7 +67,7 @@ const ListaDocentes = () => {
         </Modal.Header>
         <Modal.Body>
           <p><strong>Departamento:</strong> {selectedDocente?.departamento}</p>
-          <p><strong>Email:</strong> {selectedDocente?.email}</p>
+          <p><strong>Email:</strong> {selectedDocente?.correo}</p>
           <p><strong>Biografía:</strong> {selectedDocente?.bio}</p>
           <img src={selectedDocente?.imagen} alt={selectedDocente?.nombre} className="img-fluid" />
         </Modal.Body>

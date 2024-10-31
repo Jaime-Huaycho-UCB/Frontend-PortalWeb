@@ -59,3 +59,15 @@ export const obtenerTitulos = async () => {
     throw error;
   }
 };
+export const crearUsuario = async (idDocente, password) => {
+    try {
+      const response = await axios.post(`${BASE_URL}/usuario/crear`, {
+        idDocente,
+        password,
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error al crear usuario:", error);
+      throw error;
+    }
+  };

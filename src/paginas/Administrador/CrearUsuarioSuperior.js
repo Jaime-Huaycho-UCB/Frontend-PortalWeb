@@ -1,20 +1,20 @@
-// src/paginas/Administrador/CrearUsuarioSuperior.js
 import React, { useState, useEffect } from 'react';
-import { Form, Button, Container, Alert } from 'react-bootstrap';
-import { obtenerDocentes } from '../../librerias/PeticionesApi';
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Alert, Typography, Card, CardContent, CardActions, Grid, Container, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
+import { obtenerDocentes, crearUsuario } from '../../librerias/PeticionesApi';
 import '../../estilos/AdministradorEstilos/CrearUsuarioSuperior.css';
 
 const CrearUsuarioSuperior = () => {
-  const BASE_URL = 'http://localhost:8000'; // Asegúrate de tener definida la URL base
   const [docentes, setDocentes] = useState([]);
+  const [usuarios, setUsuarios] = useState([]);
   const [docenteSeleccionado, setDocenteSeleccionado] = useState(null);
   const [password, setPassword] = useState('');
   const [mensaje, setMensaje] = useState(null);
+  const [openDialog, setOpenDialog] = useState(false);
 
   useEffect(() => {
     const cargarDocentes = async () => {
       try {
-        const data = await obtenerDocentes(BASE_URL, '', '');
+        const data = await obtenerDocentes();
         if (data.salida) setDocentes(data.docentes);
       } catch (error) {
         console.error("Error al cargar docentes:", error);
@@ -22,21 +22,29 @@ const CrearUsuarioSuperior = () => {
     };
 
     cargarDocentes();
-  }, [BASE_URL]);
+  }, []);
 
-  const manejarSeleccionDocente = (e) => {
-    const idDocente = e.target.value;
-    const docente = docentes.find(d => d.id === parseInt(idDocente, 10));
+  const manejarSeleccionDocente = (docente) => {
     setDocenteSeleccionado(docente);
+    setOpenDialog(true);
   };
 
-  const manejarEnvio = (e) => {
+  const manejarEnvio = async (e) => {
     e.preventDefault();
     if (docenteSeleccionado && password) {
-      // Enviar los datos para crear el usuario (aquí agregarías la lógica de la API para crear usuario)
-      setMensaje(`Usuario para ${docenteSeleccionado.nombre} creado exitosamente.`);
-      setDocenteSeleccionado(null);
-      setPassword('');
+      try {
+        const nuevoUsuario = await crearUsuario(docenteSeleccionado.id, password);
+        
+        setUsuarios((prev) => [...prev, nuevoUsuario]);
+        setMensaje(`Usuario para ${docenteSeleccionado.nombre} creado exitosamente.`);
+        
+        setDocenteSeleccionado(null);
+        setPassword('');
+        setOpenDialog(false);
+      } catch (error) {
+        console.error("Error al crear usuario:", error);
+        setMensaje('Error al crear el usuario. Inténtalo nuevamente.');
+      }
     } else {
       setMensaje('Por favor selecciona un docente y completa la contraseña.');
     }
@@ -44,58 +52,81 @@ const CrearUsuarioSuperior = () => {
 
   return (
     <Container className="crear-usuario-superior-container">
-      <h2 className="titulo">Crear Usuario Superior</h2>
-      {mensaje && <Alert variant="info">{mensaje}</Alert>}
-      <Form onSubmit={manejarEnvio}>
+      <Typography variant="h4" className="titulo" gutterBottom>Crear Usuario Superior</Typography>
 
-        <Form.Group controlId="formDocente" className="mb-3">
-          <Form.Label>Selecciona un Docente</Form.Label>
-          <Form.Control as="select" onChange={manejarSeleccionDocente} value={docenteSeleccionado ? docenteSeleccionado.id : ''}>
-            <option value="">Selecciona un docente</option>
-            {docentes.map((docente) => (
-              <option key={docente.id} value={docente.id}>
-                {docente.nombre} ({docente.email})
-              </option>
-            ))}
-          </Form.Control>
-        </Form.Group>
+      {mensaje && <Alert severity="info">{mensaje}</Alert>}
 
-        {docenteSeleccionado && (
-          <>
-            <Form.Group controlId="formNombre" className="mb-3">
-              <Form.Label>Nombre</Form.Label>
-              <Form.Control
-                type="text"
-                value={docenteSeleccionado.nombre}
-                readOnly
-              />
-            </Form.Group>
+      <Box mt={3} mb={5}>
+        <Typography variant="h6">Selecciona un Docente</Typography>
+        <Grid container spacing={3}>
+          {docentes.map((docente) => (
+            <Grid item xs={12} sm={6} md={4} key={docente.id}>
+              <Card>
+                <CardContent>
+                  <Typography variant="h6">{docente.nombre}</Typography>
+                  <Typography color="textSecondary">{docente.correo}</Typography>
+                  <Typography variant="body2" color="textSecondary">ID: {docente.id}</Typography>
+                </CardContent>
+                <CardActions>
+                  <Button variant="outlined" color="primary" onClick={() => manejarSeleccionDocente(docente)}>
+                    Crear Usuario
+                  </Button>
+                </CardActions>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      </Box>
 
-            <Form.Group controlId="formEmail" className="mb-3">
-              <Form.Label>Email</Form.Label>
-              <Form.Control
-                type="email"
-                value={docenteSeleccionado.correo}
-                readOnly
-              />
-            </Form.Group>
-          </>
-        )}
-
-        <Form.Group controlId="formPassword" className="mb-3">
-          <Form.Label>Contraseña</Form.Label>
-          <Form.Control
+      <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
+        <DialogTitle>Crear Usuario para {docenteSeleccionado?.nombre}</DialogTitle>
+        <DialogContent>
+          <TextField
+            label="Email"
+            value={docenteSeleccionado?.correo || ''}
+            fullWidth
+            margin="dense"
+            InputProps={{ readOnly: true }}
+          />
+          <TextField
+            label="Contraseña"
             type="password"
             placeholder="Ingresa una contraseña"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            fullWidth
+            margin="dense"
           />
-        </Form.Group>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenDialog(false)} color="secondary">Cancelar</Button>
+          <Button onClick={manejarEnvio} color="primary" variant="contained">Crear Usuario</Button>
+        </DialogActions>
+      </Dialog>
 
-        <Button variant="primary" type="submit">
-          Crear Usuario
-        </Button>
-      </Form>
+      <Box mt={5}>
+        <Typography variant="h6" gutterBottom>Usuarios Creados</Typography>
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>ID</TableCell>
+                <TableCell>Nombre</TableCell>
+                <TableCell>Email</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {usuarios.map((usuario) => (
+                <TableRow key={usuario.id}>
+                  <TableCell>{usuario.id}</TableCell>
+                  <TableCell>{usuario.nombre}</TableCell>
+                  <TableCell>{usuario.correo}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Box>
     </Container>
   );
 };
