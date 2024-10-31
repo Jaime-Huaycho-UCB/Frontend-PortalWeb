@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Alert, Typography, Card, CardContent, CardActions, Grid, Container, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import { obtenerDocentes, crearUsuario } from '../../librerias/PeticionesApi';
 import '../../estilos/AdministradorEstilos/CrearUsuarioSuperior.css';
 
@@ -51,83 +50,103 @@ const CrearUsuarioSuperior = () => {
   };
 
   return (
-    <Container className="crear-usuario-superior-container">
-      <Typography variant="h4" className="titulo" gutterBottom>Crear Usuario Superior</Typography>
+    <div className="container my-5">
+      <h2 className="text-center mb-4">Crear Usuario Superior</h2>
 
-      {mensaje && <Alert severity="info">{mensaje}</Alert>}
+      {mensaje && <div className="alert alert-info">{mensaje}</div>}
 
-      <Box mt={3} mb={5}>
-        <Typography variant="h6">Selecciona un Docente</Typography>
-        <Grid container spacing={3}>
+      <div className="mb-5">
+        <h4>Selecciona un Docente</h4>
+        <div className="row">
           {docentes.map((docente) => (
-            <Grid item xs={12} sm={6} md={4} key={docente.id}>
-              <Card>
-                <CardContent>
-                  <Typography variant="h6">{docente.nombre}</Typography>
-                  <Typography color="textSecondary">{docente.correo}</Typography>
-                  <Typography variant="body2" color="textSecondary">ID: {docente.id}</Typography>
-                </CardContent>
-                <CardActions>
-                  <Button variant="outlined" color="primary" onClick={() => manejarSeleccionDocente(docente)}>
+            <div className="col-md-4 mb-3" key={docente.id}>
+              <div className="card h-100">
+                <div className="card-body">
+                  <h5 className="card-title">{docente.nombre}</h5>
+                  <p className="card-text text-muted">{docente.correo}</p>
+                  <p className="card-text"><small>ID: {docente.id}</small></p>
+                </div>
+                <div className="card-footer">
+                  <button 
+                    className="btn btn-outline-primary w-100" 
+                    onClick={() => manejarSeleccionDocente(docente)}
+                  >
                     Crear Usuario
-                  </Button>
-                </CardActions>
-              </Card>
-            </Grid>
+                  </button>
+                </div>
+              </div>
+            </div>
           ))}
-        </Grid>
-      </Box>
+        </div>
+      </div>
 
-      <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
-        <DialogTitle>Crear Usuario para {docenteSeleccionado?.nombre}</DialogTitle>
-        <DialogContent>
-          <TextField
-            label="Email"
-            value={docenteSeleccionado?.correo || ''}
-            fullWidth
-            margin="dense"
-            InputProps={{ readOnly: true }}
-          />
-          <TextField
-            label="Contraseña"
-            type="password"
-            placeholder="Ingresa una contraseña"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            fullWidth
-            margin="dense"
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpenDialog(false)} color="secondary">Cancelar</Button>
-          <Button onClick={manejarEnvio} color="primary" variant="contained">Crear Usuario</Button>
-        </DialogActions>
-      </Dialog>
+      {/* Modal para crear usuario */}
+      {openDialog && (
+        <div className="modal show d-block" tabIndex="-1" role="dialog">
+          <div className="modal-dialog" role="document">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Crear Usuario para {docenteSeleccionado?.nombre}</h5>
+                <button type="button" className="close" onClick={() => setOpenDialog(false)}>
+                  <span>&times;</span>
+                </button>
+              </div>
+              <form onSubmit={manejarEnvio}>
+                <div className="modal-body">
+                  <div className="form-group">
+                    <label>Email</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      value={docenteSeleccionado?.correo || ''}
+                      readOnly
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Contraseña</label>
+                    <input
+                      type="password"
+                      className="form-control"
+                      placeholder="Ingresa una contraseña"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
+                  </div>
+                </div>
+                <div className="modal-footer">
+                  <button type="button" className="btn btn-secondary" onClick={() => setOpenDialog(false)}>Cancelar</button>
+                  <button type="submit" className="btn btn-primary">Crear Usuario</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
 
-      <Box mt={5}>
-        <Typography variant="h6" gutterBottom>Usuarios Creados</Typography>
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>ID</TableCell>
-                <TableCell>Nombre</TableCell>
-                <TableCell>Email</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
+      <div className="mt-5">
+        <h4>Usuarios Creados</h4>
+        <div className="table-responsive">
+          <table className="table table-bordered">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Email</th>
+              </tr>
+            </thead>
+            <tbody>
               {usuarios.map((usuario) => (
-                <TableRow key={usuario.id}>
-                  <TableCell>{usuario.id}</TableCell>
-                  <TableCell>{usuario.nombre}</TableCell>
-                  <TableCell>{usuario.correo}</TableCell>
-                </TableRow>
+                <tr key={usuario.id}>
+                  <td>{usuario.id}</td>
+                  <td>{usuario.nombre}</td>
+                  <td>{usuario.correo}</td>
+                </tr>
               ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Box>
-    </Container>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
   );
 };
 
