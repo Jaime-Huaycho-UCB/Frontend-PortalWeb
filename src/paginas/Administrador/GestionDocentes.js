@@ -23,13 +23,17 @@ const GestionDocentes = () => {
     const idUsuario = '';  
     const token = '';      
 
-    obtenerDocentes(idUsuario, token).then((data) => {
-      if (data.salida) setDocentes(data.docentes);
-    }).catch(console.error);
+    obtenerDocentes(idUsuario, token)
+      .then((data) => {
+        if (data.salida) setDocentes(data.docentes);
+      })
+      .catch(console.error);
 
-    obtenerTitulos().then((titulos) => {
-      setTitulos(titulos);
-    }).catch(console.error);
+    obtenerTitulos()
+      .then((titulos) => {
+        setTitulos(titulos);
+      })
+      .catch(console.error);
   }, []);
 
   const handleClose = () => {
@@ -132,9 +136,10 @@ const GestionDocentes = () => {
               <Card.Img variant="top" src={docente.foto || '/ruta/a/foto-placeholder.jpg'} alt="Foto del Docente" className="docente-foto" />
               <Card.Body>
                 <Card.Title>{docente.nombre}</Card.Title>
-                <Card.Text>Email: {docente.correo}</Card.Text>
-                <Card.Text>Título: {docente.titulo.nombre}</Card.Text>
-                <Card.Text>Frase: {docente.frase}</Card.Text>
+                {/* Asegúrate de que "correo", "titulo", y "frase" no sean objetos */}
+                <Card.Text>Email: {typeof docente.correo === 'string' ? docente.correo : 'N/A'}</Card.Text>
+                <Card.Text>Título: {typeof docente.titulo === 'string' ? docente.titulo : 'N/A'}</Card.Text>
+                <Card.Text>Frase: {typeof docente.frase === 'string' ? docente.frase : 'N/A'}</Card.Text>
                 <Button variant="warning" onClick={() => iniciarActualizacion(docente)} className="me-2">Actualizar</Button>
                 <Button variant="danger" onClick={() => iniciarEliminacion(docente.id)}>Eliminar</Button>
               </Card.Body>
