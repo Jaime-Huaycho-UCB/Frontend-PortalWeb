@@ -28,6 +28,7 @@ const CrearUsuarioSuperior = () => {
         const usuariosData = await obtenerUsuarios(idUsuario, token);
         if (usuariosData.salida) {
           setUsuarios(usuariosData.usuarios); 
+          console.log(usuariosData.usuarios);
         } else {
           console.log(usuariosData.mensaje);
         }
