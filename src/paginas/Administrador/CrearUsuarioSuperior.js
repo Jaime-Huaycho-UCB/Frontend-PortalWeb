@@ -11,33 +11,33 @@ const CrearUsuarioSuperior = () => {
   const [mensaje, setMensaje] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
 
+  
+  const cargarDocentes = async () => {
+    try {
+      const data = await obtenerDocentes();
+      setDocentes(data?.docentes || []);
+    } catch (error) {
+      console.error("Error al cargar docentes:", error);
+    }
+  };
+
+  const cargarUsuarios = async () => {
+    const idUsuario = "";
+    const token = "";
+    try {
+      const usuariosData = await obtenerUsuarios(idUsuario, token);
+      if (usuariosData.salida) {
+        setUsuarios(usuariosData.usuarios);
+        console.log(usuariosData.usuarios);
+      } else {
+        console.log(usuariosData.mensaje);
+      }
+    } catch (error) {
+      console.error("Error al cargar usuarios:", error);
+    }
+  };
+
   useEffect(() => {
-    const cargarDocentes = async () => {
-      try {
-        const data = await obtenerDocentes();
-        setDocentes(data?.docentes || []); // Asegura que docentes siempre sea un array
-      } catch (error) {
-        console.error("Error al cargar docentes:", error);
-      }
-    };
-
-    const cargarUsuarios = async () => {
-      const idUsuario = "";
-      const token = "";
-      try {
-        const usuariosData = await obtenerUsuarios(idUsuario, token);
-        if (usuariosData.salida) {
-          setUsuarios(usuariosData.usuarios); 
-          console.log(usuariosData.usuarios);
-        } else {
-          console.log(usuariosData.mensaje);
-        }
-      } catch (error) {
-        console.error("Error al cargar usuarios:", error);
-      }
-    };
-    
-
     cargarDocentes();
     cargarUsuarios();
   }, []);
@@ -53,11 +53,10 @@ const CrearUsuarioSuperior = () => {
       try {
         const nuevoUsuario = await crearUsuario(docenteSeleccionado.id, password);
         
-        setUsuarios((prev) => [...prev, nuevoUsuario]);
         setMensaje(`Usuario para ${docenteSeleccionado.nombre} creado exitosamente.`);
-        
-        setDocentes((prev) => prev.filter((docente) => docente.id !== docenteSeleccionado.id));
+        await cargarUsuarios();
 
+        setDocentes((prev) => prev.filter((docente) => docente.id !== docenteSeleccionado.id));
         setDocenteSeleccionado(null);
         setPassword('');
         setOpenDialog(false);
@@ -69,7 +68,6 @@ const CrearUsuarioSuperior = () => {
       setMensaje('Por favor selecciona un docente y completa la contraseña.');
     }
 
-    // Oculta el mensaje después de unos segundos
     setTimeout(() => setMensaje(null), 3000);
   };
 
@@ -145,15 +143,13 @@ const CrearUsuarioSuperior = () => {
             </tr>
           </thead>
           <tbody>
-              {Array.isArray(usuarios) && usuarios.map((usuario) => (
-                <tr key={usuario.id}>
-                  <td>{usuario.nombre}</td>
-                  <td>{usuario.correo}</td>
-                </tr>
-              ))}
-            </tbody>
-
-
+            {Array.isArray(usuarios) && usuarios.map((usuario) => (
+              <tr key={usuario.id}>
+                <td>{usuario.nombre}</td>
+                <td>{usuario.correo}</td>
+              </tr>
+            ))}
+          </tbody>
         </Table>
       </div>
     </Container>
