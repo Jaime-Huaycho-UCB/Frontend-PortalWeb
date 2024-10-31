@@ -55,7 +55,6 @@ function App() {
                     <Route path="/noticias" element={<ListaNoticias />} />
                     <Route path="/carrera" element={<PaginaCarrera />} />
                     <Route path="/autoridades" element={<PaginaAutoridades />} />
-                    <Route path="/perfil" element={<Perfil />} />
                     <Route path="/" element={<h2>Bienvenido al Portal</h2>} />
 
                     {/* Rutas protegidas */}
@@ -87,6 +86,11 @@ function App() {
                     <Route path="/admin/crear-usuario" element={
                       <RutaProtegida rolesPermitidos={[1]}>
                         <CrearUsuarioSuperior />
+                      </RutaProtegida>
+                    } />
+                    <Route path="/admin/perfil" element={
+                      <RutaProtegida rolesPermitidos={[1, 0]}>
+                        <Perfil />
                       </RutaProtegida>
                     } />
                   </Routes>

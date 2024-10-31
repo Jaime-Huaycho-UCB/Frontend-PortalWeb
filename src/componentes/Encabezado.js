@@ -23,22 +23,23 @@ const Encabezado = () => {
                 <Nav.Link as={Link} to="/admin/gestion-noticias">Gestión Noticias</Nav.Link>
                 <Nav.Link as={Link} to="/admin/gestion-eventos">Gestión Eventos</Nav.Link>
                 <Nav.Link as={Link} to="/admin/crear-usuario">Crear Usuario Superior</Nav.Link>
+                <Nav.Link as={Link} to="/admin/perfil">Perfil</Nav.Link>
               </>
             ) : permisoInt === 0 ? (
               <>
                 <Nav.Link as={Link} to="/admin/gestion-estudiantes">Gestión Estudiantes</Nav.Link>
                 <Nav.Link as={Link} to="/admin/gestion-noticias">Gestión Noticias</Nav.Link>
                 <Nav.Link as={Link} to="/admin/gestion-eventos">Gestión Eventos</Nav.Link>
+                <Nav.Link as={Link} to="/admin/perfil">Perfil</Nav.Link>
               </>
             ) : (
               <>
                 <Nav.Link as={Link} to="/docentes">Docentes</Nav.Link>
-                <Nav.Link as={Link} to="/egresados">Egresados</Nav.Link>
+                <Nav.Link as={Link} to="/egresados">Estudiantes</Nav.Link>
                 <Nav.Link as={Link} to="/eventos">Eventos</Nav.Link>
                 <Nav.Link as={Link} to="/noticias">Noticias</Nav.Link>
                 <Nav.Link as={Link} to="/carrera">Carrera</Nav.Link>
                 <Nav.Link as={Link} to="/autoridades">Autoridades</Nav.Link>
-                <Nav.Link as={Link} to="/perfil">Perfil</Nav.Link>
               </>
             )}
           </Nav>

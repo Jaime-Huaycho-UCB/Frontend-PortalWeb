@@ -45,13 +45,14 @@ const ListaDocentes = () => {
             <Card className="card-docente">
               <Card.Img
                 variant="top"
-                src={docente.imagen || '/ruta/a/imagen-placeholder.jpg'}
+                src={docente.foto || '/ruta/a/imagen-placeholder.jpg'}
                 className="foto-docente"
                 onClick={() => handleShowModal(docente)}
               />
               <Card.Body>
                 <Card.Title>{docente.nombre}</Card.Title>
-                <Card.Text>{docente.departamento}</Card.Text>
+                <Card.Text>{docente.email}</Card.Text>
+                <Card.Text>{docente.titulo}</Card.Text>
                 <Button variant="primary" onClick={() => handleShowModal(docente)}>
                   Ver detalles
                 </Button>
@@ -66,10 +67,8 @@ const ListaDocentes = () => {
           <Modal.Title>{selectedDocente?.nombre}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p><strong>Departamento:</strong> {selectedDocente?.departamento}</p>
-          <p><strong>Email:</strong> {selectedDocente?.correo}</p>
-          <p><strong>Biografía:</strong> {selectedDocente?.bio}</p>
-          <img src={selectedDocente?.imagen} alt={selectedDocente?.nombre} className="img-fluid" />
+          <p><strong>Frase:</strong> {selectedDocente?.frase}</p>
+          <img src={selectedDocente?.foto} alt={selectedDocente?.nombre} className="img-fluid" />
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleCloseModal}>
