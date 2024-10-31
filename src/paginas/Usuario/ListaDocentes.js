@@ -51,7 +51,7 @@ const ListaDocentes = () => {
               />
               <Card.Body>
                 <Card.Title>{docente.nombre}</Card.Title>
-                <Card.Text>{docente.email}</Card.Text>
+                <Card.Text>{docente.correo}</Card.Text>
                 <Card.Text>{docente.titulo}</Card.Text>
                 <Button variant="primary" onClick={() => handleShowModal(docente)}>
                   Ver detalles
@@ -69,7 +69,7 @@ const ListaDocentes = () => {
         <Modal.Body>
           <img src={selectedDocente?.foto || '/ruta/a/imagen-placeholder.jpg'} alt={selectedDocente?.nombre} className="img-fluid mb-3" />
           <p><strong>Nombre:</strong> {selectedDocente?.nombre}</p>
-          <p><strong>Email:</strong> {selectedDocente?.email}</p>
+          <p><strong>Email:</strong> {selectedDocente?.correo}</p>
           <p><strong>Título:</strong> {selectedDocente?.titulo}</p>
           <p><strong>Frase:</strong> {selectedDocente?.frase}</p>
         </Modal.Body>
