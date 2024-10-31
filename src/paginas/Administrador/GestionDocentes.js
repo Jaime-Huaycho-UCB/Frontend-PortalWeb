@@ -136,10 +136,10 @@ const GestionDocentes = () => {
               <Card.Img variant="top" src={docente.foto || '/ruta/a/foto-placeholder.jpg'} alt="Foto del Docente" className="docente-foto" />
               <Card.Body>
                 <Card.Title>{docente.nombre}</Card.Title>
-                {/* Asegúrate de que "correo", "titulo", y "frase" no sean objetos */}
-                <Card.Text>Email: {typeof docente.correo === 'string' ? docente.correo : 'N/A'}</Card.Text>
-                <Card.Text>Título: {typeof docente.titulo === 'string' ? docente.titulo : 'N/A'}</Card.Text>
-                <Card.Text>Frase: {typeof docente.frase === 'string' ? docente.frase : 'N/A'}</Card.Text>
+                <Card.Text>Email: {docente.correo ? JSON.stringify(docente.correo) : 'N/A'}</Card.Text>
+                <Card.Text>Título: {docente.titulo ? JSON.stringify(docente.titulo) : 'N/A'}</Card.Text>
+                <Card.Text>Frase: {docente.frase ? JSON.stringify(docente.frase) : 'N/A'}</Card.Text>
+
                 <Button variant="warning" onClick={() => iniciarActualizacion(docente)} className="me-2">Actualizar</Button>
                 <Button variant="danger" onClick={() => iniciarEliminacion(docente.id)}>Eliminar</Button>
               </Card.Body>
