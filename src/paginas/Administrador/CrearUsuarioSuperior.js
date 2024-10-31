@@ -27,7 +27,7 @@ const CrearUsuarioSuperior = () => {
       try {
         const usuariosData = await obtenerUsuarios(idUsuario, token);
         if(usuariosData.salida){
-        setUsuarios(usuariosData );
+        setUsuarios(usuariosData.usuarios );
         }else{
           console.log(usuariosData.mensaje);
         }
@@ -146,11 +146,12 @@ const CrearUsuarioSuperior = () => {
           <tbody>
             {Array.isArray(usuarios) && usuarios.map((usuario) => (
               <tr key={usuario.id}>
-                <td>{usuario.nombre}</td>
-                <td>{usuario.correo}</td>
+                <td>{usuario.nombre}</td>  
+                <td>{usuario.correo}</td>           
               </tr>
             ))}
           </tbody>
+
         </Table>
       </div>
     </Container>
