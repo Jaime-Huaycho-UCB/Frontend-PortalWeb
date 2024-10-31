@@ -144,10 +144,10 @@ const CrearUsuarioSuperior = () => {
             </tr>
           </thead>
           <tbody>
-            {Array.isArray(usuarios) && usuarios.map((usuario) => (
-              <tr key={usuario.id}>
-                <td>{usuario.nombre}</td>  
-                <td>{usuario.correo}</td>           
+            {Array.isArray(usuarios) && usuarios.map((Usuarios) => (
+              <tr key={usuarios.id}>
+                <td>{usuarios.nombre}</td>  
+                <td>{usuarios.correo}</td>           
               </tr>
             ))}
           </tbody>
