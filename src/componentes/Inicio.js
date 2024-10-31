@@ -2,7 +2,6 @@
 import React from 'react';
 import { Container, Row, Col, Card, Carousel, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import '../../estilos/paginas/Inicio.css';
 
 const Inicio = () => {
   return (
