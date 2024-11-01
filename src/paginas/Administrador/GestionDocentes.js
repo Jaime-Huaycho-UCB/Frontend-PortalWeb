@@ -53,25 +53,28 @@ const GestionDocentes = () => {
   };
 
   const agregarNuevoDocente = async () => {
+    const idUsuario="";
+    const token="";
     const formData = new FormData();
     formData.append('nombre', nuevoDocente.nombre);
     formData.append('correo', nuevoDocente.correo);
     formData.append('titulo', nuevoDocente.titulo);
     formData.append('frase', nuevoDocente.frase);
-    if (nuevoDocente.foto) formData.append('foto', nuevoDocente.foto);
+    
 
-    console.log('FormData keys:', Array.from(formData.keys())); // verifica que 'foto' esté presente
-    console.log('FormData foto:', formData.get('foto')); // verifica que no esté vacío
-
-    try {
-        await agregarDocente(formData);
-        const docentesActualizados = await obtenerDocentesTodo();
-        setDocentes(docentesActualizados.docentes);
-        handleClose();
-    } catch (error) {
-        console.error("Error al agregar docente:", error);
+    if (nuevoDocente.foto) {
+      formData.append('foto', nuevoDocente.foto);
     }
-};
+  
+    try {
+      await agregarDocente(formData); // Envía el formData
+      obtenerDocentesTodo(idUsuario, token).then((data) => setDocentes(data.docentes));
+      handleClose();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  
 
 
   const iniciarEliminacion = (id) => {
