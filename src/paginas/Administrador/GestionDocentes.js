@@ -60,15 +60,19 @@ const GestionDocentes = () => {
     formData.append('frase', nuevoDocente.frase);
     if (nuevoDocente.foto) formData.append('foto', nuevoDocente.foto);
 
+    console.log('FormData keys:', Array.from(formData.keys())); // verifica que 'foto' esté presente
+    console.log('FormData foto:', formData.get('foto')); // verifica que no esté vacío
+
     try {
-      await agregarDocente(formData);
-      const docentesActualizados = await obtenerDocentesTodo();
-      setDocentes(docentesActualizados.docentes);
-      handleClose();
+        await agregarDocente(formData);
+        const docentesActualizados = await obtenerDocentesTodo();
+        setDocentes(docentesActualizados.docentes);
+        handleClose();
     } catch (error) {
-      console.error("Error al agregar docente:", error);
+        console.error("Error al agregar docente:", error);
     }
-  };
+};
+
 
   const iniciarEliminacion = (id) => {
     setDocenteIdEliminar(id);
