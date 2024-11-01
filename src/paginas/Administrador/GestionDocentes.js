@@ -151,6 +151,53 @@ const GestionDocentes = () => {
         </Modal.Header>
         <Modal.Body>
           <Form>
+            <Form.Group className="mb-3">
+              <Form.Label>Nombre</Form.Label>
+              <Form.Control
+                type="text"
+                value={nuevoDocente.nombre}
+                onChange={(e) => setNuevoDocente({ ...nuevoDocente, nombre: e.target.value })}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Email</Form.Label>
+              <Form.Control
+                type="email"
+                value={nuevoDocente.correo}
+                onChange={(e) => setNuevoDocente({ ...nuevoDocente, correo: e.target.value })}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Título</Form.Label>
+              <Form.Control
+                as="select"
+                value={nuevoDocente.titulo}
+                onChange={(e) => setNuevoDocente({ ...nuevoDocente, titulo: e.target.value })}
+              >
+                <option value="">Selecciona un título</option>
+                {titulos.map((titulo) => (
+                  <option key={titulo.id} value={titulo.id}>{titulo.nombre}</option>
+                ))}
+              </Form.Control>
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Frase</Form.Label>
+              <Form.Control
+                type="text"
+                value={nuevoDocente.frase}
+                onChange={(e) => setNuevoDocente({ ...nuevoDocente, frase: e.target.value })}
+              />
+            </Form.Group>
+            {isUpdating && (
+              <Form.Group className="mb-3">
+                <Form.Check
+                  type="switch"
+                  label="Actualizar Foto"
+                  checked={actualizarFoto}
+                  onChange={() => setActualizarFoto(!actualizarFoto)}
+                />
+              </Form.Group>
+            )}
             {(!isUpdating || actualizarFoto) && (
               <Form.Group className="mb-3">
                 <Form.Label>Foto del Docente</Form.Label>
