@@ -16,7 +16,7 @@ const GestionDocentes = () => {
     correo: '',
     titulo: '',
     frase: '',
-    foto: null,
+    fotoBase64: '', // Cambiamos `foto` a `fotoBase64`
   });
   const [actualizarFoto, setActualizarFoto] = useState(false);
 
@@ -41,41 +41,42 @@ const GestionDocentes = () => {
     setShow(false);
     setIsUpdating(false);
     setActualizarFoto(false);
-    setNuevoDocente({ nombre: '', correo: '', titulo: '', frase: '', foto: null });
+    setNuevoDocente({ nombre: '', correo: '', titulo: '', frase: '', fotoBase64: '' });
   };
 
   const handleShow = () => setShow(true);
+
   const manejarCambioFoto = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setNuevoDocente({ ...nuevoDocente, foto: file });
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setNuevoDocente({ ...nuevoDocente, fotoBase64: reader.result.split(',')[1] }); // Guardar solo la parte base64
+      };
+      reader.readAsDataURL(file);
     }
   };
 
   const agregarNuevoDocente = async () => {
-    const idUsuario="";
-    const token="";
-    const formData = new FormData();
-    formData.append('nombre', nuevoDocente.nombre);
-    formData.append('correo', nuevoDocente.correo);
-    formData.append('titulo', nuevoDocente.titulo);
-    formData.append('frase', nuevoDocente.frase);
-    
+    const idUsuario = "";
+    const token = "";
 
-    if (nuevoDocente.foto) {
-      formData.append('foto', nuevoDocente.foto);
-    }
+    const docenteData = {
+      nombre: nuevoDocente.nombre,
+      correo: nuevoDocente.correo,
+      titulo: nuevoDocente.titulo,
+      frase: nuevoDocente.frase,
+      fotoBase64: nuevoDocente.fotoBase64 // Imagen en base64
+    };
   
     try {
-      await agregarDocente(formData); // Envía el formData
+      await agregarDocente(docenteData); /
       obtenerDocentesTodo(idUsuario, token).then((data) => setDocentes(data.docentes));
       handleClose();
     } catch (error) {
       console.error(error);
     }
   };
-  
-
 
   const iniciarEliminacion = (id) => {
     setDocenteIdEliminar(id);
@@ -83,8 +84,8 @@ const GestionDocentes = () => {
   };
 
   const confirmarEliminacion = async () => { 
-    const idUsuario="";
-    const token="";
+    const idUsuario = "";
+    const token = "";
 
     try {
       await eliminarDocente(docenteIdEliminar);
@@ -104,31 +105,32 @@ const GestionDocentes = () => {
       correo: docente.correo,
       titulo: docente.titulo,
       frase: docente.frase,
-      foto: null, 
+      fotoBase64: '', 
     });
     setActualizarFoto(false);
     handleShow();
   };
 
   const actualizarDocenteExistente = async () => {
-    const idUsuario="";
-    const token="";
-    const formData = new FormData();
-    formData.append('nombre', nuevoDocente.nombre);
-    formData.append('correo', nuevoDocente.correo);
-    formData.append('titulo', nuevoDocente.titulo);
-    formData.append('frase', nuevoDocente.frase);
-    if (actualizarFoto && nuevoDocente.foto) formData.append('foto', nuevoDocente.foto.files[0]);
+    const idUsuario = "";
+    const token = "";
+
+    const docenteData = {
+      nombre: nuevoDocente.nombre,
+      correo: nuevoDocente.correo,
+      titulo: nuevoDocente.titulo,
+      frase: nuevoDocente.frase,
+      fotoBase64: actualizarFoto ? nuevoDocente.fotoBase64 : null 
+    };
 
     try {
-      await actualizarDocente(docenteIdActualizar, formData);
+      await actualizarDocente(docenteIdActualizar, docenteData);
       obtenerDocentesTodo(idUsuario, token).then((data) => setDocentes(data.docentes));
       handleClose();
     } catch (error) {
       console.error(error);
     }
   };
-
 
   return (
     <div className="gestion-docentes-container">
@@ -215,9 +217,9 @@ const GestionDocentes = () => {
               <Form.Group className="mb-3">
                 <Form.Label>Foto del Docente</Form.Label>
                 <Form.Control type="file" accept="image/*" onChange={manejarCambioFoto} />
-                {nuevoDocente.foto && (
+                {nuevoDocente.fotoBase64 && (
                   <div className="vista-previa">
-                    <img src={URL.createObjectURL(nuevoDocente.foto)} alt="Vista previa" className="foto-previa" />
+                    <img src={`data:image/jpeg;base64,${nuevoDocente.fotoBase64}`} alt="Vista previa" className="foto-previa" />
                   </div>
                 )}
               </Form.Group>
