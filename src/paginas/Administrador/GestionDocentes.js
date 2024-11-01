@@ -47,11 +47,15 @@ const GestionDocentes = () => {
   const handleShow = () => setShow(true);
 
   const agregarNuevoDocente = async () => {
-    const rutaFoto = nuevoDocente.foto ? `docentes/${nuevoDocente.foto.name}` : '';
-    const docenteData = { ...nuevoDocente, ruta: rutaFoto };
+    const formData = new FormData();
+    formData.append('nombre', nuevoDocente.nombre);
+    formData.append('email', nuevoDocente.email);
+    formData.append('titulo', nuevoDocente.titulo);
+    formData.append('frase', nuevoDocente.frase);
+    if (nuevoDocente.foto) formData.append('foto', nuevoDocente.foto);
 
     try {
-      await agregarDocente(docenteData);
+      await agregarDocente(formData);
       obtenerDocentesTodo().then((data) => setDocentes(data.docentes));
       handleClose();
     } catch (error) {
@@ -83,24 +87,22 @@ const GestionDocentes = () => {
       email: docente.correo,
       titulo: docente.titulo,
       frase: docente.frase,
-      foto: docente.foto,
+      foto: null, 
     });
     setActualizarFoto(false);
     handleShow();
   };
 
   const actualizarDocenteExistente = async () => {
-    const rutaFoto = actualizarFoto && nuevoDocente.foto ? `docentes/${nuevoDocente.foto.name}` : nuevoDocente.foto;
-    const docenteData = {
-      nombre: nuevoDocente.nombre,
-      correo: nuevoDocente.email,
-      titulo: nuevoDocente.titulo,
-      frase: nuevoDocente.frase,
-      ruta: rutaFoto,
-    };
+    const formData = new FormData();
+    formData.append('nombre', nuevoDocente.nombre);
+    formData.append('email', nuevoDocente.email);
+    formData.append('titulo', nuevoDocente.titulo);
+    formData.append('frase', nuevoDocente.frase);
+    if (actualizarFoto && nuevoDocente.foto) formData.append('foto', nuevoDocente.foto);
 
     try {
-      await actualizarDocente(docenteIdActualizar, docenteData);
+      await actualizarDocente(docenteIdActualizar, formData);
       obtenerDocentesTodo().then((data) => setDocentes(data.docentes));
       handleClose();
     } catch (error) {
@@ -111,15 +113,7 @@ const GestionDocentes = () => {
   const manejarCambioFoto = (e) => {
     const file = e.target.files[0];
     if (file) {
-      const rutaFoto = `docentes/${file.name}`;
-      setNuevoDocente({ ...nuevoDocente, foto: rutaFoto });
-
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const url = URL.createObjectURL(file);
-        setNuevoDocente({ ...nuevoDocente, foto: url });
-      };
-      reader.readAsDataURL(file);
+      setNuevoDocente({ ...nuevoDocente, foto: file });
     }
   };
 
@@ -136,12 +130,12 @@ const GestionDocentes = () => {
         {docentes.map((docente) => (
           <Col md={4} key={docente.id}>
             <Card className="docente-card mb-4">
-              <Card.Img variant="top" src={docente.foto || '/ruta/a/foto-placeholder.jpg'} alt="Foto del Docente" className="docente-foto" />
+              <Card.Img variant="top" src={docente.foto || 'https://cdn-icons-png.freepik.com/256/2307/2307607.png?ga=GA1.1.646280353.1730388091&semt=ais_hybrid'} alt="Foto del Docente" className="docente-foto" />
               <Card.Body>
                 <Card.Title>{docente.nombre}</Card.Title>
-                <Card.Text>Email: {docente.correo ? JSON.stringify(docente.correo) : 'N/A'}</Card.Text>
-                <Card.Text>Título: {docente.titulo ? JSON.stringify(docente.titulo) : 'N/A'}</Card.Text>
-                <Card.Text>Frase: {docente.frase ? JSON.stringify(docente.frase) : 'N/A'}</Card.Text>
+                <Card.Text>Email: {docente.correo || 'N/A'}</Card.Text>
+                <Card.Text>Título: {docente.titulo || 'N/A'}</Card.Text>
+                <Card.Text>Frase: {docente.frase || 'N/A'}</Card.Text>
 
                 <Button variant="warning" onClick={() => iniciarActualizacion(docente)} className="me-2">Actualizar</Button>
                 <Button variant="danger" onClick={() => iniciarEliminacion(docente.id)}>Eliminar</Button>
@@ -157,60 +151,13 @@ const GestionDocentes = () => {
         </Modal.Header>
         <Modal.Body>
           <Form>
-            <Form.Group className="mb-3">
-              <Form.Label>Nombre</Form.Label>
-              <Form.Control
-                type="text"
-                value={nuevoDocente.nombre}
-                onChange={(e) => setNuevoDocente({ ...nuevoDocente, nombre: e.target.value })}
-              />
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>correo</Form.Label>
-              <Form.Control
-                type="email"
-                value={nuevoDocente.correo}
-                onChange={(e) => setNuevoDocente({ ...nuevoDocente, correo: e.target.value })}
-              />
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>Título</Form.Label>
-              <Form.Control
-                as="select"
-                value={nuevoDocente.titulo}
-                onChange={(e) => setNuevoDocente({ ...nuevoDocente, titulo: e.target.value })}
-              >
-                <option value="">Selecciona un título</option>
-                {titulos.map((titulo) => (
-                  <option key={titulo.id} value={titulo.id}>{titulo.nombre}</option>
-                ))}
-              </Form.Control>
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>Frase</Form.Label>
-              <Form.Control
-                type="text"
-                value={nuevoDocente.frase}
-                onChange={(e) => setNuevoDocente({ ...nuevoDocente, frase: e.target.value })}
-              />
-            </Form.Group>
-            {isUpdating && (
-              <Form.Group className="mb-3">
-                <Form.Check
-                  type="switch"
-                  label="Actualizar Foto"
-                  checked={actualizarFoto}
-                  onChange={() => setActualizarFoto(!actualizarFoto)}
-                />
-              </Form.Group>
-            )}
             {(!isUpdating || actualizarFoto) && (
               <Form.Group className="mb-3">
                 <Form.Label>Foto del Docente</Form.Label>
                 <Form.Control type="file" accept="image/*" onChange={manejarCambioFoto} />
                 {nuevoDocente.foto && (
                   <div className="vista-previa">
-                    <img src={nuevoDocente.foto} alt="Vista previa" className="foto-previa" />
+                    <img src={URL.createObjectURL(nuevoDocente.foto)} alt="Vista previa" className="foto-previa" />
                   </div>
                 )}
               </Form.Group>
