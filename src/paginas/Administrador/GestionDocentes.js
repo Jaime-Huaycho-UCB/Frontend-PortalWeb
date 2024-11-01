@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Modal, Card, Row, Col, Form } from 'react-bootstrap';
-import { obtenerDocentes, agregarDocente, actualizarDocente, eliminarDocente, obtenerTitulos, obtenerDocentesTodo } from '../../librerias/PeticionesApi';
+import { agregarDocente, actualizarDocente, eliminarDocente, obtenerTitulos, obtenerDocentesTodo } from '../../librerias/PeticionesApi';
 import '../../estilos/AdministradorEstilos/GestionDocentes.css';
 
 const GestionDocentes = () => {
@@ -70,7 +70,8 @@ const GestionDocentes = () => {
     };
   
     try {
-      await agregarDocente(docenteData); /
+      await agregarDocente(docenteData); 
+
       obtenerDocentesTodo(idUsuario, token).then((data) => setDocentes(data.docentes));
       handleClose();
     } catch (error) {
