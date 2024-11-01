@@ -45,23 +45,28 @@ const GestionDocentes = () => {
   };
 
   const handleShow = () => setShow(true);
+  const manejarCambioFoto = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setNuevoDocente({ ...nuevoDocente, foto: file });
+    }
+  };
 
   const agregarNuevoDocente = async () => {
-    const idUsuario="";
-    const token="";
     const formData = new FormData();
     formData.append('nombre', nuevoDocente.nombre);
     formData.append('correo', nuevoDocente.correo);
     formData.append('titulo', nuevoDocente.titulo);
     formData.append('frase', nuevoDocente.frase);
-    if (nuevoDocente.foto) formData.append('foto', nuevoDocente.foto.files[0]);
+    if (nuevoDocente.foto) formData.append('foto', nuevoDocente.foto);
 
     try {
       await agregarDocente(formData);
-      obtenerDocentesTodo(idUsuario, token).then((data) => setDocentes(data.docentes));
+      const docentesActualizados = await obtenerDocentesTodo();
+      setDocentes(docentesActualizados.docentes);
       handleClose();
     } catch (error) {
-      console.error(error);
+      console.error("Error al agregar docente:", error);
     }
   };
 
@@ -117,12 +122,6 @@ const GestionDocentes = () => {
     }
   };
 
-  const manejarCambioFoto = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setNuevoDocente({ ...nuevoDocente, foto: file });
-    }
-  };
 
   return (
     <div className="gestion-docentes-container">
