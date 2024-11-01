@@ -47,16 +47,18 @@ const GestionDocentes = () => {
   const handleShow = () => setShow(true);
 
   const agregarNuevoDocente = async () => {
+    const idUsuario="";
+    const token="";
     const formData = new FormData();
     formData.append('nombre', nuevoDocente.nombre);
     formData.append('correo', nuevoDocente.correo);
     formData.append('titulo', nuevoDocente.titulo);
     formData.append('frase', nuevoDocente.frase);
-    if (nuevoDocente.foto) formData.append('foto', nuevoDocente.foto);
+    if (nuevoDocente.foto) formData.append('foto', nuevoDocente.foto.files[0]);
 
     try {
       await agregarDocente(formData);
-      obtenerDocentesTodo().then((data) => setDocentes(data.docentes));
+      obtenerDocentesTodo(idUsuario, token).then((data) => setDocentes(data.docentes));
       handleClose();
     } catch (error) {
       console.error(error);
@@ -68,10 +70,13 @@ const GestionDocentes = () => {
     setShowEliminarModal(true);
   };
 
-  const confirmarEliminacion = async () => {
+  const confirmarEliminacion = async () => { 
+    const idUsuario="";
+    const token="";
+
     try {
       await eliminarDocente(docenteIdEliminar);
-      obtenerDocentesTodo().then((data) => setDocentes(data.docentes));
+      obtenerDocentesTodo(idUsuario, token).then((data) => setDocentes(data.docentes));
       setShowEliminarModal(false);
       setDocenteIdEliminar(null);
     } catch (error) {
@@ -94,16 +99,18 @@ const GestionDocentes = () => {
   };
 
   const actualizarDocenteExistente = async () => {
+    const idUsuario="";
+    const token="";
     const formData = new FormData();
     formData.append('nombre', nuevoDocente.nombre);
     formData.append('correo', nuevoDocente.correo);
     formData.append('titulo', nuevoDocente.titulo);
     formData.append('frase', nuevoDocente.frase);
-    if (actualizarFoto && nuevoDocente.foto) formData.append('foto', nuevoDocente.foto);
+    if (actualizarFoto && nuevoDocente.foto) formData.append('foto', nuevoDocente.foto.files[0]);
 
     try {
       await actualizarDocente(docenteIdActualizar, formData);
-      obtenerDocentesTodo().then((data) => setDocentes(data.docentes));
+      obtenerDocentesTodo(idUsuario, token).then((data) => setDocentes(data.docentes));
       handleClose();
     } catch (error) {
       console.error(error);
