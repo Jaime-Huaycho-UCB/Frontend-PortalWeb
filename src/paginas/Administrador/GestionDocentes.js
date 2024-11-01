@@ -13,7 +13,7 @@ const GestionDocentes = () => {
   const [docenteIdEliminar, setDocenteIdEliminar] = useState(null);
   const [nuevoDocente, setNuevoDocente] = useState({
     nombre: '',
-    email: '',
+    correo: '',
     titulo: '',
     frase: '',
     foto: null,
@@ -41,7 +41,7 @@ const GestionDocentes = () => {
     setShow(false);
     setIsUpdating(false);
     setActualizarFoto(false);
-    setNuevoDocente({ nombre: '', email: '', titulo: '', frase: '', foto: null });
+    setNuevoDocente({ nombre: '', correo: '', titulo: '', frase: '', foto: null });
   };
 
   const handleShow = () => setShow(true);
@@ -49,7 +49,7 @@ const GestionDocentes = () => {
   const agregarNuevoDocente = async () => {
     const formData = new FormData();
     formData.append('nombre', nuevoDocente.nombre);
-    formData.append('email', nuevoDocente.email);
+    formData.append('correo', nuevoDocente.correo);
     formData.append('titulo', nuevoDocente.titulo);
     formData.append('frase', nuevoDocente.frase);
     if (nuevoDocente.foto) formData.append('foto', nuevoDocente.foto);
@@ -84,7 +84,7 @@ const GestionDocentes = () => {
     setDocenteIdActualizar(docente.id);
     setNuevoDocente({
       nombre: docente.nombre,
-      email: docente.correo,
+      correo: docente.correo,
       titulo: docente.titulo,
       frase: docente.frase,
       foto: null, 
