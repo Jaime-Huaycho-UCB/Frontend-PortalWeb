@@ -16,7 +16,7 @@ const GestionDocentes = () => {
     correo: '',
     titulo: '',
     frase: '',
-    fotoBase64: '', // Cambiamos `foto` a `fotoBase64`
+    fotoBase64: '',
   });
   const [actualizarFoto, setActualizarFoto] = useState(false);
 
@@ -51,9 +51,11 @@ const GestionDocentes = () => {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setNuevoDocente({ ...nuevoDocente, fotoBase64: reader.result.split(',')[1] }); // Guardar solo la parte base64
+        setNuevoDocente({ ...nuevoDocente, fotoBase64: reader.result.split(',')[1] });
       };
       reader.readAsDataURL(file);
+    } else {
+      setNuevoDocente({ ...nuevoDocente, fotoBase64: '' });
     }
   };
 
@@ -66,7 +68,7 @@ const GestionDocentes = () => {
       correo: nuevoDocente.correo,
       titulo: nuevoDocente.titulo,
       frase: nuevoDocente.frase,
-      fotoBase64: nuevoDocente.fotoBase64 // Imagen en base64
+      fotoBase64: nuevoDocente.fotoBase64 
     };
   
     try {
