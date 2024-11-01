@@ -96,7 +96,7 @@ const GestionDocentes = () => {
   const actualizarDocenteExistente = async () => {
     const formData = new FormData();
     formData.append('nombre', nuevoDocente.nombre);
-    formData.append('email', nuevoDocente.email);
+    formData.append('correo', nuevoDocente.correo);
     formData.append('titulo', nuevoDocente.titulo);
     formData.append('frase', nuevoDocente.frase);
     if (actualizarFoto && nuevoDocente.foto) formData.append('foto', nuevoDocente.foto);
