@@ -24,11 +24,9 @@ const GestionDocentes = () => {
     setNuevoDocente((prevDocente) => ({ ...prevDocente, fotoBase64: base64 }));
   };
 
-  useEffect(() => {
-    const idUsuario = '';  
-    const token = '';      
+  useEffect(() => {  
 
-    obtenerDocentesTodo(idUsuario, token)
+    obtenerDocentesTodo()
       .then((data) => {
         if (data.salida) setDocentes(data.docentes);
       })
@@ -51,6 +49,8 @@ const GestionDocentes = () => {
   const handleShow = () => setShow(true);
 
   const agregarNuevoDocente = async () => {
+    const idUsuario='';
+    const token='';
     const docenteData = {
       nombre: nuevoDocente.nombre,
       correo: nuevoDocente.correo,
@@ -60,7 +60,7 @@ const GestionDocentes = () => {
     };
   
     try {
-      await agregarDocente(docenteData); 
+      await agregarDocente(docenteData,idUsuario,token); 
       obtenerDocentesTodo().then((data) => setDocentes(data.docentes));
       handleClose();
     } catch (error) {

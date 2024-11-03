@@ -20,27 +20,28 @@ export const obtenerDocentes = async (idUsuario, token) => {
   }
 };
 
-export const obtenerDocentesTodo = async (idUsuario, token) => {
-    try {
-      const response = await instance.post('/docente/obtener/todo', { idUsuario, token });
-      return response.data;
-    } catch (error) {
-      console.error("Error al obtener docentes:", error);
-      throw error;
-    }
-  };
-  
-
-export const agregarDocente = async (docenteData) => {
+export const obtenerDocentesTodo = async () => {
   try {
-    const response = await instance.post('/docente/agregar', docenteData);
+    const response = await instance.get('/docente/obtener/todo');
     return response.data;
   } catch (error) {
-    console.error("Error al agregar docente:", error);
+    console.error("Error al obtener docentes:", error);
     throw error;
   }
 };
 
+  
+
+  export const agregarDocente = async (docenteData, idUsuario, token) => {
+    try {
+      const response = await instance.post('/docente/agregar', { ...docenteData, idUsuario, token });
+      return response.data;
+    } catch (error) {
+      console.error("Error al agregar docente:", error);
+      throw error;
+    }
+  };
+  
 export const actualizarDocente = async (id, docenteData) => {
   try {
     const response = await instance.put('/docente/actualizar', { id, ...docenteData });
@@ -106,18 +107,19 @@ export const manejarCambioFoto = (e, setFotoBase64) => {
     setFotoBase64('');
   }
 };
-export const agregarEvento = async (EventoData) => {
+export const agregarEvento = async (eventoData, idUsuario, token) => {
   try {
-    const response = await instance.post('/Evento/agregar', EventoData);
+    const response = await instance.post('/evento/agregar', { ...eventoData, idUsuario, token });
     return response.data;
   } catch (error) {
-    console.error("Error al agregar docente:", error);
+    console.error("Error al agregar evento:", error);
     throw error;
   }
 };
-export const obtenerEventos = async (idUsuario, token) => {
+
+export const obtenerEventos = async () => {
   try {
-    const response = await instance.post('/evento/obtener', { idUsuario, token });
+    const response = await instance.get('/evento/obtener');
     return response.data;
   } catch (error) {
     console.error("Error al obtener eventos:", error);

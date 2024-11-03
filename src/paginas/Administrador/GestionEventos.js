@@ -20,10 +20,8 @@ const GestionEventos = () => {
   };
 
   useEffect(() => {
-    const idUsuario = '';  
-    const token = '';      
-
-    obtenerEventos(idUsuario, token)
+   
+    obtenerEventos()
       .then((data) => {
         if (data.salida) {
           setEventos(data.eventos);
@@ -33,6 +31,9 @@ const GestionEventos = () => {
   }, []);
 
   const agregarNuevoEvento = async () => {
+    const idUsuario = '';  
+    const token = '';      
+
     const eventoData = {
       nombre: nuevoEvento.nombre,
       descripcion: nuevoEvento.descripcion,
@@ -43,7 +44,7 @@ const GestionEventos = () => {
     };
     
     try {
-      await agregarEvento(eventoData);
+      await agregarEvento(eventoData, idUsuario,token);
       setEventos([...eventos, eventoData]);
       setShowModal(false);
       setNuevoEvento({ nombre: '', descripcion: '', director: '', fecha: '', lugar: '', fotoBase64: '' });
