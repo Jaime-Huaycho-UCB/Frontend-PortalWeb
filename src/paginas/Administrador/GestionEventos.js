@@ -1,30 +1,55 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Form, Modal } from 'react-bootstrap';
+import { agregarEvento, obtenerEventos, manejarCambioFoto } from '../../librerias/PeticionesApi';
 import '../../estilos/AdministradorEstilos/GestionEventos.css';
 
 const GestionEventos = () => {
   const [showModal, setShowModal] = useState(false);
-  const [newEvento, setNewEvento] = useState({ nombre: '', fecha: '', ubicacion: '', descripcion: '', imagen: null });
-  const [eventos, setEventos] = useState([
-    { id: 1, nombre: 'Conferencia Internacional', fecha: '15 Nov 2024', ubicacion: 'Auditorio Central', descripcion: 'Un evento internacional sobre tecnología.', imagen: 'https://ichef.bbci.co.uk/ace/ws/800/cpsprodpb/4ef8/live/970bbd30-c0fa-11ee-897d-3950f2e7afa7.jpg.webp' },
-    { id: 2, nombre: 'Taller de Innovación', fecha: '20 Dic 2024', ubicacion: 'Sala 101', descripcion: 'Taller práctico sobre innovación en la industria.', imagen: 'https://ichef.bbci.co.uk/ace/ws/800/cpsprodpb/4ef8/live/970bbd30-c0fa-11ee-897d-3950f2e7afa7.jpg.webp' },
-  ]);
+  const [eventos, setEventos] = useState([]);
+  const [nuevoEvento, setNuevoEvento] = useState({
+    nombre: '',
+    descripcion: '',
+    director: '',
+    fecha: '',
+    lugar: '',
+    fotoBase64: '',
+  });
 
-  const manejarCambioFoto = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setNewEvento({ ...newEvento, imagen: reader.result });
-      };
-      reader.readAsDataURL(file);
-    }
+  const setFotoBase64 = (base64) => {
+    setNuevoEvento((prevEvento) => ({ ...prevEvento, fotoBase64: base64 }));
   };
 
-  const handleAddEvento = () => {
-    setEventos([...eventos, { ...newEvento, id: eventos.length + 1 }]);
-    setNewEvento({ nombre: '', fecha: '', ubicacion: '', descripcion: '', imagen: null });
-    setShowModal(false);
+  useEffect(() => {
+    const idUsuario = '';  
+    const token = '';      
+
+    obtenerEventos(idUsuario, token)
+      .then((data) => {
+        if (data.salida) {
+          setEventos(data.eventos);
+        }
+      })
+      .catch(console.error);
+  }, []);
+
+  const agregarNuevoEvento = async () => {
+    const eventoData = {
+      nombre: nuevoEvento.nombre,
+      descripcion: nuevoEvento.descripcion,
+      director: nuevoEvento.director,
+      fecha: nuevoEvento.fecha,
+      lugar: nuevoEvento.lugar,
+      fotoBase64: nuevoEvento.fotoBase64,
+    };
+    
+    try {
+      await agregarEvento(eventoData);
+      setEventos([...eventos, eventoData]);
+      setShowModal(false);
+      setNuevoEvento({ nombre: '', descripcion: '', director: '', fecha: '', lugar: '', fotoBase64: '' });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -39,13 +64,14 @@ const GestionEventos = () => {
         {eventos.map((evento, index) => (
           <div key={evento.id} className={`timeline-item ${index % 2 === 0 ? 'left' : 'right'}`}>
             <div className="timeline-img">
-              <img src={evento.imagen || '/ruta/a/foto-placeholder.jpg'} alt={evento.nombre} />
+              <img src={`data:image/jpeg;base64,${evento.fotoBase64}`} alt={evento.nombre} />
             </div>
             <div className="timeline-content">
               <h3>{evento.nombre}</h3>
               <p><strong>Fecha:</strong> {evento.fecha}</p>
-              <p><strong>Ubicación:</strong> {evento.ubicacion}</p>
+              <p><strong>Ubicación:</strong> {evento.lugar}</p>
               <p>{evento.descripcion}</p>
+              <p><strong>director</strong>{evento.director}</p>
             </div>
           </div>
         ))}
@@ -63,25 +89,26 @@ const GestionEventos = () => {
               <Form.Control
                 type="text"
                 placeholder="Ingresa el nombre del evento"
-                value={newEvento.nombre}
-                onChange={(e) => setNewEvento({ ...newEvento, nombre: e.target.value })}
+                value={nuevoEvento.nombre}
+                onChange={(e) => setNuevoEvento({ ...nuevoEvento, nombre: e.target.value })}
               />
             </Form.Group>
+            
             <Form.Group controlId="formFecha" className="mt-3">
               <Form.Label>Fecha</Form.Label>
               <Form.Control
                 type="date"
-                value={newEvento.fecha}
-                onChange={(e) => setNewEvento({ ...newEvento, fecha: e.target.value })}
+                value={nuevoEvento.fecha}
+                onChange={(e) => setNuevoEvento({ ...nuevoEvento, fecha: e.target.value })}
               />
             </Form.Group>
             <Form.Group controlId="formUbicacion" className="mt-3">
               <Form.Label>Ubicación</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Ingresa la ubicación"
-                value={newEvento.ubicacion}
-                onChange={(e) => setNewEvento({ ...newEvento, ubicacion: e.target.value })}
+                placeholder="Ingresa el lugar"
+                value={nuevoEvento.lugar}
+                onChange={(e) => setNuevoEvento({ ...nuevoEvento, lugar: e.target.value })}
               />
             </Form.Group>
             <Form.Group controlId="formDescripcion" className="mt-3">
@@ -90,20 +117,16 @@ const GestionEventos = () => {
                 as="textarea"
                 rows={3}
                 placeholder="Describe el evento"
-                value={newEvento.descripcion}
-                onChange={(e) => setNewEvento({ ...newEvento, descripcion: e.target.value })}
+                value={nuevoEvento.descripcion}
+                onChange={(e) => setNuevoEvento({ ...nuevoEvento, descripcion: e.target.value })}
               />
             </Form.Group>
-            <Form.Group controlId="formImagen" className="mt-3">
-              <Form.Label>Imagen del Evento</Form.Label>
-              <Form.Control
-                type="file"
-                accept="image/*"
-                onChange={manejarCambioFoto}
-              />
-              {newEvento.imagen && (
-                <div className="vista-previa mt-3">
-                  <img src={newEvento.imagen} alt="Vista previa" className="foto-previa" />
+            <Form.Group className="mb-3">
+              <Form.Label>Foto del Evento</Form.Label>
+              <Form.Control type="file" accept="image/*" onChange={(e) => manejarCambioFoto(e, setFotoBase64)} />
+              {nuevoEvento.fotoBase64 && (
+                <div className="vista-previa">
+                  <img src={`data:image/jpeg;base64,${nuevoEvento.fotoBase64}`} alt="Vista previa" className="foto-previa" />
                 </div>
               )}
             </Form.Group>
@@ -111,7 +134,7 @@ const GestionEventos = () => {
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowModal(false)}>Cerrar</Button>
-          <Button variant="primary" onClick={handleAddEvento}>Guardar</Button>
+          <Button variant="primary" onClick={agregarNuevoEvento}>Agregar</Button>
         </Modal.Footer>
       </Modal>
     </div>

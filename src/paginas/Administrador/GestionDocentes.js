@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Modal, Card, Row, Col, Form } from 'react-bootstrap';
-import { agregarDocente, actualizarDocente, eliminarDocente, obtenerTitulos, obtenerDocentesTodo } from '../../librerias/PeticionesApi';
+import { manejarCambioFoto, agregarDocente, actualizarDocente, eliminarDocente, obtenerTitulos, obtenerDocentesTodo } from '../../librerias/PeticionesApi';
 import '../../estilos/AdministradorEstilos/GestionDocentes.css';
 
 const GestionDocentes = () => {
@@ -19,6 +19,10 @@ const GestionDocentes = () => {
     fotoBase64: '',
   });
   const [actualizarFoto, setActualizarFoto] = useState(false);
+
+  const setFotoBase64 = (base64) => {
+    setNuevoDocente((prevDocente) => ({ ...prevDocente, fotoBase64: base64 }));
+  };
 
   useEffect(() => {
     const idUsuario = '';  
@@ -46,23 +50,7 @@ const GestionDocentes = () => {
 
   const handleShow = () => setShow(true);
 
-  const manejarCambioFoto = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setNuevoDocente({ ...nuevoDocente, fotoBase64: reader.result.split(',')[1] });
-      };
-      reader.readAsDataURL(file);
-    } else {
-      setNuevoDocente({ ...nuevoDocente, fotoBase64: '' });
-    }
-  };
-
   const agregarNuevoDocente = async () => {
-    const idUsuario = "";
-    const token = "";
-
     const docenteData = {
       nombre: nuevoDocente.nombre,
       correo: nuevoDocente.correo,
@@ -73,8 +61,7 @@ const GestionDocentes = () => {
   
     try {
       await agregarDocente(docenteData); 
-
-      obtenerDocentesTodo(idUsuario, token).then((data) => setDocentes(data.docentes));
+      obtenerDocentesTodo().then((data) => setDocentes(data.docentes));
       handleClose();
     } catch (error) {
       console.error(error);
@@ -86,13 +73,10 @@ const GestionDocentes = () => {
     setShowEliminarModal(true);
   };
 
-  const confirmarEliminacion = async () => { 
-    const idUsuario = "";
-    const token = "";
-
+  const confirmarEliminacion = async () => {
     try {
       await eliminarDocente(docenteIdEliminar);
-      obtenerDocentesTodo(idUsuario, token).then((data) => setDocentes(data.docentes));
+      obtenerDocentesTodo().then((data) => setDocentes(data.docentes));
       setShowEliminarModal(false);
       setDocenteIdEliminar(null);
     } catch (error) {
@@ -115,9 +99,6 @@ const GestionDocentes = () => {
   };
 
   const actualizarDocenteExistente = async () => {
-    const idUsuario = "";
-    const token = "";
-
     const docenteData = {
       nombre: nuevoDocente.nombre,
       correo: nuevoDocente.correo,
@@ -128,7 +109,7 @@ const GestionDocentes = () => {
 
     try {
       await actualizarDocente(docenteIdActualizar, docenteData);
-      obtenerDocentesTodo(idUsuario, token).then((data) => setDocentes(data.docentes));
+      obtenerDocentesTodo().then((data) => setDocentes(data.docentes));
       handleClose();
     } catch (error) {
       console.error(error);
@@ -219,7 +200,7 @@ const GestionDocentes = () => {
             {(!isUpdating || actualizarFoto) && (
               <Form.Group className="mb-3">
                 <Form.Label>Foto del Docente</Form.Label>
-                <Form.Control type="file" accept="image/*" onChange={manejarCambioFoto} />
+                <Form.Control type="file" accept="image/*" onChange={(e) => manejarCambioFoto(e, setFotoBase64)} />
                 {nuevoDocente.fotoBase64 && (
                   <div className="vista-previa">
                     <img src={`data:image/jpeg;base64,${nuevoDocente.fotoBase64}`} alt="Vista previa" className="foto-previa" />

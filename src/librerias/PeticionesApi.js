@@ -91,3 +91,36 @@ export const crearUsuario = async (idDocente, password) => {
       throw error;
     }
   };
+
+  
+
+export const manejarCambioFoto = (e, setFotoBase64) => {
+  const file = e.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setFotoBase64(reader.result.split(',')[1]);
+    };
+    reader.readAsDataURL(file);
+  } else {
+    setFotoBase64('');
+  }
+};
+export const agregarEvento = async (EventoData) => {
+  try {
+    const response = await instance.post('/Evento/agregar', EventoData);
+    return response.data;
+  } catch (error) {
+    console.error("Error al agregar docente:", error);
+    throw error;
+  }
+};
+export const obtenerEventos = async (idUsuario, token) => {
+  try {
+    const response = await instance.post('/evento/obtener', { idUsuario, token });
+    return response.data;
+  } catch (error) {
+    console.error("Error al obtener eventos:", error);
+    throw error;
+  }
+};
