@@ -94,7 +94,16 @@ const GestionEventos = () => {
                 onChange={(e) => setNuevoEvento({ ...nuevoEvento, nombre: e.target.value })}
               />
             </Form.Group>
-            
+            <Form.Group controlId="forDirector">
+              <Form.Label>Director del evento</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Ingresa el nombre del Director del evento"
+                value={nuevoEvento.director}
+                onChange={(e) => setNuevoEvento({ ...nuevoEvento, director: e.target.value })}
+              />
+            </Form.Group>
+
             <Form.Group controlId="formFecha" className="mt-3">
               <Form.Label>Fecha</Form.Label>
               <Form.Control
