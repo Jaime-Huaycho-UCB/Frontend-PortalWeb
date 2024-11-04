@@ -31,9 +31,8 @@ const GestionEventos = () => {
   }, []);
 
   const agregarNuevoEvento = async () => {
-    const idUsuario = '';  
-    const token = '';      
-
+    const idUsuario='';
+    const token='';
     const eventoData = {
       nombre: nuevoEvento.nombre,
       descripcion: nuevoEvento.descripcion,
@@ -44,14 +43,17 @@ const GestionEventos = () => {
     };
     
     try {
-      await agregarEvento(eventoData, idUsuario,token);
-      setEventos([...eventos, eventoData]);
+      await agregarEvento(eventoData,idUsuario,token); 
+      const data = await obtenerEventos();
+      setEventos(data.eventos); 
+  
       setShowModal(false);
       setNuevoEvento({ nombre: '', descripcion: '', director: '', fecha: '', lugar: '', fotoBase64: '' });
     } catch (error) {
       console.error(error);
     }
   };
+  
 
   return (
     <div className="gestion-eventos-container">
