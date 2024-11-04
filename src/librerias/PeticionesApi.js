@@ -31,7 +31,6 @@ export const obtenerDocentesTodo = async () => {
 };
 
   
-
   export const agregarDocente = async (docenteData, idUsuario, token) => {
     try {
       const response = await instance.post('/docente/agregar', { ...docenteData, idUsuario, token });
