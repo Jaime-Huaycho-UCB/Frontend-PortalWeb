@@ -65,7 +65,7 @@ const GestionEventos = () => {
         {eventos.map((evento, index) => (
           <div key={evento.id} className={`timeline-item ${index % 2 === 0 ? 'left' : 'right'}`}>
             <div className="timeline-img">
-              <img src={`data:image/jpeg;base64,${evento.fotoBase64}`} alt={evento.nombre} />
+              <img src={evento.fotoBase64} alt={evento.nombre} />
             </div>
             <div className="timeline-content">
               <h3>{evento.nombre}</h3>
