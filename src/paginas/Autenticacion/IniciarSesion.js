@@ -21,7 +21,7 @@ const IniciarSesion = () => {
         contrasena: password
       });
 
-      const { salida, mensaje, id , permiso } = response.data;
+      const { salida, mensaje, id , permiso,idUsuario,idDocente,token } = response.data;
 
       if (salida) {
         iniciarSesion(parseInt(permiso, 10)); 
