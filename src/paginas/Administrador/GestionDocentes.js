@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Button, Modal, Card, Row, Col, Form } from 'react-bootstrap';
 import { manejarCambioFoto, agregarDocente, actualizarDocente, eliminarDocente, obtenerTitulos, obtenerDocentesTodo } from '../../librerias/PeticionesApi';
 import '../../estilos/AdministradorEstilos/GestionDocentes.css';
-
+import { AuthContext } from '../../contextos/ContextoAutenticacion';
 const GestionDocentes = () => {
+  const { idUsuario } = useContext(AuthContext);
+  const { token } = useContext(AuthContext);
   const [docentes, setDocentes] = useState([]);
   const [titulos, setTitulos] = useState([]);
   const [show, setShow] = useState(false);
@@ -49,8 +51,6 @@ const GestionDocentes = () => {
   const handleShow = () => setShow(true);
 
   const agregarNuevoDocente = async () => {
-    const idUsuario='';
-    const token='';
     const docenteData = {
       nombre: nuevoDocente.nombre,
       correo: nuevoDocente.correo,
@@ -75,7 +75,7 @@ const GestionDocentes = () => {
 
   const confirmarEliminacion = async () => {
     try {
-      await eliminarDocente(docenteIdEliminar);
+      await eliminarDocente(docenteIdEliminar, idUsuario,token);
       obtenerDocentesTodo().then((data) => setDocentes(data.docentes));
       setShowEliminarModal(false);
       setDocenteIdEliminar(null);
@@ -108,7 +108,7 @@ const GestionDocentes = () => {
     };
 
     try {
-      await actualizarDocente(docenteIdActualizar, docenteData);
+      await actualizarDocente(docenteIdActualizar, docenteData,idUsuario,token);
       obtenerDocentesTodo().then((data) => setDocentes(data.docentes));
       handleClose();
     } catch (error) {

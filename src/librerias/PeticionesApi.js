@@ -41,9 +41,9 @@ export const obtenerDocentesTodo = async () => {
     }
   };
   
-export const actualizarDocente = async (id, docenteData) => {
+export const actualizarDocente = async (id, docenteData,idUsuario,token) => {
   try {
-    const response = await instance.put('/docente/actualizar', { id, ...docenteData });
+    const response = await instance.put('/docente/actualizar', { id, ...docenteData,idUsuario, token });
     return response.data;
   } catch (error) {
     console.error("Error al actualizar docente:", error);
@@ -51,9 +51,9 @@ export const actualizarDocente = async (id, docenteData) => {
   }
 };
 
-export const eliminarDocente = async (id) => {
+export const eliminarDocente = async (id,idUsuario,token) => {
   try {
-    const response = await instance.put('/docente/eliminar', { docente: id });
+    const response = await instance.put('/docente/eliminar', { docente: id, idUsuario, token });
     return response.data;
   } catch (error) {
     console.error("Error al eliminar docente:", error);
@@ -125,3 +125,22 @@ export const obtenerEventos = async () => {
     throw error;
   }
 };
+export const obtenerNoticias = async () => {
+  try {
+    const response = await instance.get('/noticia/obtener');
+    return response.data;
+  } catch (error) {
+    console.error("Error al obtener eventos:", error);
+    throw error;
+  }
+};
+export const eliminarEvento = async (id) => {
+  try {
+    const response = await instance.put('/evento/eliminar', { evento: id });
+    return response.data;
+  } catch (error) {
+    console.error("Error al eliminar docente:", error);
+    throw error;
+  }
+};
+
