@@ -24,7 +24,7 @@ const IniciarSesion = () => {
       const { salida, mensaje, id , permiso,idUsuario,idDocente,token } = response.data;
 
       if (salida) {
-        iniciarSesion(parseInt(permiso, 10)); 
+        iniciarSesion(parseInt(permiso, 10),idUsuario,idDocente,token); 
         navigate('/admin');
       } else {
         setError(mensaje || 'Credenciales incorrectas');
