@@ -4,8 +4,7 @@ import { manejarCambioFoto, agregarDocente, actualizarDocente, eliminarDocente, 
 import '../../estilos/AdministradorEstilos/GestionDocentes.css';
 import { AuthContext } from '../../contextos/ContextoAutenticacion';
 const GestionDocentes = () => {
-  const { idUsuario } = useContext(AuthContext);
-  const { token } = useContext(AuthContext);
+  const { idUsuario, idDocente, token, permiso } = useContext(AuthContext);
   const [docentes, setDocentes] = useState([]);
   const [titulos, setTitulos] = useState([]);
   const [show, setShow] = useState(false);
