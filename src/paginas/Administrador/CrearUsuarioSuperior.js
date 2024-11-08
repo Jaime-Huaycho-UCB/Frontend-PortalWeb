@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
 import { Container, Row, Col, Card, Button, Modal, Form, Alert, Table } from 'react-bootstrap';
 import { obtenerDocentes, crearUsuario, obtenerUsuarios } from '../../librerias/PeticionesApi';
 import '../../estilos/AdministradorEstilos/CrearUsuarioSuperior.css';
+import { AuthContext } from '../../contextos/ContextoAutenticacion';
 
 const CrearUsuarioSuperior = () => {
   const [docentes, setDocentes] = useState([]);
@@ -10,20 +11,19 @@ const CrearUsuarioSuperior = () => {
   const [password, setPassword] = useState('');
   const [mensaje, setMensaje] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
+  const { idUsuario, idDocente, token, permiso } = useContext(AuthContext);
 
   
-  const cargarDocentes = async () => {
+  const cargarDocentes = useCallback(async () => {
     try {
-      const data = await obtenerDocentes();
+      const data = await obtenerDocentes(idUsuario, token);
       setDocentes(data?.docentes || []);
     } catch (error) {
       console.error("Error al cargar docentes:", error);
     }
-  };
+  }, [idUsuario, token]); // Memoriza `cargarDocentes` para evitar ejecuciones innecesarias
 
-  const cargarUsuarios = async () => {
-    const idUsuario = "";
-    const token = "";
+  const cargarUsuarios = useCallback(async () => {
     try {
       const usuariosData = await obtenerUsuarios(idUsuario, token);
       if (usuariosData.salida) {
@@ -35,12 +35,15 @@ const CrearUsuarioSuperior = () => {
     } catch (error) {
       console.error("Error al cargar usuarios:", error);
     }
-  };
+  }, [idUsuario, token]); // Memoriza `cargarUsuarios` para evitar ejecuciones innecesarias
 
   useEffect(() => {
+    console.log("Cargando docentes...");
     cargarDocentes();
+
+    console.log("Cargando usuarios...");
     cargarUsuarios();
-  }, []);
+  }, [cargarDocentes, cargarUsuarios]); // Incluye las funciones en las dependencias
 
   const manejarSeleccionDocente = (docente) => {
     setDocenteSeleccionado(docente);
@@ -51,7 +54,7 @@ const CrearUsuarioSuperior = () => {
     e.preventDefault();
     if (docenteSeleccionado && password) {
       try {
-        const nuevoUsuario = await crearUsuario(docenteSeleccionado.id, password);
+        const nuevoUsuario = await crearUsuario(docenteSeleccionado.id, password,idUsuario,token);
         
         setMensaje(`Usuario para ${docenteSeleccionado.nombre} creado exitosamente.`);
         await cargarUsuarios();
