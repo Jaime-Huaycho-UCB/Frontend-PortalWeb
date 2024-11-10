@@ -65,7 +65,7 @@ export const eliminarDocente = async (id,idUsuario,token) => {
 
 export const obtenerTitulos = async () => {
   try {
-    const response = await instance.get('/titulo/obtener');
+    const response = await instance.get('/docente/titulo/obtener');
     return response.data.titulos;
   } catch (error) {
     console.error("Error al obtener títulos:", error);
