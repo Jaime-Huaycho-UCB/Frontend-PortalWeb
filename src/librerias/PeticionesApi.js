@@ -188,17 +188,6 @@ export const eliminarNoticia = async (idNoticia, idUsuario, token) => {
     throw error;
   }
 };
-// Obtener niveles académicos
-export const obtenerNivelesAcademicos = async () => {
-  try {
-    const response = await instance.get('/estudiante/nivelAcademico/obtener');
-    return response.data;
-  } catch (error) {
-    console.error("Error al obtener niveles académicos:", error);
-    return [];
-  }
-};
-
 // Obtener estudiantes
 export const obtenerEstudiantes = async () => {
   try {
@@ -210,8 +199,19 @@ export const obtenerEstudiantes = async () => {
   }
 };
 
+// Obtener niveles académicos
+export const obtenerNivelesAcademicos = async () => {
+  try {
+    const response = await instance.get('/estudiante/nivelAcademico/obtener');
+    return response.data;
+  } catch (error) {
+    console.error("Error al obtener niveles académicos:", error);
+    return [];
+  }
+};
+
 // Agregar estudiante
-export const agregarEstudiante = async (estudianteData,idUsuario,token) => {
+export const agregarEstudiante = async (estudianteData, idUsuario, token) => {
   try {
     const response = await instance.post('/estudiante/agregar', { ...estudianteData, idUsuario, token });
     return response.data;
@@ -222,9 +222,9 @@ export const agregarEstudiante = async (estudianteData,idUsuario,token) => {
 };
 
 // Actualizar estudiante
-export const actualizarEstudiante = async (idEstudiante, estudianteData,idUsuario,token) => {
+export const actualizarEstudiante = async (idEstudiante, estudianteData, idUsuario, token) => {
   try {
-    const response = await instance.put(`/estudiante/actualizar`,{ idEstudiante,...estudianteData,idUsuario,token});
+    const response = await instance.put(`/estudiante/actualizar`, { idEstudiante, ...estudianteData, idUsuario, token });
     return response.data;
   } catch (error) {
     console.error("Error al actualizar estudiante:", error);
@@ -233,9 +233,11 @@ export const actualizarEstudiante = async (idEstudiante, estudianteData,idUsuari
 };
 
 // Eliminar estudiante
-export const eliminarEstudiante = async (idEstudiante,idUsuario,token) => {
+export const eliminarEstudiante = async (idEstudiante, idUsuario, token) => {
   try {
-    const response = await instance.delete(`/estudiante/eliminar`, { data:idEstudiante,idUsuario, token  });
+    const response = await instance.delete(`/estudiante/eliminar`, {
+      data: { idEstudiante, idUsuario, token },
+    });
     return response.data;
   } catch (error) {
     console.error("Error al eliminar estudiante:", error);
