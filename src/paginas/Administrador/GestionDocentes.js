@@ -3,6 +3,8 @@ import { Button, Modal, Card, Row, Col, Form } from 'react-bootstrap';
 import { manejarCambioFoto, agregarDocente, actualizarDocente, eliminarDocente, obtenerTitulos, obtenerDocentesTodo } from '../../librerias/PeticionesApi';
 import '../../estilos/AdministradorEstilos/GestionDocentes.css';
 import { AuthContext } from '../../contextos/ContextoAutenticacion';
+import { useNavigate } from 'react-router-dom';
+
 const GestionDocentes = () => {
   const { idUsuario, idDocente, token, permiso } = useContext(AuthContext);
   const [docentes, setDocentes] = useState([]);
@@ -12,6 +14,9 @@ const GestionDocentes = () => {
   const [isUpdating, setIsUpdating] = useState(false);
   const [docenteIdActualizar, setDocenteIdActualizar] = useState(null);
   const [docenteIdEliminar, setDocenteIdEliminar] = useState(null);
+  const navigate = useNavigate();
+  const { cerrarSesion } = useContext(AuthContext); 
+
   const [nuevoDocente, setNuevoDocente] = useState({
     nombre: '',
     correo: '',
@@ -59,7 +64,16 @@ const GestionDocentes = () => {
     };
   
     try {
-      await agregarDocente(docenteData,idUsuario,token); 
+      const response=await agregarDocente(docenteData,idUsuario,token); 
+      if (!response.salida) {
+        if(response.mensaje==='TKIN'){
+          cerrarSesion(); 
+          navigate('/iniciar-sesion'); 
+          return;
+        }else{
+          console.error(response.mensaje)
+        }
+      }
       obtenerDocentesTodo().then((data) => setDocentes(data.docentes));
       handleClose();
     } catch (error) {
@@ -74,7 +88,16 @@ const GestionDocentes = () => {
 
   const confirmarEliminacion = async () => {
     try {
-      await eliminarDocente(docenteIdEliminar, idUsuario,token);
+      const response=await eliminarDocente(docenteIdEliminar, idUsuario,token);
+      if (!response.salida) {
+        if(response.mensaje==='TKIN'){
+          cerrarSesion(); 
+          navigate('/iniciar-sesion'); 
+          return;
+        }else{
+          console.error(response.mensaje)
+        }
+      }
       obtenerDocentesTodo().then((data) => setDocentes(data.docentes));
       setShowEliminarModal(false);
       setDocenteIdEliminar(null);
@@ -107,7 +130,16 @@ const GestionDocentes = () => {
     };
 
     try {
-      await actualizarDocente(docenteIdActualizar, docenteData,idUsuario,token);
+      const response=await actualizarDocente(docenteIdActualizar, docenteData,idUsuario,token);
+      if (!response.salida) {
+        if(response.mensaje==='TKIN'){
+          cerrarSesion(); 
+          navigate('/iniciar-sesion'); 
+          return;
+        }else{
+          console.error(response.mensaje)
+        }
+      }
       obtenerDocentesTodo().then((data) => setDocentes(data.docentes));
       handleClose();
     } catch (error) {

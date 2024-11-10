@@ -3,6 +3,7 @@ import { Container, Row, Col, Card, Button, Modal, Form, Alert, Table } from 're
 import { obtenerDocentes, crearUsuario, obtenerUsuarios } from '../../librerias/PeticionesApi';
 import '../../estilos/AdministradorEstilos/CrearUsuarioSuperior.css';
 import { AuthContext } from '../../contextos/ContextoAutenticacion';
+import { useNavigate } from 'react-router-dom';
 
 const CrearUsuarioSuperior = () => {
   const [docentes, setDocentes] = useState([]);
@@ -12,16 +13,26 @@ const CrearUsuarioSuperior = () => {
   const [mensaje, setMensaje] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
   const { idUsuario, idDocente, token, permiso } = useContext(AuthContext);
-
+  const navigate = useNavigate();
+  const { cerrarSesion } = useContext(AuthContext); 
   
   const cargarDocentes = useCallback(async () => {
     try {
-      const data = await obtenerDocentes(idUsuario, token);
-      setDocentes(data?.docentes || []);
+      const response = await obtenerDocentes(idUsuario, token);
+      if (!response.salida) {
+        if(response.mensaje==='TKIN'){
+          cerrarSesion(); 
+          navigate('/iniciar-sesion'); 
+          return;
+        }else{
+          console.error(response.mensaje)
+        }
+      }
+      setDocentes(response?.docentes || []);
     } catch (error) {
       console.error("Error al cargar docentes:", error);
     }
-  }, [idUsuario, token]); 
+  }, [idUsuario, token,cerrarSesion,navigate]); 
 
   const cargarUsuarios = useCallback(async () => {
     try {
@@ -30,12 +41,19 @@ const CrearUsuarioSuperior = () => {
         setUsuarios(usuariosData.usuarios);
         console.log(usuariosData.usuarios);
       } else {
-        console.log(usuariosData.mensaje);
-      }
+          if(usuariosData.mensaje==='TKIN'){
+          cerrarSesion();
+          navigate('/iniciar-sesion');
+          return;
+        
+          }else{
+            console.log(usuariosData.mensaje);
+          }
+        }
     } catch (error) {
       console.error("Error al cargar usuarios:", error);
     }
-  }, [idUsuario, token]); // Memoriza `cargarUsuarios` para evitar ejecuciones innecesarias
+  }, [idUsuario, token,cerrarSesion,navigate]); // Memoriza `cargarUsuarios` para evitar ejecuciones innecesarias
 
   useEffect(() => {
     console.log("Cargando docentes...");
@@ -55,7 +73,15 @@ const CrearUsuarioSuperior = () => {
     if (docenteSeleccionado && password) {
       try {
         const nuevoUsuario = await crearUsuario(docenteSeleccionado.id, password,idUsuario,token);
-        
+        if(!nuevoUsuario.salida){
+          if(nuevoUsuario.mensaje==="TKIN"){
+            cerrarSesion();
+            navigate('/iniciar-sesion');
+            return;
+          }else{
+            console.log(nuevoUsuario.mensaje);
+          }
+        }
         setMensaje(`Usuario para ${docenteSeleccionado.nombre} creado exitosamente.`);
         await cargarUsuarios();
 
