@@ -22,22 +22,30 @@ const GestionEstudiantes = () => {
       contenido: null,
     }
   });
-
   useEffect(() => {
     const cargarEstudiantes = async () => {
-      const estudiantesData = await obtenerEstudiantes();
-      setEstudiantes(estudiantesData);
+      try {
+        const respuesta = await obtenerEstudiantes();
+        setEstudiantes(Array.isArray(respuesta.estudiante) ? respuesta.estudiante : []);
+      } catch (error) {
+        console.error("Error al cargar estudiantes:", error);
+        setEstudiantes([]); // Asegura que `estudiantes` sea un array en caso de error
+      }
     };
-
+  
     const cargarNivelesAcademicos = async () => {
-      const niveles = await obtenerNivelesAcademicos();
-      setNivelesAcademicos(niveles);
+      try {
+        const niveles = await obtenerNivelesAcademicos();
+        setNivelesAcademicos(niveles);
+      } catch (error) {
+        console.error("Error al cargar niveles académicos:", error);
+      }
     };
-
+  
     cargarEstudiantes();
     cargarNivelesAcademicos();
   }, []);
-
+  
   const handleGuardarEstudiante = async () => {
     if (estudianteSeleccionado) {
       const estudianteActualizado = await actualizarEstudiante(estudianteSeleccionado.id, nuevoEstudiante);
