@@ -78,7 +78,8 @@ const GestionNoticias = () => {
 
   const iniciarEdicion = (noticia) => {
     setIsUpdating(true);
-    setNoticiaSeleccionada(noticia.idNoticia);
+    // Asegúrate de que aquí estás asignando el id correctamente, revisa si es `noticia.id` o `noticia.idNoticia`
+    setNoticiaSeleccionada(noticia.idNoticia || noticia.id); // Asegura que exista el id antes de usarlo
     setNewNoticia({
       titulo: noticia.titulo,
       redactor: noticia.redactor,
@@ -90,6 +91,7 @@ const GestionNoticias = () => {
     });
     setShowModal(true);
   }
+  
 
   const actualizarNoticiaExistente = async () => {
     try {
@@ -107,6 +109,7 @@ const GestionNoticias = () => {
       console.error("Error al actualizar noticia:", error);
     }
   };
+  
 
   const confirmarEliminacion = async (id) => {
     try {
