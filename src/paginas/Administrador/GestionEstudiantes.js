@@ -22,30 +22,20 @@ const GestionEstudiantes = () => {
       contenido: null,
     }
   });
-useEffect(() => {
-  const cargarEstudiantes = async () => {
-    try {
-      const respuesta = await obtenerEstudiantes();
-      setEstudiantes(respuesta.salida ? respuesta.estudiantes : []);
-    } catch (error) {
-      console.error("Error al cargar estudiantes:", error);
-      setEstudiantes([]);
-    }
-  };
+  useEffect(() => {  
 
-  const cargarNivelesAcademicos = async () => {
-    try {
-      const respuesta = await obtenerNivelesAcademicos();
-      setNivelesAcademicos(Array.isArray(respuesta) ? respuesta : []);
-    } catch (error) {
-      console.error("Error al cargar niveles académicos:", error);
-      setNivelesAcademicos([]);
-    }
-  };
+    obtenerEstudiantes()
+      .then((data) => {
+        if (data.salida) setEstudiantes(data.estudiantes);
+      })
+      .catch(console.error);
 
-  cargarEstudiantes();
-  cargarNivelesAcademicos();
-}, []);
+    obtenerNivelesAcademicos()
+      .then((nivel) => {
+        setNivelesAcademicos(nivel);
+      })
+      .catch(console.error);
+  }, []);
 
   
   
