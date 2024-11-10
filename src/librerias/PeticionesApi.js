@@ -1,8 +1,5 @@
 // src/librerias/PeticionesApi.js
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import { cerrarSesion } from '../contextos/ContextoAutenticacion'; // Importa la función de cierre de sesión desde tu contexto de autenticación
-
 
 const BASE_URL = 'http://localhost:8000';  
 
@@ -113,16 +110,9 @@ export const manejarCambioFoto = (e, setFotoBase64) => {
     setFotoBase64('');
   }
 };
-
 export const agregarEvento = async (eventoData, idUsuario, token) => {
   try {
     const response = await instance.post('/evento/agregar', { ...eventoData, idUsuario, token });
-
-    if (!response.data.salida && response.data.mensaje === 'TKIN') {
-      cerrarSesion(); // Cierra la sesión si se detecta `TKIN`
-      useNavigate()('/inicio-sesion'); // Redirige a la pantalla de inicio de sesión
-    }
-
     return response.data;
   } catch (error) {
     console.error("Error al agregar evento:", error);

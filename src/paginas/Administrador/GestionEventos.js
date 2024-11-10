@@ -2,11 +2,13 @@ import React, { useState, useEffect,useContext } from 'react';
 import { Button, Form, Modal } from 'react-bootstrap';
 import { agregarEvento, obtenerEventos, manejarCambioFoto } from '../../librerias/PeticionesApi';
 import '../../estilos/AdministradorEstilos/GestionEventos.css';
-import { AuthContext,cerrarSesion } from '../../contextos/ContextoAutenticacion';
+import { AuthContext} from '../../contextos/ContextoAutenticacion';
 import { useNavigate } from 'react-router-dom';
 const GestionEventos = () => {
   const { idUsuario, idDocente, token, permiso } = useContext(AuthContext);
   const navigate = useNavigate();
+  const { cerrarSesion } = useContext(AuthContext); 
+
   const [showModal, setShowModal] = useState(false);
   const [eventos, setEventos] = useState([]);
   const [nuevoEvento, setNuevoEvento] = useState({
