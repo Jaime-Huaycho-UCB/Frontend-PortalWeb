@@ -78,7 +78,7 @@ const GestionNoticias = () => {
 
   const iniciarEdicion = (noticia) => {
     setIsUpdating(true);
-    setNoticiaSeleccionada(noticia.id);
+    setNoticiaSeleccionada(noticia.idNoticia);
     setNewNoticia({
       titulo: noticia.titulo,
       redactor: noticia.redactor,
@@ -170,14 +170,14 @@ const GestionNoticias = () => {
         </thead>
         <tbody>
           {currentNoticias.map((noticia) => (
-            <tr key={noticia.id}>
+            <tr key={noticia.idNoticia}>
               <td>{noticia.titulo}</td>
               <td>{noticia.redactor}</td>
               <td>{noticia.resumen}</td>
               <td>{noticia.fechaPublicacion}</td>
               <td>
                 <Button variant="warning" onClick={() => iniciarEdicion(noticia)}>Actualizar</Button>
-                <Button variant="danger" onClick={() => confirmarEliminacion(noticia.id)}>Eliminar</Button>
+                <Button variant="danger" onClick={() => confirmarEliminacion(noticia.idNoticia)}>Eliminar</Button>
               </td>
             </tr>
           ))}
@@ -262,7 +262,7 @@ const GestionNoticias = () => {
                 accept="image/*"
                 onChange={(e) => manejarCambioFoto(e, setFotoRelleno)}
               />
-              {newNoticia.fotoNoticia && <img src={newNoticia.fotoNoticia} alt="Vista previa" className="foto-previa mt-3" />}
+              {newNoticia.fotoRelleno && <img src={newNoticia.fotoRelleno} alt="Vista previa" className="foto-previa mt-3" />}
             </Form.Group>
           </Form>
         </Modal.Body>

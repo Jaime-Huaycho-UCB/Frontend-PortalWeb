@@ -171,7 +171,7 @@ export const agregarNoticia = async (noticiaData, idUsuario, token) => {
 
 export const actualizarNoticia = async (idNoticia, noticiaData, idUsuario, token) => {
   try {
-    const response = await instance.put(`/noticia/actualizar/`, { idNoticia,...noticiaData, idUsuario, token });
+    const response = await instance.put(`/noticia/actualizar`, { idNoticia,...noticiaData, idUsuario, token });
     return response.data;
   } catch (error) {
     console.error("Error al actualizar noticia:", error);
@@ -181,7 +181,7 @@ export const actualizarNoticia = async (idNoticia, noticiaData, idUsuario, token
 
 export const eliminarNoticia = async (id, idUsuario, token) => {
   try {
-    const response = await instance.delete(`/noticia/eliminar/`, { data:id,idUsuario, token  });
+    const response = await instance.put(`/noticia/eliminar`, { data:id,idUsuario, token  });
     return response.data;
   } catch (error) {
     console.error("Error al eliminar noticia:", error);
