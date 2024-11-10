@@ -54,7 +54,7 @@ const GestionEventos = () => {
       if (!response.salida) {
         if(response.mensaje==='TKIN'){
           cerrarSesion(); 
-          navigate('/inicio-sesion'); 
+          navigate('/iniciar-sesion'); 
           return;
         }else{
           console.error(response.mensaje)
