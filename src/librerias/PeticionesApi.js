@@ -138,13 +138,21 @@ export const obtenerNoticias = async () => {
     throw error;
   }
 };
-export const eliminarEvento = async (id) => {
+export const eliminarEvento = async (id,idUsuario,token) => {
   try {
-    const response = await instance.put('/evento/eliminar', { evento: id });
+    const response = await instance.put('/evento/eliminar', { evento: id , idUsuario,token});
     return response.data;
   } catch (error) {
     console.error("Error al eliminar docente:", error);
     throw error;
   }
 };
-
+export const actualizarEvento = async (id, eventoData, idUsuario, token) => {
+  try {
+    const response = await instance.put(`/evento/actualizar`, {id, ...eventoData, idUsuario, token });
+    return response.data;
+  } catch (error) {
+    console.error("Error al actualizar evento:", error);
+    throw error;
+  }
+};

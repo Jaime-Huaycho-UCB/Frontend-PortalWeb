@@ -1,16 +1,17 @@
-import React, { useState, useEffect,useContext } from 'react';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
 import { Button, Form, Modal } from 'react-bootstrap';
-import { agregarEvento, obtenerEventos, manejarCambioFoto } from '../../librerias/PeticionesApi';
-import '../../estilos/AdministradorEstilos/GestionEventos.css';
-import { AuthContext} from '../../contextos/ContextoAutenticacion';
+import { agregarEvento, obtenerEventos, actualizarEvento, eliminarEvento, manejarCambioFoto } from '../../librerias/PeticionesApi';
+import { AuthContext } from '../../contextos/ContextoAutenticacion';
 import { useNavigate } from 'react-router-dom';
+
 const GestionEventos = () => {
-  const { idUsuario, idDocente, token, permiso } = useContext(AuthContext);
+  const { idUsuario, token, cerrarSesion } = useContext(AuthContext);
   const navigate = useNavigate();
-  const { cerrarSesion } = useContext(AuthContext); 
 
   const [showModal, setShowModal] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
   const [eventos, setEventos] = useState([]);
+  const [eventoSeleccionado, setEventoSeleccionado] = useState(null);
   const [nuevoEvento, setNuevoEvento] = useState({
     nombre: '',
     descripcion: '',
@@ -24,52 +25,90 @@ const GestionEventos = () => {
     setNuevoEvento((prevEvento) => ({ ...prevEvento, fotoBase64: base64 }));
   };
 
-  useEffect(() => {
-   
-    obtenerEventos()
-      .then((data) => {
-        if (data.salida) {
-          setEventos(data.eventos);
-        }
-      })
-      .catch(console.error);
-  }, []);
-
-
-
-  
-  const agregarNuevoEvento = async () => {
-    const eventoData = {
-      nombre: nuevoEvento.nombre,
-      descripcion: nuevoEvento.descripcion,
-      director: nuevoEvento.director,
-      fecha: nuevoEvento.fecha,
-      lugar: nuevoEvento.lugar,
-      fotoBase64: nuevoEvento.fotoBase64,
-    };
-    
+  const cargarEventos = useCallback(async () => {
     try {
-      const response = await agregarEvento(eventoData, idUsuario, token); 
-  
-      if (!response.salida) {
+      const data = await obtenerEventos();
+      if (data.salida) {
+        setEventos(data.eventos);
+      } else {if (data.mensaje === 'TKIN') {
+        cerrarSesion();
+        navigate('/iniciar-sesion');
+
+      }else{
+        console.log(data.mensaje);
+      }}
+    } catch (error) {
+      console.error(error);
+    }
+  }, [cerrarSesion, navigate]);
+
+  useEffect(() => {
+    cargarEventos();
+  }, [cargarEventos]);
+
+  const agregarNuevoEvento = useCallback(async () => {
+    try {
+      const response = await agregarEvento(nuevoEvento, idUsuario, token);
+      if (!response.salida ) {
         if(response.mensaje==='TKIN'){
-          cerrarSesion(); 
-          navigate('/iniciar-sesion'); 
+          cerrarSesion();
+          navigate('/iniciar-sesion');
           return;
         }else{
-          console.error(response.mensaje)
+          console.log(response.mensaje);
         }
+     
       }
-      const data = await obtenerEventos();
-      setEventos(data.eventos); 
-  
+      cargarEventos();
       setShowModal(false);
       setNuevoEvento({ nombre: '', descripcion: '', director: '', fecha: '', lugar: '', fotoBase64: '' });
     } catch (error) {
       console.error(error);
     }
+  }, [cargarEventos, cerrarSesion, navigate, nuevoEvento, idUsuario, token]);
+
+  const iniciarEdicion = (evento) => {
+    setIsUpdating(true);
+    setEventoSeleccionado(evento.id);
+    setNuevoEvento(evento);
+    setShowModal(true);
   };
-  
+
+  const actualizarEventoExistente = useCallback(async () => {
+    try {
+      const response = await actualizarEvento(eventoSeleccionado, nuevoEvento, idUsuario, token);
+      if (!response.salida && response.mensaje === 'TKIN') {
+        cerrarSesion();
+        navigate('/iniciar-sesion');
+        return;
+      }
+      cargarEventos();
+      setShowModal(false);
+      setIsUpdating(false);
+      setNuevoEvento({ nombre: '', descripcion: '', director: '', fecha: '', lugar: '', fotoBase64: '' });
+    } catch (error) {
+      console.error(error);
+    }
+  }, [cargarEventos, cerrarSesion, navigate, eventoSeleccionado, nuevoEvento, idUsuario, token]);
+
+  const confirmarEliminacion = useCallback(async (id) => {
+    try {
+      const response = await eliminarEvento(id, idUsuario, token);
+      if (!response.salida) {
+        if(response.mensaje==='TKIN'){
+          cerrarSesion();
+        navigate('/iniciar-sesion');
+        return;
+        }else{
+          console.log(response.mensaje);
+        }
+      }
+      cargarEventos();
+    } catch (error) {
+      console.error(error);
+    }
+  }, [cargarEventos, cerrarSesion, navigate, idUsuario, token]);
+
   return (
     <div className="gestion-eventos-container">
       <div className="header">
@@ -77,7 +116,6 @@ const GestionEventos = () => {
         <Button variant="primary" onClick={() => setShowModal(true)} className="add-evento-btn">Agregar Evento</Button>
       </div>
 
-      {/* Línea de tiempo de eventos */}
       <div className="timeline">
         {eventos.map((evento, index) => (
           <div key={evento.id} className={`timeline-item ${index % 2 === 0 ? 'left' : 'right'}`}>
@@ -89,16 +127,17 @@ const GestionEventos = () => {
               <p><strong>Fecha:</strong> {evento.fecha}</p>
               <p><strong>Ubicación:</strong> {evento.lugar}</p>
               <p>{evento.descripcion}</p>
-              <p><strong>director</strong>{evento.director}</p>
+              <p><strong>Director:</strong> {evento.director}</p>
+              <Button variant="warning" onClick={() => iniciarEdicion(evento)}>Actualizar</Button>
+              <Button variant="danger" onClick={() => confirmarEliminacion(evento.id)}>Eliminar</Button>
             </div>
           </div>
         ))}
       </div>
 
-      {/* Modal para agregar eventos */}
-      <Modal show={showModal} onHide={() => setShowModal(false)} centered>
+      <Modal show={showModal} onHide={() => { setShowModal(false); setIsUpdating(false); }}>
         <Modal.Header closeButton>
-          <Modal.Title>Agregar Nuevo Evento</Modal.Title>
+          <Modal.Title>{isUpdating ? 'Actualizar Evento' : 'Agregar Nuevo Evento'}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
@@ -106,21 +145,18 @@ const GestionEventos = () => {
               <Form.Label>Nombre del Evento</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Ingresa el nombre del evento"
                 value={nuevoEvento.nombre}
                 onChange={(e) => setNuevoEvento({ ...nuevoEvento, nombre: e.target.value })}
               />
             </Form.Group>
-            <Form.Group controlId="forDirector">
-              <Form.Label>Director del evento</Form.Label>
+            <Form.Group controlId="formDirector" className="mt-3">
+              <Form.Label>Director del Evento</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Ingresa el nombre del Director del evento"
                 value={nuevoEvento.director}
                 onChange={(e) => setNuevoEvento({ ...nuevoEvento, director: e.target.value })}
               />
             </Form.Group>
-
             <Form.Group controlId="formFecha" className="mt-3">
               <Form.Label>Fecha</Form.Label>
               <Form.Control
@@ -133,7 +169,6 @@ const GestionEventos = () => {
               <Form.Label>Ubicación</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Ingresa el lugar"
                 value={nuevoEvento.lugar}
                 onChange={(e) => setNuevoEvento({ ...nuevoEvento, lugar: e.target.value })}
               />
@@ -143,25 +178,22 @@ const GestionEventos = () => {
               <Form.Control
                 as="textarea"
                 rows={3}
-                placeholder="Describe el evento"
                 value={nuevoEvento.descripcion}
                 onChange={(e) => setNuevoEvento({ ...nuevoEvento, descripcion: e.target.value })}
               />
             </Form.Group>
-            <Form.Group className="mb-3">
+            <Form.Group controlId="formFoto" className="mt-3">
               <Form.Label>Foto del Evento</Form.Label>
-              <Form.Control type="file" accept="image/*" onChange={(e) => manejarCambioFoto(e, setFotoBase64)} />
-              {nuevoEvento.fotoBase64 && (
-                <div className="vista-previa">
-                  <img src={`data:image/jpeg;base64,${nuevoEvento.fotoBase64}`} alt="Vista previa" className="foto-previa" />
-                </div>
-              )}
+              <Form.Control type="file" onChange={(e) => manejarCambioFoto(e, setFotoBase64)} />
+              {nuevoEvento.fotoBase64 && <img src={`data:image/jpeg;base64,${nuevoEvento.fotoBase64}`} alt="Vista previa" className="foto-previa" />}
             </Form.Group>
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowModal(false)}>Cerrar</Button>
-          <Button variant="primary" onClick={agregarNuevoEvento}>Agregar</Button>
+          <Button variant="secondary" onClick={() => { setShowModal(false); setIsUpdating(false); }}>Cerrar</Button>
+          <Button variant="primary" onClick={isUpdating ? actualizarEventoExistente : agregarNuevoEvento}>
+            {isUpdating ? 'Actualizar' : 'Agregar'}
+          </Button>
         </Modal.Footer>
       </Modal>
     </div>
