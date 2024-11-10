@@ -129,15 +129,7 @@ export const obtenerEventos = async () => {
     throw error;
   }
 };
-export const obtenerNoticias = async () => {
-  try {
-    const response = await instance.get('/noticia/obtener');
-    return response.data;
-  } catch (error) {
-    console.error("Error al obtener eventos:", error);
-    throw error;
-  }
-};
+
 export const eliminarEvento = async (id,idUsuario,token) => {
   try {
     const response = await instance.put('/evento/eliminar', { evento: id , idUsuario,token});
@@ -156,3 +148,44 @@ export const actualizarEvento = async (idEvento, eventoData, idUsuario, token) =
     throw error;
   }
 };
+
+export const obtenerNoticias = async () => {
+  try {
+    const response = await instance.get('/noticia/obtener');
+    return response.data;
+  } catch (error) {
+    console.error("Error al obtener noticias:", error);
+    throw error;
+  }
+};
+
+export const agregarNoticia = async (noticiaData, idUsuario, token) => {
+  try {
+    const response = await instance.post('/noticia/agregar', { ...noticiaData, idUsuario, token });
+    return response.data;
+  } catch (error) {
+    console.error("Error al agregar noticia:", error);
+    throw error;
+  }
+};
+
+export const actualizarNoticia = async (idNoticia, noticiaData, idUsuario, token) => {
+  try {
+    const response = await instance.put(`/noticia/actualizar/`, { idNoticia,...noticiaData, idUsuario, token });
+    return response.data;
+  } catch (error) {
+    console.error("Error al actualizar noticia:", error);
+    throw error;
+  }
+};
+
+export const eliminarNoticia = async (id, idUsuario, token) => {
+  try {
+    const response = await instance.delete(`/noticia/eliminar/`, { data:id,idUsuario, token  });
+    return response.data;
+  } catch (error) {
+    console.error("Error al eliminar noticia:", error);
+    throw error;
+  }
+};
+
