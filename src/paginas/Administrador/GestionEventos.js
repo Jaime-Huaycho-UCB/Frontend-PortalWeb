@@ -30,13 +30,10 @@ const GestionEventos = () => {
       const data = await obtenerEventos();
       if (data.salida) {
         setEventos(data.eventos);
-      } else {if (data.mensaje === 'TKIN') {
+      } else if (data.mensaje === 'TKIN') {
         cerrarSesion();
         navigate('/iniciar-sesion');
-
-      }else{
-        console.log(data.mensaje);
-      }}
+      }
     } catch (error) {
       console.error(error);
     }
@@ -49,15 +46,14 @@ const GestionEventos = () => {
   const agregarNuevoEvento = useCallback(async () => {
     try {
       const response = await agregarEvento(nuevoEvento, idUsuario, token);
-      if (!response.salida ) {
-        if(response.mensaje==='TKIN'){
+      if (!response.salida) {
+        if (response.mensaje === 'TKIN') {
           cerrarSesion();
           navigate('/iniciar-sesion');
-          return;
-        }else{
-          console.log(response.mensaje);
+        } else {
+          console.error(response.mensaje);
         }
-     
+        return;
       }
       cargarEventos();
       setShowModal(false);
@@ -70,16 +66,27 @@ const GestionEventos = () => {
   const iniciarEdicion = (evento) => {
     setIsUpdating(true);
     setEventoSeleccionado(evento.id);
-    setNuevoEvento(evento);
+    setNuevoEvento({
+      nombre: evento.nombre,
+      descripcion: evento.descripcion,
+      director: evento.director,
+      fecha: evento.fecha,
+      lugar: evento.lugar,
+      fotoBase64: '',
+    });
     setShowModal(true);
   };
 
   const actualizarEventoExistente = useCallback(async () => {
     try {
       const response = await actualizarEvento(eventoSeleccionado, nuevoEvento, idUsuario, token);
-      if (!response.salida && response.mensaje === 'TKIN') {
-        cerrarSesion();
-        navigate('/iniciar-sesion');
+      if (!response.salida) {
+        if (response.mensaje === 'TKIN') {
+          cerrarSesion();
+          navigate('/iniciar-sesion');
+        } else {
+          console.error(response.mensaje);
+        }
         return;
       }
       cargarEventos();
@@ -95,13 +102,13 @@ const GestionEventos = () => {
     try {
       const response = await eliminarEvento(id, idUsuario, token);
       if (!response.salida) {
-        if(response.mensaje==='TKIN'){
+        if (response.mensaje === 'TKIN') {
           cerrarSesion();
-        navigate('/iniciar-sesion');
-        return;
-        }else{
-          console.log(response.mensaje);
+          navigate('/iniciar-sesion');
+        } else {
+          console.error(response.mensaje);
         }
+        return;
       }
       cargarEventos();
     } catch (error) {
