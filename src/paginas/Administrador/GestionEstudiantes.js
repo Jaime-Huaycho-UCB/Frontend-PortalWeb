@@ -35,16 +35,18 @@ const GestionEstudiantes = () => {
   
     const cargarNivelesAcademicos = async () => {
       try {
-        const niveles = await obtenerNivelesAcademicos();
-        setNivelesAcademicos(niveles);
+        const respuesta = await obtenerNivelesAcademicos();
+        setNivelesAcademicos(Array.isArray(respuesta) ? respuesta : []);
       } catch (error) {
         console.error("Error al cargar niveles académicos:", error);
+        setNivelesAcademicos([]); // Asegura que `nivelesAcademicos` sea un array en caso de error
       }
     };
   
     cargarEstudiantes();
     cargarNivelesAcademicos();
   }, []);
+  
   
   const handleGuardarEstudiante = async () => {
     if (estudianteSeleccionado) {
