@@ -191,7 +191,7 @@ export const eliminarNoticia = async (idNoticia, idUsuario, token) => {
 // Obtener niveles académicos
 export const obtenerNivelesAcademicos = async () => {
   try {
-    const response = await instance.get('/estudiante/niveles');
+    const response = await instance.get('/estudiante/nivelAcademico/obtener');
     return response.data;
   } catch (error) {
     console.error("Error al obtener niveles académicos:", error);
@@ -239,6 +239,24 @@ export const eliminarEstudiante = async (idEstudiante,idUsuario,token) => {
     return response.data;
   } catch (error) {
     console.error("Error al eliminar estudiante:", error);
+    throw error;
+  }
+};
+export const obtenerTesis = async () => {
+  try {
+    const response = await instance.get('/tesis/obtener');
+    return response.data;
+  } catch (error) {
+    console.error("Error al obtener las tesis:", error);
+    throw error;
+  }
+};
+export const eliminarTesis = async (idTesis,idUsuario,token) => {
+  try {
+    const response = await instance.put(`/tesis/eliminar`,{idTesis,idUsuario,token});
+    return response.data;
+  } catch (error) {
+    console.error("Error al eliminar la tesis:", error);
     throw error;
   }
 };
