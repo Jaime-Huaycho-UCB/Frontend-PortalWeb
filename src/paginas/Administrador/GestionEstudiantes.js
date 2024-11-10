@@ -45,8 +45,8 @@ const GestionEstudiantes = () => {
       .catch(console.error);
 
     obtenerNivelesAcademicos()
-      .then((nivel) => {
-        setNivelesAcademicos(nivel);
+      .then((nivelesAcademicos) => {
+        setNivelesAcademicos(nivelesAcademicos);
       })
       .catch(console.error);
   }, []);
@@ -205,8 +205,8 @@ const GestionEstudiantes = () => {
                 onChange={(e) => setNuevoEstudiante({ ...nuevoEstudiante, nivelAcademico: e.target.value })}
               >
                 <option value="">Selecciona un nivel</option>
-                {nivelesAcademicos.map((nivel) => (
-                  <option key={nivel.id} value={nivel.id}>{nivel.nombre}</option>
+                {nivelesAcademicos.map((nivelesAcademicos) => (
+                  <option key={nivelesAcademicos.id} value={nivelesAcademicos.id}>{nivelesAcademicos.nombre}</option>
                 ))}
               </Form.Control>
             </Form.Group>
