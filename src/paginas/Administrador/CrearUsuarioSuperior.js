@@ -21,7 +21,7 @@ const CrearUsuarioSuperior = () => {
     } catch (error) {
       console.error("Error al cargar docentes:", error);
     }
-  }, [idUsuario, token]); // Memoriza `cargarDocentes` para evitar ejecuciones innecesarias
+  }, [idUsuario, token]); 
 
   const cargarUsuarios = useCallback(async () => {
     try {

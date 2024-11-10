@@ -1,9 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useContext } from 'react';
 import { Button, Form, Modal } from 'react-bootstrap';
 import { agregarEvento, obtenerEventos, manejarCambioFoto } from '../../librerias/PeticionesApi';
 import '../../estilos/AdministradorEstilos/GestionEventos.css';
-
+import { AuthContext,cerrarSesion } from '../../contextos/ContextoAutenticacion';
+import { useNavigate } from 'react-router-dom';
 const GestionEventos = () => {
+  const { idUsuario, idDocente, token, permiso } = useContext(AuthContext);
+  const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
   const [eventos, setEventos] = useState([]);
   const [nuevoEvento, setNuevoEvento] = useState({
@@ -30,9 +33,10 @@ const GestionEventos = () => {
       .catch(console.error);
   }, []);
 
+
+
+  
   const agregarNuevoEvento = async () => {
-    const idUsuario='';
-    const token='';
     const eventoData = {
       nombre: nuevoEvento.nombre,
       descripcion: nuevoEvento.descripcion,
@@ -43,7 +47,17 @@ const GestionEventos = () => {
     };
     
     try {
-      await agregarEvento(eventoData,idUsuario,token); 
+      const response = await agregarEvento(eventoData, idUsuario, token); 
+  
+      if (!response.salida) {
+        if(response.mensaje==='TKIN'){
+          cerrarSesion(); 
+          navigate('/inicio-sesion'); 
+          return;
+        }else{
+          console.error(response.mensaje)
+        }
+      }
       const data = await obtenerEventos();
       setEventos(data.eventos); 
   
@@ -53,9 +67,7 @@ const GestionEventos = () => {
       console.error(error);
     }
   };
-
   
-
   return (
     <div className="gestion-eventos-container">
       <div className="header">
