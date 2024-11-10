@@ -1,52 +1,46 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Button, Modal, Card, Row, Col, Form } from 'react-bootstrap';
-import { obtenerEstudiantes, agregarEstudiante, actualizarEstudiante, eliminarEstudiante, obtenerNivelesAcademicos } from '../../librerias/PeticionesApi';
-import '../../estilos/AdministradorEstilos/GestionEstudiantes.css';
+import { manejarCambioFoto, agregarDocente, actualizarDocente, eliminarDocente, obtenerTitulos, obtenerDocentesTodo } from '../../librerias/PeticionesApi';
+import '../../estilos/AdministradorEstilos/GestionDocentes.css';
 import { AuthContext } from '../../contextos/ContextoAutenticacion';
 import { useNavigate } from 'react-router-dom';
 
-const GestionEstudiantes = () => {
+const GestionDocentes = () => {
   const { idUsuario, token } = useContext(AuthContext);
-  const [estudiantes, setEstudiantes] = useState([]);
-  const [nivelesAcademicos, setNivelesAcademicos] = useState([]);
+  const [docentes, setDocentes] = useState([]);
+  const [titulos, setTitulos] = useState([]);
   const [show, setShow] = useState(false);
   const [showEliminarModal, setShowEliminarModal] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
-  const [estudianteIdActualizar, setEstudianteIdActualizar] = useState(null);
-  const [estudianteIdEliminar, setEstudianteIdEliminar] = useState(null);
+  const [docenteIdActualizar, setDocenteIdActualizar] = useState(null);
+  const [docenteIdEliminar, setDocenteIdEliminar] = useState(null);
   const navigate = useNavigate();
   const { cerrarSesion } = useContext(AuthContext); 
 
-  const [nuevoEstudiante, setNuevoEstudiante] = useState({
+  const [nuevoDocente, setNuevoDocente] = useState({
     nombre: '',
     correo: '',
-    nivelAcademico: '',
-    foto: '',
-    agregarTesis: false,
-    tesis: {
-      titulo: '',
-      tipo: '',
-      fechaPublicacion: '',
-      resumen: '',
-      contenido: '',
-    }
+    titulo: '',
+    frase: '',
+    fotoBase64: '',
   });
   const [actualizarFoto, setActualizarFoto] = useState(false);
 
   const setFotoBase64 = (base64) => {
-    setNuevoEstudiante((prevEstudiante) => ({ ...prevEstudiante, foto: base64 }));
+    setNuevoDocente((prevDocente) => ({ ...prevDocente, fotoBase64: base64 }));
   };
 
   useEffect(() => {  
-    obtenerEstudiantes()
+
+    obtenerDocentesTodo()
       .then((data) => {
-        if (data.salida) setEstudiantes(data.estudiantes);
+        if (data.salida) setDocentes(data.docentes);
       })
       .catch(console.error);
 
-    obtenerNivelesAcademicos()
-      .then((nivel) => {
-        setNivelesAcademicos(nivel);
+    obtenerTitulos()
+      .then((titulos) => {
+        setTitulos(titulos);
       })
       .catch(console.error);
   }, []);
@@ -55,36 +49,32 @@ const GestionEstudiantes = () => {
     setShow(false);
     setIsUpdating(false);
     setActualizarFoto(false);
-    setNuevoEstudiante({
-      nombre: '',
-      correo: '',
-      nivelAcademico: '',
-      foto: '',
-      agregarTesis: false,
-      tesis: { titulo: '', tipo: '', fechaPublicacion: '', resumen: '', contenido: '' },
-    });
+    setNuevoDocente({ nombre: '', correo: '', titulo: '', frase: '', fotoBase64: '' });
   };
 
   const handleShow = () => setShow(true);
 
-  const agregarNuevoEstudiante = async () => {
-    const estudianteData = {
-      ...nuevoEstudiante,
-      tesis: nuevoEstudiante.agregarTesis ? nuevoEstudiante.tesis : null,
+  const agregarNuevoDocente = async () => {
+    const docenteData = {
+      nombre: nuevoDocente.nombre,
+      correo: nuevoDocente.correo,
+      titulo: nuevoDocente.titulo,
+      frase: nuevoDocente.frase,
+      fotoBase64: nuevoDocente.fotoBase64 
     };
   
     try {
-      const response = await agregarEstudiante(estudianteData, idUsuario, token); 
+      const response=await agregarDocente(docenteData,idUsuario,token); 
       if (!response.salida) {
-        if(response.mensaje === 'TKIN'){
+        if(response.mensaje==='TKIN'){
           cerrarSesion(); 
           navigate('/iniciar-sesion'); 
           return;
-        } else {
-          console.error(response.mensaje);
+        }else{
+          console.error(response.mensaje)
         }
       }
-      obtenerEstudiantes().then((data) => setEstudiantes(data.estudiantes));
+      obtenerDocentesTodo().then((data) => setDocentes(data.docentes));
       handleClose();
     } catch (error) {
       console.error(error);
@@ -92,57 +82,65 @@ const GestionEstudiantes = () => {
   };
 
   const iniciarEliminacion = (id) => {
-    setEstudianteIdEliminar(id);
+    setDocenteIdEliminar(id);
     setShowEliminarModal(true);
   };
 
   const confirmarEliminacion = async () => {
     try {
-      const response = await eliminarEstudiante(estudianteIdEliminar, idUsuario, token);
+      const response=await eliminarDocente(docenteIdEliminar, idUsuario,token);
       if (!response.salida) {
-        if(response.mensaje === 'TKIN'){
+        if(response.mensaje==='TKIN'){
           cerrarSesion(); 
           navigate('/iniciar-sesion'); 
           return;
-        } else {
-          console.error(response.mensaje);
+        }else{
+          console.error(response.mensaje)
         }
       }
-      obtenerEstudiantes().then((data) => setEstudiantes(data.estudiantes));
+      obtenerDocentesTodo().then((data) => setDocentes(data.docentes));
       setShowEliminarModal(false);
-      setEstudianteIdEliminar(null);
+      setDocenteIdEliminar(null);
     } catch (error) {
       console.error(error);
     }
   };
 
-  const iniciarActualizacion = (estudiante) => {
+  const iniciarActualizacion = (docente) => {
     setIsUpdating(true);
-    setEstudianteIdActualizar(estudiante.id);
-    setNuevoEstudiante(estudiante);
+    setDocenteIdActualizar(docente.id);
+    setNuevoDocente({
+      nombre: docente.nombre,
+      correo: docente.correo,
+      titulo: docente.titulo,
+      frase: docente.frase,
+      fotoBase64: '', 
+    });
     setActualizarFoto(false);
     handleShow();
   };
 
-  const actualizarEstudianteExistente = async () => {
-    const estudianteData = {
-      ...nuevoEstudiante,
-      foto: actualizarFoto ? nuevoEstudiante.foto : null,
-      tesis: nuevoEstudiante.agregarTesis ? nuevoEstudiante.tesis : null,
+  const actualizarDocenteExistente = async () => {
+    const docenteData = {
+      nombre: nuevoDocente.nombre,
+      correo: nuevoDocente.correo,
+      titulo: nuevoDocente.titulo,
+      frase: nuevoDocente.frase,
+      fotoBase64: actualizarFoto ? nuevoDocente.fotoBase64 : null 
     };
 
     try {
-      const response = await actualizarEstudiante(estudianteIdActualizar, estudianteData, idUsuario, token);
+      const response=await actualizarDocente(docenteIdActualizar, docenteData,idUsuario,token);
       if (!response.salida) {
-        if(response.mensaje === 'TKIN'){
+        if(response.mensaje==='TKIN'){
           cerrarSesion(); 
           navigate('/iniciar-sesion'); 
           return;
-        } else {
-          console.error(response.mensaje);
+        }else{
+          console.error(response.mensaje)
         }
       }
-      obtenerEstudiantes().then((data) => setEstudiantes(data.estudiantes));
+      obtenerDocentesTodo().then((data) => setDocentes(data.docentes));
       handleClose();
     } catch (error) {
       console.error(error);
@@ -150,25 +148,27 @@ const GestionEstudiantes = () => {
   };
 
   return (
-    <div className="gestion-estudiantes-container">
+    <div className="gestion-docentes-container">
       <div className="header">
-        <h2>Gestión de Estudiantes</h2>
-        <Button className="add-estudiante-btn" onClick={handleShow}>
-          Agregar Estudiante
+        <h2>Gestión de Docentes</h2>
+        <Button className="add-docente-btn" onClick={handleShow}>
+          Agregar Docente
         </Button>
       </div>
 
       <Row>
-        {estudiantes.map((estudiante) => (
-          <Col md={4} key={estudiante.id}>
-            <Card className="estudiante-card mb-4">
-              <Card.Img variant="top" src={estudiante.foto || 'https://cdn-icons-png.freepik.com/256/2307/2307607.png'} alt="Foto del Estudiante" className="estudiante-foto" />
+        {docentes.map((docente) => (
+          <Col md={4} key={docente.id}>
+            <Card className="docente-card mb-4">
+              <Card.Img variant="top" src={docente.foto || 'https://cdn-icons-png.freepik.com/256/2307/2307607.png?ga=GA1.1.646280353.1730388091&semt=ais_hybrid'} alt="Foto del Docente" className="docente-foto" />
               <Card.Body>
-                <Card.Title>{estudiante.nombre}</Card.Title>
-                <Card.Text>Email: {estudiante.correo || 'N/A'}</Card.Text>
-                <Card.Text>Nivel Académico: {estudiante.nivelAcademico || 'N/A'}</Card.Text>
-                <Button variant="warning" onClick={() => iniciarActualizacion(estudiante)} className="me-2">Actualizar</Button>
-                <Button variant="danger" onClick={() => iniciarEliminacion(estudiante.id)}>Eliminar</Button>
+                <Card.Title>{docente.nombre}</Card.Title>
+                <Card.Text>Email: {docente.correo || 'N/A'}</Card.Text>
+                <Card.Text>Título: {docente.titulo || 'N/A'}</Card.Text>
+                <Card.Text>Frase: {docente.frase || 'N/A'}</Card.Text>
+
+                <Button variant="warning" onClick={() => iniciarActualizacion(docente)} className="me-2">Actualizar</Button>
+                <Button variant="danger" onClick={() => iniciarEliminacion(docente.id)}>Eliminar</Button>
               </Card.Body>
             </Card>
           </Col>
@@ -176,8 +176,8 @@ const GestionEstudiantes = () => {
       </Row>
 
       <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>{isUpdating ? 'Actualizar Estudiante' : 'Agregar Estudiante'}</Modal.Title>
+        <Modal.Header closeButton className="modal-header">
+          <Modal.Title>{isUpdating ? 'Actualizar Docente' : 'Agregar Docente'}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
@@ -185,52 +185,68 @@ const GestionEstudiantes = () => {
               <Form.Label>Nombre</Form.Label>
               <Form.Control
                 type="text"
-                value={nuevoEstudiante.nombre}
-                onChange={(e) => setNuevoEstudiante({ ...nuevoEstudiante, nombre: e.target.value })}
+                value={nuevoDocente.nombre}
+                onChange={(e) => setNuevoDocente({ ...nuevoDocente, nombre: e.target.value })}
               />
             </Form.Group>
             <Form.Group className="mb-3">
               <Form.Label>Email</Form.Label>
               <Form.Control
                 type="email"
-                value={nuevoEstudiante.correo}
-                onChange={(e) => setNuevoEstudiante({ ...nuevoEstudiante, correo: e.target.value })}
+                value={nuevoDocente.correo}
+                onChange={(e) => setNuevoDocente({ ...nuevoDocente, correo: e.target.value })}
               />
             </Form.Group>
             <Form.Group className="mb-3">
-              <Form.Label>Nivel Académico</Form.Label>
+              <Form.Label>Título</Form.Label>
               <Form.Control
                 as="select"
-                value={nuevoEstudiante.nivelAcademico}
-                onChange={(e) => setNuevoEstudiante({ ...nuevoEstudiante, nivelAcademico: e.target.value })}
+                value={nuevoDocente.titulo}
+                onChange={(e) => setNuevoDocente({ ...nuevoDocente, titulo: e.target.value })}
               >
-                <option value="">Selecciona un nivel</option>
-                {nivelesAcademicos.map((nivel) => (
-                  <option key={nivel.id} value={nivel.id}>{nivel.nombre}</option>
+                <option value="">Selecciona un título</option>
+                {titulos.map((titulo) => (
+                  <option key={titulo.id} value={titulo.id}>{titulo.nombre}</option>
                 ))}
               </Form.Control>
             </Form.Group>
             <Form.Group className="mb-3">
-              <Form.Label>Foto del Estudiante</Form.Label>
+              <Form.Label>Frase</Form.Label>
               <Form.Control
-                type="file"
-                accept="image/*"
-                onChange={(e) => {
-                  const file = e.target.files[0];
-                  const reader = new FileReader();
-                  reader.onloadend = () => {
-                    setFotoBase64(reader.result.split(',')[1]);
-                  };
-                  if (file) reader.readAsDataURL(file);
-                }}
+                type="text"
+                value={nuevoDocente.frase}
+                onChange={(e) => setNuevoDocente({ ...nuevoDocente, frase: e.target.value })}
               />
             </Form.Group>
+            {isUpdating && (
+              <Form.Group className="mb-3">
+                <Form.Check
+                  type="switch"
+                  label="Actualizar Foto"
+                  checked={actualizarFoto}
+                  onChange={() => setActualizarFoto(!actualizarFoto)}
+                />
+              </Form.Group>
+            )}
+            {(!isUpdating || actualizarFoto) && (
+              <Form.Group className="mb-3">
+                <Form.Label>Foto del Docente</Form.Label>
+                <Form.Control type="file" accept="image/*" onChange={(e) => manejarCambioFoto(e, setFotoBase64)} />
+                {nuevoDocente.fotoBase64 && (
+                  <div className="vista-previa">
+                    <img src={`data:image/jpeg;base64,${nuevoDocente.fotoBase64}`} alt="Vista previa" className="foto-previa" />
+                  </div>
+                )}
+              </Form.Group>
+            )}
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>Cancelar</Button>
-          <Button onClick={isUpdating ? actualizarEstudianteExistente : agregarNuevoEstudiante}>
-            {isUpdating ? 'Actualizar' : 'Guardar'}
+          <Button variant="secondary" onClick={handleClose}>
+            Cancelar
+          </Button>
+          <Button className="add-docente-btn" onClick={isUpdating ? actualizarDocenteExistente : agregarNuevoDocente}>
+            {isUpdating ? 'Actualizar' : 'Agregar'}
           </Button>
         </Modal.Footer>
       </Modal>
@@ -239,7 +255,7 @@ const GestionEstudiantes = () => {
         <Modal.Header closeButton>
           <Modal.Title>Confirmar Eliminación</Modal.Title>
         </Modal.Header>
-        <Modal.Body>¿Estás seguro de que deseas eliminar este estudiante?</Modal.Body>
+        <Modal.Body>¿Estás seguro de que deseas eliminar este docente?</Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowEliminarModal(false)}>
             Cancelar
@@ -253,4 +269,4 @@ const GestionEstudiantes = () => {
   );
 };
 
-export default GestionEstudiantes;
+export default GestionDocentes;

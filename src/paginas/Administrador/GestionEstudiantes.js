@@ -1,29 +1,43 @@
-import React, { useState, useEffect } from 'react';
-import { Button, Form, Modal, Card } from 'react-bootstrap';
+import React, { useState, useEffect, useContext } from 'react';
+import { Button, Modal, Card, Row, Col, Form } from 'react-bootstrap';
 import { obtenerEstudiantes, agregarEstudiante, actualizarEstudiante, eliminarEstudiante, obtenerNivelesAcademicos } from '../../librerias/PeticionesApi';
 import '../../estilos/AdministradorEstilos/GestionEstudiantes.css';
+import { AuthContext } from '../../contextos/ContextoAutenticacion';
+import { useNavigate } from 'react-router-dom';
 
 const GestionEstudiantes = () => {
-  const [mostrarModal, setMostrarModal] = useState(false);
-  const [nivelesAcademicos, setNivelesAcademicos] = useState([]);
+  const { idUsuario, token } = useContext(AuthContext);
   const [estudiantes, setEstudiantes] = useState([]);
-  const [estudianteSeleccionado, setEstudianteSeleccionado] = useState(null);
+  const [nivelesAcademicos, setNivelesAcademicos] = useState([]);
+  const [show, setShow] = useState(false);
+  const [showEliminarModal, setShowEliminarModal] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [estudianteIdActualizar, setEstudianteIdActualizar] = useState(null);
+  const [estudianteIdEliminar, setEstudianteIdEliminar] = useState(null);
+  const navigate = useNavigate();
+  const { cerrarSesion } = useContext(AuthContext); 
+
   const [nuevoEstudiante, setNuevoEstudiante] = useState({
     nombre: '',
-    nivelAcademico: '',
     correo: '',
-    foto: null,
+    nivelAcademico: '',
+    foto: '',
     agregarTesis: false,
     tesis: {
       titulo: '',
       tipo: '',
       fechaPublicacion: '',
       resumen: '',
-      contenido: null,
+      contenido: '',
     }
   });
-  useEffect(() => {  
+  const [actualizarFoto, setActualizarFoto] = useState(false);
 
+  const setFotoBase64 = (base64) => {
+    setNuevoEstudiante((prevEstudiante) => ({ ...prevEstudiante, foto: base64 }));
+  };
+
+  useEffect(() => {  
     obtenerEstudiantes()
       .then((data) => {
         if (data.salida) setEstudiantes(data.estudiantes);
@@ -37,98 +51,150 @@ const GestionEstudiantes = () => {
       .catch(console.error);
   }, []);
 
-  
-  
-  const handleGuardarEstudiante = async () => {
-    if (estudianteSeleccionado) {
-      const estudianteActualizado = await actualizarEstudiante(estudianteSeleccionado.id, nuevoEstudiante);
-      setEstudiantes(estudiantes.map(est => (est.id === estudianteActualizado.id ? estudianteActualizado : est)));
-    } else {
-      const estudianteAgregado = await agregarEstudiante(nuevoEstudiante);
-      setEstudiantes([...estudiantes, estudianteAgregado]);
-    }
-    setNuevoEstudiante({ nombre: '', nivelAcademico: '', correo: '', foto: null, agregarTesis: false, tesis: {} });
-    setMostrarModal(false);
-    setEstudianteSeleccionado(null);
+  const handleClose = () => {
+    setShow(false);
+    setIsUpdating(false);
+    setActualizarFoto(false);
+    setNuevoEstudiante({
+      nombre: '',
+      correo: '',
+      nivelAcademico: '',
+      foto: '',
+      agregarTesis: false,
+      tesis: { titulo: '', tipo: '', fechaPublicacion: '', resumen: '', contenido: '' },
+    });
   };
 
-  const handleEditarEstudiante = (estudiante) => {
-    setEstudianteSeleccionado(estudiante);
+  const handleShow = () => setShow(true);
+
+  const agregarNuevoEstudiante = async () => {
+    const estudianteData = {
+      ...nuevoEstudiante,
+      tesis: nuevoEstudiante.agregarTesis ? nuevoEstudiante.tesis : null,
+    };
+  
+    try {
+      const response = await agregarEstudiante(estudianteData, idUsuario, token); 
+      if (!response.salida) {
+        if(response.mensaje === 'TKIN'){
+          cerrarSesion(); 
+          navigate('/iniciar-sesion'); 
+          return;
+        } else {
+          console.error(response.mensaje);
+        }
+      }
+      obtenerEstudiantes().then((data) => setEstudiantes(data.estudiantes));
+      handleClose();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const iniciarEliminacion = (id) => {
+    setEstudianteIdEliminar(id);
+    setShowEliminarModal(true);
+  };
+
+  const confirmarEliminacion = async () => {
+    try {
+      const response = await eliminarEstudiante(estudianteIdEliminar, idUsuario, token);
+      if (!response.salida) {
+        if(response.mensaje === 'TKIN'){
+          cerrarSesion(); 
+          navigate('/iniciar-sesion'); 
+          return;
+        } else {
+          console.error(response.mensaje);
+        }
+      }
+      obtenerEstudiantes().then((data) => setEstudiantes(data.estudiantes));
+      setShowEliminarModal(false);
+      setEstudianteIdEliminar(null);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const iniciarActualizacion = (estudiante) => {
+    setIsUpdating(true);
+    setEstudianteIdActualizar(estudiante.id);
     setNuevoEstudiante(estudiante);
-    setMostrarModal(true);
+    setActualizarFoto(false);
+    handleShow();
   };
 
-  const handleSubirImagen = (e) => {
-    const archivo = e.target.files[0];
-    if (archivo) {
-      const lector = new FileReader();
-      lector.onloadend = () => {
-        setNuevoEstudiante({ ...nuevoEstudiante, foto: lector.result.split(',')[1] });
-      };
-      lector.readAsDataURL(archivo);
+  const actualizarEstudianteExistente = async () => {
+    const estudianteData = {
+      ...nuevoEstudiante,
+      foto: actualizarFoto ? nuevoEstudiante.foto : null,
+      tesis: nuevoEstudiante.agregarTesis ? nuevoEstudiante.tesis : null,
+    };
+
+    try {
+      const response = await actualizarEstudiante(estudianteIdActualizar, estudianteData, idUsuario, token);
+      if (!response.salida) {
+        if(response.mensaje === 'TKIN'){
+          cerrarSesion(); 
+          navigate('/iniciar-sesion'); 
+          return;
+        } else {
+          console.error(response.mensaje);
+        }
+      }
+      obtenerEstudiantes().then((data) => setEstudiantes(data.estudiantes));
+      handleClose();
+    } catch (error) {
+      console.error(error);
     }
-  };
-
-  const handleSubirArchivoPDF = (e) => {
-    const archivo = e.target.files[0];
-    if (archivo && archivo.type === 'application/pdf') {
-      const lector = new FileReader();
-      lector.onloadend = () => {
-        setNuevoEstudiante({ 
-          ...nuevoEstudiante, 
-          tesis: { ...nuevoEstudiante.tesis, contenido: lector.result.split(',')[1] } 
-        });
-      };
-      lector.readAsDataURL(archivo);
-    } else {
-      alert("Por favor, selecciona un archivo PDF.");
-    }
-  };
-
-  const handleEliminarEstudiante = async (id) => {
-    await eliminarEstudiante(id);
-    setEstudiantes(estudiantes.filter(est => est.id !== id));
   };
 
   return (
     <div className="gestion-estudiantes-container">
       <div className="header">
         <h2>Gestión de Estudiantes</h2>
-        <Button variant="primary" onClick={() => setMostrarModal(true)} className="add-estudiante-btn">Agregar Estudiante</Button>
+        <Button className="add-estudiante-btn" onClick={handleShow}>
+          Agregar Estudiante
+        </Button>
       </div>
 
-      <div className="estudiantes-grid">
+      <Row>
         {estudiantes.map((estudiante) => (
-          <Card key={estudiante.id} className="estudiante-card">
-            {estudiante.foto && (
-              <Card.Img variant="top" src={`data:image/png;base64,${estudiante.foto}`} alt="Foto del estudiante" />
-            )}
-            <Card.Body>
-              <Card.Title>{estudiante.nombre}</Card.Title>
-              <Card.Text>
-                Nivel Académico: {estudiante.nivelAcademico}<br />
-                Correo: {estudiante.correo}<br />
-              </Card.Text>
-              <Button variant="info" onClick={() => handleEditarEstudiante(estudiante)}>Editar</Button>
-              <Button variant="danger" onClick={() => handleEliminarEstudiante(estudiante.id)} className="ms-2">Eliminar</Button>
-            </Card.Body>
-          </Card>
+          <Col md={4} key={estudiante.id}>
+            <Card className="estudiante-card mb-4">
+              <Card.Img variant="top" src={estudiante.foto || 'https://cdn-icons-png.freepik.com/256/2307/2307607.png'} alt="Foto del Estudiante" className="estudiante-foto" />
+              <Card.Body>
+                <Card.Title>{estudiante.nombre}</Card.Title>
+                <Card.Text>Email: {estudiante.correo || 'N/A'}</Card.Text>
+                <Card.Text>Nivel Académico: {estudiante.nivelAcademico || 'N/A'}</Card.Text>
+                <Button variant="warning" onClick={() => iniciarActualizacion(estudiante)} className="me-2">Actualizar</Button>
+                <Button variant="danger" onClick={() => iniciarEliminacion(estudiante.id)}>Eliminar</Button>
+              </Card.Body>
+            </Card>
+          </Col>
         ))}
-      </div>
+      </Row>
 
-      <Modal show={mostrarModal} onHide={() => setMostrarModal(false)} centered>
+      <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>{estudianteSeleccionado ? "Editar Estudiante" : "Agregar Nuevo Estudiante"}</Modal.Title>
+          <Modal.Title>{isUpdating ? 'Actualizar Estudiante' : 'Agregar Estudiante'}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
-            <Form.Group controlId="formNombre">
+            <Form.Group className="mb-3">
               <Form.Label>Nombre</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="Ingresa el nombre del estudiante"
                 value={nuevoEstudiante.nombre}
                 onChange={(e) => setNuevoEstudiante({ ...nuevoEstudiante, nombre: e.target.value })}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Email</Form.Label>
+              <Form.Control
+                type="email"
+                value={nuevoEstudiante.correo}
+                onChange={(e) => setNuevoEstudiante({ ...nuevoEstudiante, correo: e.target.value })}
               />
             </Form.Group>
             <Form.Group className="mb-3">
@@ -140,92 +206,46 @@ const GestionEstudiantes = () => {
               >
                 <option value="">Selecciona un nivel</option>
                 {nivelesAcademicos.map((nivel) => (
-                  <option key={nivel.id} value={nivel.id}>
-                    {nivel.nombre}
-                  </option>
+                  <option key={nivel.id} value={nivel.id}>{nivel.nombre}</option>
                 ))}
               </Form.Control>
             </Form.Group>
-
-            <Form.Group controlId="formCorreo" className="mt-3">
-              <Form.Label>Correo</Form.Label>
-              <Form.Control
-                type="email"
-                placeholder="Ingresa el correo"
-                value={nuevoEstudiante.correo}
-                onChange={(e) => setNuevoEstudiante({ ...nuevoEstudiante, correo: e.target.value })}
-              />
-            </Form.Group>
-            <Form.Group controlId="formFoto" className="mt-3">
+            <Form.Group className="mb-3">
               <Form.Label>Foto del Estudiante</Form.Label>
               <Form.Control
                 type="file"
                 accept="image/*"
-                onChange={handleSubirImagen}
+                onChange={(e) => {
+                  const file = e.target.files[0];
+                  const reader = new FileReader();
+                  reader.onloadend = () => {
+                    setFotoBase64(reader.result.split(',')[1]);
+                  };
+                  if (file) reader.readAsDataURL(file);
+                }}
               />
             </Form.Group>
-            <Form.Check
-              type="switch"
-              id="switchTesis"
-              label="¿Agregar Tesis?"
-              checked={nuevoEstudiante.agregarTesis}
-              onChange={(e) => setNuevoEstudiante({ ...nuevoEstudiante, agregarTesis: e.target.checked })}
-              className="mt-3"
-            />
-            {nuevoEstudiante.agregarTesis && (
-              <>
-                <Form.Group controlId="formTituloTesis" className="mt-3">
-                  <Form.Label>Título de la Tesis</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Título de la tesis"
-                    value={nuevoEstudiante.tesis.titulo}
-                    onChange={(e) => setNuevoEstudiante({ ...nuevoEstudiante, tesis: { ...nuevoEstudiante.tesis, titulo: e.target.value } })}
-                  />
-                </Form.Group>
-                <Form.Group controlId="formTipoTesis" className="mt-3">
-                  <Form.Label>Tipo de Tesis</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Tipo de tesis"
-                    value={nuevoEstudiante.tesis.tipo}
-                    onChange={(e) => setNuevoEstudiante({ ...nuevoEstudiante, tesis: { ...nuevoEstudiante.tesis, tipo: e.target.value } })}
-                  />
-                </Form.Group>
-                <Form.Group controlId="formFechaPublicacionTesis" className="mt-3">
-                  <Form.Label>Fecha de Publicación</Form.Label>
-                  <Form.Control
-                    type="date"
-                    value={nuevoEstudiante.tesis.fechaPublicacion}
-                    onChange={(e) => setNuevoEstudiante({ ...nuevoEstudiante, tesis: { ...nuevoEstudiante.tesis, fechaPublicacion: e.target.value } })}
-                  />
-                </Form.Group>
-                <Form.Group controlId="formResumenTesis" className="mt-3">
-                  <Form.Label>Resumen</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    rows={3}
-                    placeholder="Resumen de la tesis"
-                    value={nuevoEstudiante.tesis.resumen}
-                    onChange={(e) => setNuevoEstudiante({ ...nuevoEstudiante, tesis: { ...nuevoEstudiante.tesis, resumen: e.target.value } })}
-                  />
-                </Form.Group>
-                <Form.Group controlId="formArchivoTesis" className="mt-3">
-                  <Form.Label>Contenido de la Tesis (PDF)</Form.Label>
-                  <Form.Control
-                    type="file"
-                    accept="application/pdf"
-                    onChange={handleSubirArchivoPDF}
-                  />
-                </Form.Group>
-              </>
-            )}
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setMostrarModal(false)}>Cerrar</Button>
-          <Button variant="primary" onClick={handleGuardarEstudiante}>
-            {estudianteSeleccionado ? "Actualizar" : "Guardar"}
+          <Button variant="secondary" onClick={handleClose}>Cancelar</Button>
+          <Button onClick={isUpdating ? actualizarEstudianteExistente : agregarNuevoEstudiante}>
+            {isUpdating ? 'Actualizar' : 'Guardar'}
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      <Modal show={showEliminarModal} onHide={() => setShowEliminarModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirmar Eliminación</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>¿Estás seguro de que deseas eliminar este estudiante?</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowEliminarModal(false)}>
+            Cancelar
+          </Button>
+          <Button variant="danger" onClick={confirmarEliminacion}>
+            Eliminar
           </Button>
         </Modal.Footer>
       </Modal>
