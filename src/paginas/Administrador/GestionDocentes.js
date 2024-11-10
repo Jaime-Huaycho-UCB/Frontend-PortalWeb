@@ -6,7 +6,7 @@ import { AuthContext } from '../../contextos/ContextoAutenticacion';
 import { useNavigate } from 'react-router-dom';
 
 const GestionDocentes = () => {
-  const { idUsuario, idDocente, token, permiso } = useContext(AuthContext);
+  const { idUsuario, token } = useContext(AuthContext);
   const [docentes, setDocentes] = useState([]);
   const [titulos, setTitulos] = useState([]);
   const [show, setShow] = useState(false);

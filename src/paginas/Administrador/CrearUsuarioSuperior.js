@@ -12,7 +12,7 @@ const CrearUsuarioSuperior = () => {
   const [password, setPassword] = useState('');
   const [mensaje, setMensaje] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
-  const { idUsuario, idDocente, token, permiso } = useContext(AuthContext);
+  const { idUsuario, token } = useContext(AuthContext);
   const navigate = useNavigate();
   const { cerrarSesion } = useContext(AuthContext); 
   
