@@ -22,31 +22,31 @@ const GestionEstudiantes = () => {
       contenido: null,
     }
   });
-  useEffect(() => {
-    const cargarEstudiantes = async () => {
-      try {
-        const respuesta = await obtenerEstudiantes();
-        setEstudiantes(respuesta.salida ? respuesta.estudiantes : []);
-      } catch (error) {
-        console.error("Error al cargar estudiantes:", error);
-        setEstudiantes([]);
-      }
-    };
-  
-    const cargarNivelesAcademicos = async () => {
-      try {
-        const respuesta = await obtenerNivelesAcademicos();
-        setNivelesAcademicos(Array.isArray(respuesta) ? respuesta : []);
-      } catch (error) {
-        console.error("Error al cargar niveles académicos:", error);
-        setNivelesAcademicos([]);
-      }
-    };
-  
-    cargarEstudiantes();
-    cargarNivelesAcademicos();
-  }, []);
-  
+useEffect(() => {
+  const cargarEstudiantes = async () => {
+    try {
+      const respuesta = await obtenerEstudiantes();
+      setEstudiantes(respuesta.salida ? respuesta.estudiantes : []);
+    } catch (error) {
+      console.error("Error al cargar estudiantes:", error);
+      setEstudiantes([]);
+    }
+  };
+
+  const cargarNivelesAcademicos = async () => {
+    try {
+      const respuesta = await obtenerNivelesAcademicos();
+      setNivelesAcademicos(Array.isArray(respuesta) ? respuesta : []);
+    } catch (error) {
+      console.error("Error al cargar niveles académicos:", error);
+      setNivelesAcademicos([]);
+    }
+  };
+
+  cargarEstudiantes();
+  cargarNivelesAcademicos();
+}, []);
+
   
   
   const handleGuardarEstudiante = async () => {
@@ -141,19 +141,22 @@ const GestionEstudiantes = () => {
                 onChange={(e) => setNuevoEstudiante({ ...nuevoEstudiante, nombre: e.target.value })}
               />
             </Form.Group>
-            <Form.Group controlId="formNivelAcademico" className="mt-3">
+            <Form.Group className="mb-3">
               <Form.Label>Nivel Académico</Form.Label>
               <Form.Control
                 as="select"
                 value={nuevoEstudiante.nivelAcademico}
                 onChange={(e) => setNuevoEstudiante({ ...nuevoEstudiante, nivelAcademico: e.target.value })}
               >
-                <option value="">Selecciona el nivel</option>
+                <option value="">Selecciona un nivel</option>
                 {nivelesAcademicos.map((nivel) => (
-                  <option key={nivel.id} value={nivel.nombre}>{nivel.nombre}</option>
+                  <option key={nivel.id} value={nivel.id}>
+                    {nivel.nombre}
+                  </option>
                 ))}
               </Form.Control>
             </Form.Group>
+
             <Form.Group controlId="formCorreo" className="mt-3">
               <Form.Label>Correo</Form.Label>
               <Form.Control
