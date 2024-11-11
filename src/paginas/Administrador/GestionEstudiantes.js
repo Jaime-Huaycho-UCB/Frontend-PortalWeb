@@ -5,7 +5,6 @@ import { AuthContext } from '../../contextos/ContextoAutenticacion';
 import { useNavigate } from 'react-router-dom';
 import '../../estilos/AdministradorEstilos/GestionEstudiantes.css';
 
-
 const GestionEstudiantes = () => {
   const { idUsuario, token } = useContext(AuthContext);
   const [estudiantes, setEstudiantes] = useState([]);
@@ -26,13 +25,6 @@ const GestionEstudiantes = () => {
     correo: '',
     nivelAcademico: '',
     foto: '',
-  });
-  const [nuevaTesis, setNuevaTesis] = useState({
-    titulo: '',
-    tipo: '',
-    fechaPublicacion: '',
-    resumen: '',
-    contenido: '',
   });
 
   const [actualizarFoto, setActualizarFoto] = useState(false);
@@ -183,8 +175,8 @@ const GestionEstudiantes = () => {
 
   return (
     <div className="gestion-estudiantes-container">
-      <h2>Gestión de Estudiantes</h2>
-      <Button variant="contained" color="primary" onClick={handleShow}>
+      <h2 className="titulo-gestion">Gestión de Estudiantes</h2>
+      <Button variant="contained" color="primary" onClick={handleShow} className="add-estudiante-btn">
         {loading ? <CircularProgress size={24} /> : 'Agregar Estudiante'}
       </Button>
 
@@ -193,40 +185,42 @@ const GestionEstudiantes = () => {
           variant="contained"
           color="secondary"
           onClick={() => setShowAgregarTesisDialog(true)}
-          style={{ insetInlineStart: 16 }}        >
+          className="add-tesis-btn"
+        >
           Agregar Tesis
         </Button>
       )}
 
-      <Grid container spacing={2} style={{ insetBlockStart: 16 }}
->
+      <Grid container spacing={2} className="grid-estudiantes">
         {estudiantes.map((estudiante) => (
           <Grid item xs={12} sm={6} md={4} key={estudiante.id}>
-            <Card>
+            <Card className="card">
               <CardMedia
                 component="img"
                 height="140"
                 image={estudiante.foto || 'https://cdn-icons-png.freepik.com/256/2307/2307607.png'}
                 alt="Foto del Estudiante"
               />
-              <CardContent>
+              <CardContent className="card-content">
                 <h3>{estudiante.nombre}</h3>
                 <p>Email: {estudiante.correo || 'N/A'}</p>
                 <p>Nivel Académico: {estudiante.nivelAcademico || 'N/A'}</p>
-                <Button variant="contained" color="warning" onClick={() => iniciarActualizacion(estudiante)} style={{ insetInlineEnd: 8 }}>
-                  Actualizar
-                </Button>
-                <Button variant="contained" color="error" onClick={() => iniciarEliminacion(estudiante.id)}>
-                  Eliminar
-                </Button>
+                <div className="button-container">
+                  <Button variant="contained" color="warning" onClick={() => iniciarActualizacion(estudiante)} className="button-update">
+                    Actualizar
+                  </Button>
+                  <Button variant="contained" color="error" onClick={() => iniciarEliminacion(estudiante.id)} className="button-delete">
+                    Eliminar
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           </Grid>
         ))}
       </Grid>
 
-      <Dialog open={show} onClose={handleClose}>
-        <DialogTitle>{isUpdating ? 'Actualizar Estudiante' : 'Agregar Estudiante'}</DialogTitle>
+      <Dialog open={show} onClose={handleClose} className="dialog">
+        <DialogTitle className="dialog-title">{isUpdating ? 'Actualizar Estudiante' : 'Agregar Estudiante'}</DialogTitle>
         <DialogContent>
           <TextField
             label="Nombre"
@@ -234,6 +228,7 @@ const GestionEstudiantes = () => {
             margin="dense"
             value={nuevoEstudiante.nombre}
             onChange={(e) => setNuevoEstudiante({ ...nuevoEstudiante, nombre: e.target.value })}
+            className="text-field"
           />
           <TextField
             label="Email"
@@ -241,8 +236,9 @@ const GestionEstudiantes = () => {
             margin="dense"
             value={nuevoEstudiante.correo}
             onChange={(e) => setNuevoEstudiante({ ...nuevoEstudiante, correo: e.target.value })}
+            className="text-field"
           />
-          <FormControl fullWidth margin="dense">
+          <FormControl fullWidth margin="dense" className="select-field">
             <InputLabel>Nivel Académico</InputLabel>
             <Select
               value={nuevoEstudiante.nivelAcademico}
@@ -259,12 +255,13 @@ const GestionEstudiantes = () => {
           <FormControlLabel
             control={<Switch checked={actualizarFoto} onChange={() => setActualizarFoto(!actualizarFoto)} />}
             label="Actualizar Foto"
+            className="switch-update-foto"
           />
           {actualizarFoto && (
             <Button
               variant="contained"
               component="label"
-              style={{ insetBlockStart: 8 }}
+              className="upload-button"
             >
               Subir Foto
               <input
@@ -284,19 +281,19 @@ const GestionEstudiantes = () => {
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="secondary">Cancelar</Button>
-          <Button onClick={isUpdating ? actualizarEstudianteExistente : agregarNuevoEstudiante} color="primary">
+          <Button onClick={handleClose} color="secondary" className="button-cancelar">Cancelar</Button>
+          <Button onClick={isUpdating ? actualizarEstudianteExistente : agregarNuevoEstudiante} color="primary" className="button-guardar">
             {loading ? <CircularProgress size={24} /> : isUpdating ? 'Actualizar' : 'Guardar'}
           </Button>
         </DialogActions>
       </Dialog>
 
-      <Dialog open={showEliminarDialog} onClose={() => setShowEliminarDialog(false)}>
-        <DialogTitle>Confirmar Eliminación</DialogTitle>
+      <Dialog open={showEliminarDialog} onClose={() => setShowEliminarDialog(false)} className="dialog-eliminar">
+        <DialogTitle className="dialog-title">Confirmar Eliminación</DialogTitle>
         <DialogContent>¿Estás seguro de que deseas eliminar este estudiante?</DialogContent>
         <DialogActions>
-          <Button onClick={() => setShowEliminarDialog(false)} color="secondary">Cancelar</Button>
-          <Button onClick={confirmarEliminacion} color="error">
+          <Button onClick={() => setShowEliminarDialog(false)} color="secondary" className="button-cancelar">Cancelar</Button>
+          <Button onClick={confirmarEliminacion} color="error" className="button-eliminar">
             {loading ? <CircularProgress size={24} /> : 'Eliminar'}
           </Button>
         </DialogActions>
@@ -307,7 +304,7 @@ const GestionEstudiantes = () => {
         autoHideDuration={6000}
         onClose={() => setSnackbar({ ...snackbar, open: false })}
       >
-        <Alert onClose={() => setSnackbar({ ...snackbar, open: false })} severity={snackbar.severity} style={{ inlineSize: '100%' }}>
+        <Alert onClose={() => setSnackbar({ ...snackbar, open: false })} severity={snackbar.severity} className="snackbar-alert">
           {snackbar.message}
         </Alert>
       </Snackbar>
