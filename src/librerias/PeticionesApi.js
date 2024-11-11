@@ -261,3 +261,17 @@ export const eliminarTesis = async (idTesis,idUsuario,token) => {
     throw error;
   }
 };
+export const agregarTesis = async (tesisData, idUsuario, token, idEstudiante) => {
+  try {
+    const response = await instance.post('/estudiante/tesis/ingresar', { 
+      idUsuario, 
+      token, 
+      idEstudiante, 
+      ...tesisData 
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error al agregar la tesis:", error);
+    throw error;
+  }
+};

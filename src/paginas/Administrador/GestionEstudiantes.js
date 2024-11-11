@@ -177,9 +177,10 @@ const GestionEstudiantes = () => {
     }
   };
 
-  const agregarTesis = () => {
-    navigate('/admin/gestion-tesis'); // Redirige a la página de gestión de tesis
-  };
+  const agregarTesis = (idEstudiante) => {
+    navigate('/admin/gestion-tesis', { state: { openModal: true, idEstudiante } });
+};
+
 
   return (
     <div className="gestion-estudiantes-container">
@@ -214,7 +215,7 @@ const GestionEstudiantes = () => {
           <Button
             variant="contained"
             color="primary"
-            onClick={agregarTesis}
+            onClick={() => agregarTesis(estudiante.id)}
             className="agregar-tesis-btn"
           >
             Agregar Tesis
