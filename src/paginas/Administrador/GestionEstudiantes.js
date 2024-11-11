@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Button, Modal, Card, Row, Col, Form } from 'react-bootstrap';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Card, CardContent, CardMedia, Grid, TextField, Select, MenuItem, FormControl, InputLabel, CircularProgress, Snackbar, Alert, Switch, FormControlLabel } from '@mui/material';
 import { obtenerEstudiantes, agregarEstudiante, actualizarEstudiante, eliminarEstudiante, obtenerNivelesAcademicos } from '../../librerias/PeticionesApi';
-import '../../estilos/AdministradorEstilos/GestionEstudiantes.css';
 import { AuthContext } from '../../contextos/ContextoAutenticacion';
 import { useNavigate } from 'react-router-dom';
 
@@ -10,45 +9,58 @@ const GestionEstudiantes = () => {
   const [estudiantes, setEstudiantes] = useState([]);
   const [nivelesAcademicos, setNivelesAcademicos] = useState([]);
   const [show, setShow] = useState(false);
-  const [showEliminarModal, setShowEliminarModal] = useState(false);
+  const [showEliminarDialog, setShowEliminarDialog] = useState(false);
+  const [showAgregarTesisDialog, setShowAgregarTesisDialog] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [estudianteIdActualizar, setEstudianteIdActualizar] = useState(null);
   const [estudianteIdEliminar, setEstudianteIdEliminar] = useState(null);
+  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
   const navigate = useNavigate();
-  const { cerrarSesion } = useContext(AuthContext); 
+  const { cerrarSesion } = useContext(AuthContext);
 
   const [nuevoEstudiante, setNuevoEstudiante] = useState({
     nombre: '',
     correo: '',
     nivelAcademico: '',
     foto: '',
-    agregarTesis: false,
-    tesis: {
-      titulo: '',
-      tipo: '',
-      fechaPublicacion: '',
-      resumen: '',
-      contenido: '',
-    }
   });
+  const [nuevaTesis, setNuevaTesis] = useState({
+    titulo: '',
+    tipo: '',
+    fechaPublicacion: '',
+    resumen: '',
+    contenido: '',
+  });
+
   const [actualizarFoto, setActualizarFoto] = useState(false);
+  const [ultimoEstudianteId, setUltimoEstudianteId] = useState(null);
 
   const setFotoBase64 = (base64) => {
     setNuevoEstudiante((prevEstudiante) => ({ ...prevEstudiante, foto: base64 }));
   };
 
-  useEffect(() => {  
+  useEffect(() => {
+    setLoading(true);
     obtenerEstudiantes()
       .then((data) => {
         if (data.salida) setEstudiantes(data.estudiantes);
+        setLoading(false);
       })
-      .catch(console.error);
+      .catch((error) => {
+        console.error(error);
+        setLoading(false);
+        setSnackbar({ open: true, message: 'Error al cargar estudiantes', severity: 'error' });
+      });
 
     obtenerNivelesAcademicos()
-      .then((nivelesAcademicos) => {
-        setNivelesAcademicos(nivelesAcademicos);
+      .then((niveles) => {
+        setNivelesAcademicos(niveles);
       })
-      .catch(console.error);
+      .catch((error) => {
+        console.error(error);
+        setSnackbar({ open: true, message: 'Error al cargar niveles académicos', severity: 'error' });
+      });
   }, []);
 
   const handleClose = () => {
@@ -60,59 +72,71 @@ const GestionEstudiantes = () => {
       correo: '',
       nivelAcademico: '',
       foto: '',
-      agregarTesis: false,
-      tesis: { titulo: '', tipo: '', fechaPublicacion: '', resumen: '', contenido: '' },
     });
   };
 
   const handleShow = () => setShow(true);
 
   const agregarNuevoEstudiante = async () => {
+    setLoading(true);
     const estudianteData = {
       ...nuevoEstudiante,
-      tesis: nuevoEstudiante.agregarTesis ? nuevoEstudiante.tesis : null,
     };
-  
+
     try {
-      const response = await agregarEstudiante(estudianteData, idUsuario, token); 
+      const response = await agregarEstudiante(estudianteData, idUsuario, token);
+      setLoading(false);
       if (!response.salida) {
-        if(response.mensaje === 'TKIN'){
-          cerrarSesion(); 
-          navigate('/iniciar-sesion'); 
+        if (response.mensaje === 'TKIN') {
+          cerrarSesion();
+          navigate('/iniciar-sesion');
           return;
         } else {
           console.error(response.mensaje);
+          setSnackbar({ open: true, message: response.mensaje, severity: 'error' });
         }
+      } else {
+        setUltimoEstudianteId(response.estudianteId);
+        obtenerEstudiantes().then((data) => setEstudiantes(data.estudiantes));
+        handleClose();
+        setSnackbar({ open: true, message: 'Estudiante agregado con éxito', severity: 'success' });
       }
-      obtenerEstudiantes().then((data) => setEstudiantes(data.estudiantes));
-      handleClose();
     } catch (error) {
       console.error(error);
+      setLoading(false);
+      setSnackbar({ open: true, message: 'Error al agregar estudiante', severity: 'error' });
     }
   };
 
   const iniciarEliminacion = (id) => {
     setEstudianteIdEliminar(id);
-    setShowEliminarModal(true);
+    setShowEliminarDialog(true);
   };
 
   const confirmarEliminacion = async () => {
+    setLoading(true);
     try {
       const response = await eliminarEstudiante(estudianteIdEliminar, idUsuario, token);
+      setLoading(false);
       if (!response.salida) {
-        if(response.mensaje === 'TKIN'){
-          cerrarSesion(); 
-          navigate('/iniciar-sesion'); 
+        if (response.mensaje === 'TKIN') {
+          cerrarSesion();
+          navigate('/iniciar-sesion');
           return;
         } else {
           console.error(response.mensaje);
+          setSnackbar({ open: true, message: response.mensaje, severity: 'error' });
         }
+      } else {
+        obtenerEstudiantes().then((data) => setEstudiantes(data.estudiantes));
+        setShowEliminarDialog(false);
+        setEstudianteIdEliminar(null);
+        setSnackbar({ open: true, message: 'Estudiante eliminado con éxito', severity: 'success' });
       }
-      obtenerEstudiantes().then((data) => setEstudiantes(data.estudiantes));
-      setShowEliminarModal(false);
-      setEstudianteIdEliminar(null);
     } catch (error) {
       console.error(error);
+      setLoading(false);
+      setSnackbar({ open: true, message: 'Error al eliminar estudiante', severity: 'error' });
     }
   };
 
@@ -125,95 +149,125 @@ const GestionEstudiantes = () => {
   };
 
   const actualizarEstudianteExistente = async () => {
+    setLoading(true);
     const estudianteData = {
       ...nuevoEstudiante,
       foto: actualizarFoto ? nuevoEstudiante.foto : null,
-      tesis: nuevoEstudiante.agregarTesis ? nuevoEstudiante.tesis : null,
     };
 
     try {
       const response = await actualizarEstudiante(estudianteIdActualizar, estudianteData, idUsuario, token);
+      setLoading(false);
       if (!response.salida) {
-        if(response.mensaje === 'TKIN'){
-          cerrarSesion(); 
-          navigate('/iniciar-sesion'); 
+        if (response.mensaje === 'TKIN') {
+          cerrarSesion();
+          navigate('/iniciar-sesion');
           return;
         } else {
           console.error(response.mensaje);
+          setSnackbar({ open: true, message: response.mensaje, severity: 'error' });
         }
+      } else {
+        obtenerEstudiantes().then((data) => setEstudiantes(data.estudiantes));
+        handleClose();
+        setSnackbar({ open: true, message: 'Estudiante actualizado con éxito', severity: 'success' });
       }
-      obtenerEstudiantes().then((data) => setEstudiantes(data.estudiantes));
-      handleClose();
     } catch (error) {
       console.error(error);
+      setLoading(false);
+      setSnackbar({ open: true, message: 'Error al actualizar estudiante', severity: 'error' });
     }
   };
 
   return (
     <div className="gestion-estudiantes-container">
-      <div className="header">
-        <h2>Gestión de Estudiantes</h2>
-        <Button className="add-estudiante-btn" onClick={handleShow}>
-          Agregar Estudiante
+      <h2>Gestión de Estudiantes</h2>
+      <Button variant="contained" color="primary" onClick={handleShow}>
+        {loading ? <CircularProgress size={24} /> : 'Agregar Estudiante'}
+      </Button>
+
+      {ultimoEstudianteId && (
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={() => setShowAgregarTesisDialog(true)}
+          style={{ insetInlineStart: 16 }}        >
+          Agregar Tesis
         </Button>
-      </div>
+      )}
 
-      <Row>
+      <Grid container spacing={2} style={{ insetBlockStart: 16 }}
+>
         {estudiantes.map((estudiante) => (
-          <Col md={4} key={estudiante.id}>
-            <Card className="estudiante-card mb-4">
-              <Card.Img variant="top" src={estudiante.foto || 'https://cdn-icons-png.freepik.com/256/2307/2307607.png'} alt="Foto del Estudiante" className="estudiante-foto" />
-              <Card.Body>
-                <Card.Title>{estudiante.nombre}</Card.Title>
-                <Card.Text>Email: {estudiante.correo || 'N/A'}</Card.Text>
-                <Card.Text>Nivel Académico: {estudiante.nivelAcademico || 'N/A'}</Card.Text>
-                <Button variant="warning" onClick={() => iniciarActualizacion(estudiante)} className="me-2">Actualizar</Button>
-                <Button variant="danger" onClick={() => iniciarEliminacion(estudiante.id)}>Eliminar</Button>
-              </Card.Body>
+          <Grid item xs={12} sm={6} md={4} key={estudiante.id}>
+            <Card>
+              <CardMedia
+                component="img"
+                height="140"
+                image={estudiante.foto || 'https://cdn-icons-png.freepik.com/256/2307/2307607.png'}
+                alt="Foto del Estudiante"
+              />
+              <CardContent>
+                <h3>{estudiante.nombre}</h3>
+                <p>Email: {estudiante.correo || 'N/A'}</p>
+                <p>Nivel Académico: {estudiante.nivelAcademico || 'N/A'}</p>
+                <Button variant="contained" color="warning" onClick={() => iniciarActualizacion(estudiante)} style={{ insetInlineEnd: 8 }}>
+                  Actualizar
+                </Button>
+                <Button variant="contained" color="error" onClick={() => iniciarEliminacion(estudiante.id)}>
+                  Eliminar
+                </Button>
+              </CardContent>
             </Card>
-          </Col>
+          </Grid>
         ))}
-      </Row>
+      </Grid>
 
-      <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>{isUpdating ? 'Actualizar Estudiante' : 'Agregar Estudiante'}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form>
-            <Form.Group className="mb-3">
-              <Form.Label>Nombre</Form.Label>
-              <Form.Control
-                type="text"
-                value={nuevoEstudiante.nombre}
-                onChange={(e) => setNuevoEstudiante({ ...nuevoEstudiante, nombre: e.target.value })}
-              />
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>Email</Form.Label>
-              <Form.Control
-                type="email"
-                value={nuevoEstudiante.correo}
-                onChange={(e) => setNuevoEstudiante({ ...nuevoEstudiante, correo: e.target.value })}
-              />
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>Nivel Académico</Form.Label>
-              <Form.Control
-                as="select"
-                value={nuevoEstudiante.nivelAcademico}
-                onChange={(e) => setNuevoEstudiante({ ...nuevoEstudiante, nivelAcademico: e.target.value })}
-              >
-                <option value="">Selecciona un nivel</option>
-                {nivelesAcademicos.map((nivelesAcademicos) => (
-                  <option key={nivelesAcademicos.id} value={nivelesAcademicos.id}>{nivelesAcademicos.nombre}</option>
-                ))}
-              </Form.Control>
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>Foto del Estudiante</Form.Label>
-              <Form.Control
+      <Dialog open={show} onClose={handleClose}>
+        <DialogTitle>{isUpdating ? 'Actualizar Estudiante' : 'Agregar Estudiante'}</DialogTitle>
+        <DialogContent>
+          <TextField
+            label="Nombre"
+            fullWidth
+            margin="dense"
+            value={nuevoEstudiante.nombre}
+            onChange={(e) => setNuevoEstudiante({ ...nuevoEstudiante, nombre: e.target.value })}
+          />
+          <TextField
+            label="Email"
+            fullWidth
+            margin="dense"
+            value={nuevoEstudiante.correo}
+            onChange={(e) => setNuevoEstudiante({ ...nuevoEstudiante, correo: e.target.value })}
+          />
+          <FormControl fullWidth margin="dense">
+            <InputLabel>Nivel Académico</InputLabel>
+            <Select
+              value={nuevoEstudiante.nivelAcademico}
+              onChange={(e) => setNuevoEstudiante({ ...nuevoEstudiante, nivelAcademico: e.target.value })}
+            >
+              <MenuItem value="">Selecciona un nivel</MenuItem>
+              {nivelesAcademicos.map((nivel) => (
+                <MenuItem key={nivel.id} value={nivel.id}>
+                  {nivel.nombre}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <FormControlLabel
+            control={<Switch checked={actualizarFoto} onChange={() => setActualizarFoto(!actualizarFoto)} />}
+            label="Actualizar Foto"
+          />
+          {actualizarFoto && (
+            <Button
+              variant="contained"
+              component="label"
+              style={{ insetBlockStart: 8 }}
+            >
+              Subir Foto
+              <input
                 type="file"
+                hidden
                 accept="image/*"
                 onChange={(e) => {
                   const file = e.target.files[0];
@@ -224,31 +278,37 @@ const GestionEstudiantes = () => {
                   if (file) reader.readAsDataURL(file);
                 }}
               />
-            </Form.Group>
-          </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>Cancelar</Button>
-          <Button onClick={isUpdating ? actualizarEstudianteExistente : agregarNuevoEstudiante}>
-            {isUpdating ? 'Actualizar' : 'Guardar'}
+            </Button>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="secondary">Cancelar</Button>
+          <Button onClick={isUpdating ? actualizarEstudianteExistente : agregarNuevoEstudiante} color="primary">
+            {loading ? <CircularProgress size={24} /> : isUpdating ? 'Actualizar' : 'Guardar'}
           </Button>
-        </Modal.Footer>
-      </Modal>
+        </DialogActions>
+      </Dialog>
 
-      <Modal show={showEliminarModal} onHide={() => setShowEliminarModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Confirmar Eliminación</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>¿Estás seguro de que deseas eliminar este estudiante?</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowEliminarModal(false)}>
-            Cancelar
+      <Dialog open={showEliminarDialog} onClose={() => setShowEliminarDialog(false)}>
+        <DialogTitle>Confirmar Eliminación</DialogTitle>
+        <DialogContent>¿Estás seguro de que deseas eliminar este estudiante?</DialogContent>
+        <DialogActions>
+          <Button onClick={() => setShowEliminarDialog(false)} color="secondary">Cancelar</Button>
+          <Button onClick={confirmarEliminacion} color="error">
+            {loading ? <CircularProgress size={24} /> : 'Eliminar'}
           </Button>
-          <Button variant="danger" onClick={confirmarEliminacion}>
-            Eliminar
-          </Button>
-        </Modal.Footer>
-      </Modal>
+        </DialogActions>
+      </Dialog>
+
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={6000}
+        onClose={() => setSnackbar({ ...snackbar, open: false })}
+      >
+        <Alert onClose={() => setSnackbar({ ...snackbar, open: false })} severity={snackbar.severity} style={{ inlineSize: '100%' }}>
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };
