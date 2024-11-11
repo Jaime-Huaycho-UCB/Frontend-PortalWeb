@@ -235,9 +235,8 @@ export const actualizarEstudiante = async (idEstudiante, estudianteData, idUsuar
 // Eliminar estudiante
 export const eliminarEstudiante = async (idEstudiante, idUsuario, token) => {
   try {
-    const response = await instance.put(`/estudiante/eliminar`, {
-      data: { idEstudiante, idUsuario, token },
-    });
+    const response = await instance.put(`/estudiante/eliminar`, { idEstudiante, idUsuario, token },
+    );
     return response.data;
   } catch (error) {
     console.error("Error al eliminar estudiante:", error);

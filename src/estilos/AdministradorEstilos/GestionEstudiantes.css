@@ -1,147 +1,147 @@
 .gestion-estudiantes-container {
-    padding: 20px;
-    font-family: 'Roboto', sans-serif;
-    background-color: #f3f4f6;
+    padding: 20px !important;
+    font-family: 'Roboto', sans-serif !important;
+    background-color: #f3f4f6 !important;
   }
   
   h2 {
-    font-size: 2rem;
-    font-weight: 600;
-    color: #333;
-    margin-bottom: 16px;
-    text-align: center;
+    font-size: 2rem !important;
+    font-weight: 600 !important;
+    color: #333 !important;
+    margin-bottom: 16px !important;
+    text-align: center !important;
   }
   
   .add-estudiante-btn,
   .add-tesis-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1rem;
-    padding: 10px 20px;
-    border-radius: 8px;
-    text-transform: none;
-    transition: all 0.3s ease;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 1rem !important;
+    padding: 10px 20px !important;
+    border-radius: 24px !important; /* Botones más redondeados */
+    text-transform: none !important;
+    transition: all 0.3s ease !important;
   }
   
   .add-estudiante-btn {
-    background-color: #4caf50;
-    color: #fff;
+    background-color: #4caf50 !important;
+    color: #fff !important;
   }
   
   .add-estudiante-btn:hover {
-    background-color: #388e3c;
-    transform: translateY(-2px);
+    background-color: #388e3c !important;
+    transform: translateY(-2px) !important;
   }
   
   .add-tesis-btn {
-    margin-left: 10px;
-    background-color: #0288d1;
-    color: #fff;
+    margin-left: 10px !important;
+    background-color: #0288d1 !important;
+    color: #fff !important;
   }
   
   .add-tesis-btn:hover {
-    background-color: #0277bd;
-    transform: translateY(-2px);
+    background-color: #0277bd !important;
+    transform: translateY(-2px) !important;
   }
   
   .card {
-    border-radius: 12px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-    overflow: hidden;
+    border-radius: 24px !important; /* Bordes redondeados en la tarjeta */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+    transition: all 0.3s ease !important;
+    overflow: hidden !important;
   }
   
   .card:hover {
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2) !important;
+    transform: translateY(-4px) !important;
   }
   
   .card img {
-    border-top-left-radius: 12px;
-    border-top-right-radius: 12px;
-    height: 140px;
-    object-fit: cover;
+    border-top-left-radius: 24px !important;
+    border-top-right-radius: 24px !important;
+    height: 140px !important;
+    object-fit: cover !important;
   }
   
   .card-content h3 {
-    font-size: 1.25rem;
-    color: #333;
-    margin-bottom: 8px;
+    font-size: 1.25rem !important;
+    color: #333 !important;
+    margin-bottom: 8px !important;
   }
   
   .card-content p {
-    font-size: 0.95rem;
-    color: #555;
+    font-size: 0.95rem !important;
+    color: #555 !important;
   }
   
   .button-container {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
+    display: flex !important;
+    gap: 10px !important;
+    justify-content: center !important;
   }
   
   .button-update,
   .button-delete {
-    font-size: 0.9rem;
-    padding: 8px 16px;
-    border-radius: 6px;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    font-size: 0.9rem !important;
+    padding: 8px 16px !important;
+    border-radius: 20px !important; /* Bordes redondeados en botones */
+    transition: background-color 0.3s ease, transform 0.2s ease !important;
   }
   
   .button-update {
-    background-color: #ffb74d;
-    color: #fff;
+    background-color: #ffb74d !important;
+    color: #fff !important;
   }
   
   .button-update:hover {
-    background-color: #ffa726;
-    transform: translateY(-2px);
+    background-color: #ffa726 !important;
+    transform: translateY(-2px) !important;
   }
   
   .button-delete {
-    background-color: #e57373;
-    color: #fff;
+    background-color: #e57373 !important;
+    color: #fff !important;
   }
   
   .button-delete:hover {
-    background-color: #ef5350;
-    transform: translateY(-2px);
+    background-color: #ef5350 !important;
+    transform: translateY(-2px) !important;
   }
   
   .dialog {
-    border-radius: 12px;
+    border-radius: 20px !important;
   }
   
   .dialog-title {
-    font-weight: bold;
-    color: #333;
+    font-weight: bold !important;
+    color: #333 !important;
   }
   
   .text-field,
   .select-field {
-    margin-bottom: 16px;
+    margin-bottom: 16px !important;
   }
   
   .snackbar-alert {
-    border-radius: 8px;
-    background-color: #323232;
-    color: #fff;
-    font-weight: 500;
-    text-align: center;
+    border-radius: 16px !important;
+    background-color: #323232 !important;
+    color: #fff !important;
+    font-weight: 500 !important;
+    text-align: center !important;
   }
   
   .upload-button {
-    font-size: 0.9rem;
-    color: #fff;
-    background-color: #1976d2;
-    padding: 8px 12px;
-    border-radius: 6px;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    font-size: 0.9rem !important;
+    color: #fff !important;
+    background-color: #1976d2 !important;
+    padding: 8px 12px !important;
+    border-radius: 16px !important; /* Botón de carga redondeado */
+    transition: background-color 0.3s ease, transform 0.2s ease !important;
   }
   
   .upload-button:hover {
-    background-color: #1565c0;
-    transform: translateY(-2px);
+    background-color: #1565c0 !important;
+    transform: translateY(-2px) !important;
   }
   
