@@ -46,7 +46,7 @@ const GestionEstudiantes = () => {
     setLoading(true);
     obtenerEstudiantes()
       .then((data) => {
-        if (data.salida) setEstudiantes(data.estudiantes);
+        if (data.salida) setEstudiantes(data.estudiantes || []);
         setLoading(false);
       })
       .catch((error) => {
@@ -57,7 +57,7 @@ const GestionEstudiantes = () => {
 
     obtenerNivelesAcademicos()
       .then((niveles) => {
-        setNivelesAcademicos(niveles.nivelesAcademicos);
+        setNivelesAcademicos(niveles.nivelesAcademicos || []);
       })
       .catch((error) => {
         console.error(error);
