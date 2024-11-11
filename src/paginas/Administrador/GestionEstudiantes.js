@@ -99,7 +99,7 @@ const GestionEstudiantes = () => {
         setUltimoEstudianteId(response.estudianteId);
         obtenerEstudiantes().then((data) => setEstudiantes(data.estudiantes));
         handleClose();
-        setSnackbar({ open: true, message: 'Estudiante agregado con éxito', severity: 'success' });
+        setSnackbar({ open: true, message: response.mensaje, severity: 'success' });
       }
     } catch (error) {
       console.error(error);
