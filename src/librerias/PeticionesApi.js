@@ -235,7 +235,7 @@ export const actualizarEstudiante = async (idEstudiante, estudianteData, idUsuar
 // Eliminar estudiante
 export const eliminarEstudiante = async (idEstudiante, idUsuario, token) => {
   try {
-    const response = await instance.delete(`/estudiante/eliminar`, {
+    const response = await instance.put(`/estudiante/eliminar`, {
       data: { idEstudiante, idUsuario, token },
     });
     return response.data;
