@@ -1,95 +1,147 @@
 .gestion-estudiantes-container {
-    padding: 20px !important;
-    background-color: #f8f9fa !important;
-}
-
-.header {
-    display: flex !important;
-    justify-content: space-between !important;
-    align-items: center !important;
-    margin-bottom: 20px !important;
-}
-
-h2 {
-    color: #343a40 !important;
-    font-size: 28px !important;
-    font-weight: bold !important;
-    text-transform: uppercase !important;
-}
-
-.add-estudiante-btn {
-    transition: all 0.3s ease !important;
-    background-color: #007bff !important;
-    border: none !important;
-}
-
-.add-estudiante-btn:hover {
-    background-color: #0056b3 !important;
-    transform: scale(1.05) !important;
-}
-
-.estudiantes-table {
-    background-color: white !important;
-    border-radius: 8px !important;
-    overflow: hidden !important;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15) !important;
-    transition: box-shadow 0.3s ease !important;
-}
-
-.estudiantes-table:hover {
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25) !important;
-}
-
-.estudiante-row {
-    transition: background-color 0.3s ease !important;
-}
-
-.estudiante-row:hover {
-    background-color: #f1f1f1 !important;
-}
-
-.modal-content {
-    border-radius: 10px !important;
-}
-
-.modal-header {
-    background-color: #007bff !important;
-    color: white !important;
-    border-top-left-radius: 10px !important;
-    border-top-right-radius: 10px !important;
-}
-
-.modal-title {
-    font-size: 24px !important;
-    font-weight: bold !important;
-}
-
-.modal-body input {
-    transition: border-color 0.3s ease !important;
-}
-
-.modal-body input:focus {
-    border-color: #007bff !important;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5) !important;
-}
-.estudiantes-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
+    padding: 20px;
+    font-family: 'Roboto', sans-serif;
+    background-color: #f3f4f6;
   }
   
-  .estudiante-card {
-    width: 300px;
-    transition: transform 0.3s ease-in-out;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  h2 {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 16px;
+    text-align: center;
   }
   
-  .estudiante-card:hover {
-    transform: translateY(-10px);
-  }
-  
-  .preview-image img {
+  .add-estudiante-btn,
+  .add-tesis-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    padding: 10px 20px;
     border-radius: 8px;
+    text-transform: none;
+    transition: all 0.3s ease;
+  }
+  
+  .add-estudiante-btn {
+    background-color: #4caf50;
+    color: #fff;
+  }
+  
+  .add-estudiante-btn:hover {
+    background-color: #388e3c;
+    transform: translateY(-2px);
+  }
+  
+  .add-tesis-btn {
+    margin-left: 10px;
+    background-color: #0288d1;
+    color: #fff;
+  }
+  
+  .add-tesis-btn:hover {
+    background-color: #0277bd;
+    transform: translateY(-2px);
+  }
+  
+  .card {
+    border-radius: 12px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    overflow: hidden;
+  }
+  
+  .card:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    transform: translateY(-4px);
+  }
+  
+  .card img {
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    height: 140px;
+    object-fit: cover;
+  }
+  
+  .card-content h3 {
+    font-size: 1.25rem;
+    color: #333;
+    margin-bottom: 8px;
+  }
+  
+  .card-content p {
+    font-size: 0.95rem;
+    color: #555;
+  }
+  
+  .button-container {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+  }
+  
+  .button-update,
+  .button-delete {
+    font-size: 0.9rem;
+    padding: 8px 16px;
+    border-radius: 6px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  .button-update {
+    background-color: #ffb74d;
+    color: #fff;
+  }
+  
+  .button-update:hover {
+    background-color: #ffa726;
+    transform: translateY(-2px);
+  }
+  
+  .button-delete {
+    background-color: #e57373;
+    color: #fff;
+  }
+  
+  .button-delete:hover {
+    background-color: #ef5350;
+    transform: translateY(-2px);
+  }
+  
+  .dialog {
+    border-radius: 12px;
+  }
+  
+  .dialog-title {
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .text-field,
+  .select-field {
+    margin-bottom: 16px;
+  }
+  
+  .snackbar-alert {
+    border-radius: 8px;
+    background-color: #323232;
+    color: #fff;
+    font-weight: 500;
+    text-align: center;
+  }
+  
+  .upload-button {
+    font-size: 0.9rem;
+    color: #fff;
+    background-color: #1976d2;
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  .upload-button:hover {
+    background-color: #1565c0;
+    transform: translateY(-2px);
   }
   

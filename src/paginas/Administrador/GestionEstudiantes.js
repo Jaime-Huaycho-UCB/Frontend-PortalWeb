@@ -3,6 +3,8 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Card, CardCo
 import { obtenerEstudiantes, agregarEstudiante, actualizarEstudiante, eliminarEstudiante, obtenerNivelesAcademicos } from '../../librerias/PeticionesApi';
 import { AuthContext } from '../../contextos/ContextoAutenticacion';
 import { useNavigate } from 'react-router-dom';
+import '../../estilos/AdministradorEstilos/GestionEstudiantes.css';
+
 
 const GestionEstudiantes = () => {
   const { idUsuario, token } = useContext(AuthContext);
