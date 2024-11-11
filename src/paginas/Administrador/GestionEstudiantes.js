@@ -190,36 +190,53 @@ const GestionEstudiantes = () => {
           Agregar Tesis
         </Button>
       )}
+<Grid container spacing={5} className="grid-estudiantes" justifyContent="center">
+  {estudiantes.map((estudiante) => (
+    <Grid item xs={4} sm={4} md={4} key={estudiante.id}>
+      <Card className="card">
+        <CardMedia
+          component="img"
+          height="140"
+          image={estudiante.foto || 'https://cdn-icons-png.freepik.com/256/2307/2307607.png'}
+          alt="Foto del Estudiante"
+        />
+        <CardContent className="card-content">
+          <h3>{estudiante.nombre}</h3>
+          <p>Email: {estudiante.correo || 'N/A'}</p>
+          <p>Nivel Académico: {estudiante.nivelAcademico || 'N/A'}</p>
+          <div className="button-container">
+            <Button variant="contained" color="warning" onClick={() => iniciarActualizacion(estudiante)} className="button-update">
+              Actualizar
+            </Button>
+            <Button variant="contained" color="error" onClick={() => iniciarEliminacion(estudiante.id)} className="button-delete">
+              Eliminar
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    </Grid>
+  ))}
+</Grid>
 
-      <Grid container spacing={2} className="grid-estudiantes">
-        {estudiantes.map((estudiante) => (
-          <Grid item xs={12} sm={6} md={4} key={estudiante.id}>
-            <Card className="card">
-              <CardMedia
-                component="img"
-                height="140"
-                image={estudiante.foto || 'https://cdn-icons-png.freepik.com/256/2307/2307607.png'}
-                alt="Foto del Estudiante"
-              />
-              <CardContent className="card-content">
-                <h3>{estudiante.nombre}</h3>
-                <p>Email: {estudiante.correo || 'N/A'}</p>
-                <p>Nivel Académico: {estudiante.nivelAcademico || 'N/A'}</p>
-                <div className="button-container">
-                  <Button variant="contained" color="warning" onClick={() => iniciarActualizacion(estudiante)} className="button-update">
-                    Actualizar
-                  </Button>
-                  <Button variant="contained" color="error" onClick={() => iniciarEliminacion(estudiante.id)} className="button-delete">
-                    Eliminar
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
 
-      <Dialog open={show} onClose={handleClose} className="dialog">
+      <Dialog
+  open={show}
+  onClose={handleClose}
+  PaperProps={{
+    style: {
+      padding: '20px',
+      borderRadius: '15px',
+      maxInlineSize: '500px', // Correcto: maxInlineSize
+      inlineSize: '100%',     // Correcto: inlineSize
+      backgroundColor: 'rgba(255, 255, 255, 0.9)', // Fondo semitransparente
+      boxShadow: '0px 4px 15px rgba(0, 0, 0, 0.3)', // Sombra
+      margin: 'auto', // Centrado en la pantalla
+    },
+  }}
+  className="dialog"
+>
+
+
         <DialogTitle className="dialog-title">{isUpdating ? 'Actualizar Estudiante' : 'Agregar Estudiante'}</DialogTitle>
         <DialogContent>
           <TextField
@@ -287,6 +304,7 @@ const GestionEstudiantes = () => {
           </Button>
         </DialogActions>
       </Dialog>
+
 
       <Dialog open={showEliminarDialog} onClose={() => setShowEliminarDialog(false)} className="dialog-eliminar">
         <DialogTitle className="dialog-title">Confirmar Eliminación</DialogTitle>

@@ -1,16 +1,16 @@
 .gestion-estudiantes-container {
+    inline-size: 100%;
+    padding: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 20px;
-    background-color: #f9f9f9;
   }
   
   .titulo-gestion {
     font-size: 24px;
     font-weight: bold;
     color: #333;
-    margin-bottom: 20px;
+    margin-block-end: 20px;
     text-align: center;
   }
   
@@ -27,14 +27,15 @@
     transform: scale(1.05) !important;
   }
   
+  
   .grid-estudiantes {
+    inline-size: 100%;
+    max-inline-size: 1200px;
     display: flex;
-    justify-content: center;
-    gap: 16px;
     flex-wrap: wrap;
-    width: 100%;
-    max-width: 1200px;
+    justify-content: center;
   }
+  
   
   .card {
     border-radius: 20px !important;
@@ -42,9 +43,8 @@
     transition: transform 0.3s ease !important;
     overflow: hidden;
   }
-  
   .card:hover {
-    transform: translateY(-5px) !important;
+    transform: translateY(-9px) !important;
   }
   
   .card-content {
@@ -55,70 +55,17 @@
   .button-container {
     display: flex;
     justify-content: space-around;
-    margin-top: 10px;
-  }
-  
-  .button-update, .button-delete, .button-cancelar, .button-guardar, .button-eliminar {
-    border-radius: 20px !important;
-    padding: 5px 15px !important;
-    transition: background-color 0.3s ease !important;
-  }
-  
-  .button-update:hover {
-    background-color: #ff9800 !important;
-  }
-  
-  .button-delete:hover, .button-eliminar:hover {
-    background-color: #e57373 !important;
-  }
-  
-  .dialog, .dialog-eliminar {
-    padding: 20px;
-    border-radius: 20px !important;
-    width: 100%;
-    max-width: 500px;
-  }
-  
-  .dialog-title {
-    font-size: 20px;
-    font-weight: bold;
-    color: #333;
-  }
-  
-  .text-field, .select-field {
-    margin: 10px 0 !important;
-  }
-  
-  .switch-update-foto {
-    margin-top: 10px;
-  }
-  
-  .upload-button {
-    background-color: #3f51b5 !important;
-    color: white !important;
-    border-radius: 20px !important;
-    margin-top: 10px !important;
-  }
-  
-  .upload-button:hover {
-    background-color: #303f9f !important;
-  }
-  
-  .snackbar-alert {
-    width: 100%;
-  }
-  .dialog {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: rgba(0, 0, 0, 0.5); /* Fondo oscuro detrás del diálogo */
+    margin-block-start: 10px;
   }
   
   .dialog .MuiDialog-paper {
-    background-color: #ffffff !important; /* Color de fondo blanco */
-    border-radius: 15px !important;
     padding: 20px !important;
+    border-radius: 15px !important;
+    max-inline-size: 500px !important;
+    inline-size: 100% !important;
+    background-color: rgba(255, 255, 255, 0.9) !important; /* Fondo semitransparente */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3) !important;
+    margin: auto !important; /* Centrado */
   }
   
   .dialog-title {
@@ -126,7 +73,7 @@
     font-weight: bold !important;
     color: #333333 !important;
     text-align: center !important;
-    margin-bottom: 10px !important;
+    margin-block-end: 10px !important;
   }
   
   .button-cancelar, .button-guardar {
@@ -154,6 +101,6 @@
   }
   
   .text-field, .select-field, .switch-update-foto {
-    margin-bottom: 15px !important;
+    margin-block-end: 15px !important;
   }
   
