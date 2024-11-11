@@ -55,7 +55,7 @@ const GestionEstudiantes = () => {
 
     obtenerNivelesAcademicos()
       .then((niveles) => {
-        setNivelesAcademicos(niveles);
+        setNivelesAcademicos(niveles.nivelesAcademicos);
       })
       .catch((error) => {
         console.error(error);
