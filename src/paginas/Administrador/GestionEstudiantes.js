@@ -1,6 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Card, CardContent, CardMedia, Grid, TextField, Select, MenuItem, FormControl, InputLabel, CircularProgress, Snackbar, Alert, Switch, FormControlLabel } from '@mui/material';
-import { obtenerEstudiantes, agregarEstudiante, actualizarEstudiante, eliminarEstudiante, obtenerNivelesAcademicos } from '../../librerias/PeticionesApi';
+import {
+  Button, Dialog, DialogActions, DialogContent, DialogTitle, Card, CardContent, CardMedia, Grid, TextField, Select, MenuItem, FormControl, InputLabel, CircularProgress, Snackbar, Alert, Switch, FormControlLabel
+} from '@mui/material';
+import {
+  obtenerEstudiantes, agregarEstudiante, actualizarEstudiante, eliminarEstudiante, obtenerNivelesAcademicos
+} from '../../librerias/PeticionesApi';
 import { AuthContext } from '../../contextos/ContextoAutenticacion';
 import { useNavigate } from 'react-router-dom';
 import '../../estilos/AdministradorEstilos/GestionEstudiantes.css';
@@ -173,34 +177,28 @@ const GestionEstudiantes = () => {
     }
   };
 
+  const agregarTesis = () => {
+    navigate('/admin/gestion-tesis'); // Redirige a la página de gestión de tesis
+  };
+
   return (
     <div className="gestion-estudiantes-container">
       <h2 className="titulo-gestion">Gestión de Estudiantes</h2>
       <Button variant="contained" color="primary" onClick={handleShow} className="add-estudiante-btn">
         {loading ? <CircularProgress size={24} /> : 'Agregar Estudiante'}
       </Button>
-
-      {ultimoEstudianteId && (
-        <Button
-          variant="contained"
-          color="secondary"
-          onClick={() => setShowAgregarTesisDialog(true)}
-          className="add-tesis-btn"
-        >
-          Agregar Tesis
-        </Button>
-      )}
-<Grid container spacing={5} className="grid-estudiantes" justifyContent="center">
+      <Grid container spacing={5} className="grid-estudiantes" justifyContent="center">
   {estudiantes.map((estudiante) => (
     <Grid item xs={4} sm={4} md={4} key={estudiante.id}>
       <Card className="card">
-      <CardMedia
-  component="img"
-  height="240" // Cambia este valor según la altura que desees
-  image={estudiante.foto || 'https://cdn-icons-png.freepik.com/256/2307/2307607.png'}
-  alt="Foto del Estudiante"
-/>
-
+        <CardMedia
+          component="img"
+          className="card-media"
+          height="200"
+          image={estudiante.foto || 'https://cdn-icons-png.freepik.com/256/2307/2307607.png'}
+          alt="Foto del Estudiante"
+          style={{ objectFit: 'cover' }}
+        />
         <CardContent className="card-content">
           <h3>{estudiante.nombre}</h3>
           <p>Email: {estudiante.correo || 'N/A'}</p>
@@ -213,6 +211,14 @@ const GestionEstudiantes = () => {
               Eliminar
             </Button>
           </div>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={agregarTesis}
+            className="agregar-tesis-btn"
+          >
+            Agregar Tesis
+          </Button>
         </CardContent>
       </Card>
     </Grid>

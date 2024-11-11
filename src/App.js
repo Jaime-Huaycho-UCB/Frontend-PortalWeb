@@ -15,6 +15,8 @@ import BarraDeBusqueda from './componentes/BarraDeBusqueda';
 import IniciarSesion from './paginas/Autenticacion/IniciarSesion';
 import Registro from './paginas/Autenticacion/Registro';
 import PanelAdministrador from './paginas/Administrador/PanelAdministrador';
+import GestionTesis from './paginas/Administrador/GestionTesis';
+
 import GestionDocentes from './paginas/Administrador/GestionDocentes';
 import GestionEstudiantes from './paginas/Administrador/GestionEstudiantes';
 import GestionNoticias from './paginas/Administrador/GestionNoticias';
@@ -94,6 +96,11 @@ function App() {
                     <Route path="/admin/perfil" element={
                       <RutaProtegida rolesPermitidos={[1, 0]}>
                         <Perfil />
+                      </RutaProtegida>
+                    } />
+                     <Route path="/admin/gestion-tesis" element={
+                      <RutaProtegida rolesPermitidos={[1, 0]}>
+                        <GestionTesis />
                       </RutaProtegida>
                     } />
                   </Routes>
