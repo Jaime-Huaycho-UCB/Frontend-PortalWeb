@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useContext, useCallback } from 'react';
-import {
-    Timeline, TimelineItem, TimelineSeparator, TimelineConnector, TimelineContent,
-    TimelineDot, TimelineOppositeContent
-} from '@mui/lab';
+import { VerticalTimeline, VerticalTimelineElement } from 'react-vertical-timeline-component';
+import 'react-vertical-timeline-component/style.min.css';
 import {
     Card, CardContent, Typography, Box, Dialog, DialogContent, DialogTitle,
     TextField, Button, DialogActions, IconButton, Tooltip
@@ -151,50 +149,44 @@ const GestionEventos = () => {
                     Agregar Evento
                 </Button>
             </Box>
-            <Timeline position="alternate">
-                {eventos.map((evento, index) => (
-                    <TimelineItem key={evento.id}>
-                        <TimelineOppositeContent color="text.secondary">
-                            {evento.fecha}
-                        </TimelineOppositeContent>
-                        <TimelineSeparator>
-                            <TimelineDot color="primary">
-                                <Event />
-                            </TimelineDot>
-                            {index < eventos.length - 1 && <TimelineConnector />}
-                        </TimelineSeparator>
-                        <TimelineContent>
-                            <Card className="timeline-card">
-                                <CardContent>
-                                    {evento.fotoBase64 && (
-                                        <img
-                                            src={evento.fotoBase64}
-                                            alt={evento.nombre}
-                                            style={{ width: '100%', borderRadius: '8px', marginBottom: '10px' }}
-                                        />
-                                    )}
-                                    <Typography variant="h6" sx={{ fontWeight: 'bold' }}>{evento.nombre}</Typography>
-                                    <Typography variant="body2" color="textSecondary">Ubicación: {evento.lugar}</Typography>
-                                    <Typography variant="body2" color="textSecondary">Director: {evento.director}</Typography>
-                                    <Typography variant="body2" paragraph>{evento.descripcion}</Typography>
-                                    <Box display="flex" justifyContent="space-between" mt={2}>
-                                        <Tooltip title="Editar">
-                                            <IconButton color="warning" onClick={() => iniciarEdicion(evento)}>
-                                                <Edit />
-                                            </IconButton>
-                                        </Tooltip>
-                                        <Tooltip title="Eliminar">
-                                            <IconButton color="error" onClick={() => confirmarEliminacion(evento.id)}>
-                                                <Delete />
-                                            </IconButton>
-                                        </Tooltip>
-                                    </Box>
-                                </CardContent>
-                            </Card>
-                        </TimelineContent>
-                    </TimelineItem>
+            <VerticalTimeline>
+                {eventos.map((evento) => (
+                    <VerticalTimelineElement
+                        key={evento.id}
+                        date={evento.fecha}
+                        icon={<Event />}
+                        iconStyle={{ background: '#3f51b5', color: '#fff' }}
+                    >
+                        <Card className="timeline-card">
+                            <CardContent>
+                                {evento.fotoBase64 && (
+                                    <img
+                                        src={evento.fotoBase64}
+                                        alt={evento.nombre}
+                                        style={{ width: '100%', borderRadius: '8px', marginBottom: '10px' }}
+                                    />
+                                )}
+                                <Typography variant="h6" sx={{ fontWeight: 'bold' }}>{evento.nombre}</Typography>
+                                <Typography variant="body2" color="textSecondary">Ubicación: {evento.lugar}</Typography>
+                                <Typography variant="body2" color="textSecondary">Director: {evento.director}</Typography>
+                                <Typography variant="body2" paragraph>{evento.descripcion}</Typography>
+                                <Box display="flex" justifyContent="space-between" mt={2}>
+                                    <Tooltip title="Editar">
+                                        <IconButton color="warning" onClick={() => iniciarEdicion(evento)}>
+                                            <Edit />
+                                        </IconButton>
+                                    </Tooltip>
+                                    <Tooltip title="Eliminar">
+                                        <IconButton color="error" onClick={() => confirmarEliminacion(evento.id)}>
+                                            <Delete />
+                                        </IconButton>
+                                    </Tooltip>
+                                </Box>
+                            </CardContent>
+                        </Card>
+                    </VerticalTimelineElement>
                 ))}
-            </Timeline>
+            </VerticalTimeline>
 
             <Dialog open={showModal} onClose={() => { setShowModal(false); setIsUpdating(false); }} fullWidth maxWidth="sm">
                 <DialogTitle>
