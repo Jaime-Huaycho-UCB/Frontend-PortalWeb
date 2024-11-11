@@ -194,12 +194,13 @@ const GestionEstudiantes = () => {
   {estudiantes.map((estudiante) => (
     <Grid item xs={4} sm={4} md={4} key={estudiante.id}>
       <Card className="card">
-        <CardMedia
-          component="img"
-          height="140"
-          image={estudiante.foto || 'https://cdn-icons-png.freepik.com/256/2307/2307607.png'}
-          alt="Foto del Estudiante"
-        />
+      <CardMedia
+  component="img"
+  height="240" // Cambia este valor según la altura que desees
+  image={estudiante.foto || 'https://cdn-icons-png.freepik.com/256/2307/2307607.png'}
+  alt="Foto del Estudiante"
+/>
+
         <CardContent className="card-content">
           <h3>{estudiante.nombre}</h3>
           <p>Email: {estudiante.correo || 'N/A'}</p>
