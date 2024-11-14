@@ -193,9 +193,10 @@ const GestionTesis = () => {
                         </IconButton>
                     </Box>
                     {selectedPdf && (
-                        <Worker workerUrl={`https://unpkg.com/pdfjs-dist@2.9.359/build/pdf.worker.min.js`}>
+                       <Worker workerUrl={`https://unpkg.com/pdfjs-dist@3.0.279/build/pdf.worker.min.js`}>
                             <Viewer fileUrl={`data:application/pdf;base64,${selectedPdf}`} />
                         </Worker>
+                   
                     )}
                 </DialogContent>
             </Dialog>
