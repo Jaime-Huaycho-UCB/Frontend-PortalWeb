@@ -1,7 +1,8 @@
 // src/librerias/PeticionesApi.js
 import axios from 'axios';
 
-const BASE_URL = 'https://backend-portalweb-production.up.railway.app';  
+// const BASE_URL = 'https://backend-portalweb-production.up.railway.app';  
+const BASE_URL = 'https://localhost:8000';  
 
 const instance = axios.create({
   baseURL: BASE_URL,

@@ -1,16 +1,21 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Card, CardContent, Typography, Grid, Button, Box, Dialog, DialogContent, TextField, IconButton, DialogActions, Link } from '@mui/material';
+import { Card, CardContent, Typography, Grid, Button, Box, Dialog, DialogContent, TextField, IconButton, DialogActions } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useLocation } from 'react-router-dom';
 import { agregarTesis, obtenerTesis, eliminarTesis } from '../../librerias/PeticionesApi';
 import { AuthContext } from '../../contextos/ContextoAutenticacion';
+import { Worker, Viewer } from '@react-pdf-viewer/core';
+import '@react-pdf-viewer/core/lib/styles/index.css';
+import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 
 const GestionTesis = () => {
     const { idUsuario, token } = useContext(AuthContext);
     const location = useLocation();
     const [openDialog, setOpenDialog] = useState(location.state?.openModal || false);
+    const [openPdfViewer, setOpenPdfViewer] = useState(false);
+    const [selectedPdf, setSelectedPdf] = useState(null);
     const [idEstudiante, setIdEstudiante] = useState(location.state?.idEstudiante || null);
     const [nuevoTesis, setNuevoTesis] = useState({
         titulo: '',
@@ -85,6 +90,14 @@ const GestionTesis = () => {
     };
 
     const closeDialog = () => setOpenDialog(false);
+    const openPdfModal = (pdf) => {
+        setSelectedPdf(pdf);
+        setOpenPdfViewer(true);
+    };
+    const closePdfModal = () => {
+        setSelectedPdf(null);
+        setOpenPdfViewer(false);
+    };
 
     return (
         <Box sx={{ padding: 4 }}>
@@ -107,12 +120,12 @@ const GestionTesis = () => {
                     <Grid item xs={12} md={6} lg={4} key={tesis.id}>
                         <Card>
                             <CardContent>
-                                <Typography variant="h6">{tesis.titulo}</Typography>
+                                <Typography variant="h6">{tesis.tesis.titulo}</Typography>
                                 <Typography variant="body2" color="textSecondary" gutterBottom>
-                                    Fecha de Publicación: {tesis.fechaPublicacion}
+                                    Fecha de Publicación: {tesis.tesis.fechaPublicacion}
                                 </Typography>
                                 <Typography variant="body2" gutterBottom>
-                                    Resumen: {tesis.resumen}
+                                    Resumen: {tesis.tesis.resumen}
                                 </Typography>
 
                                 {/* Mostrar detalles del estudiante si existen */}
@@ -130,8 +143,6 @@ const GestionTesis = () => {
                                         <Typography variant="body2">
                                             Correo: {tesis.estudiante.correo}
                                         </Typography>
-
-                                        {/* Mostrar foto si está disponible */}
                                         {tesis.estudiante.foto && (
                                             <Box
                                                 component="img"
@@ -149,16 +160,14 @@ const GestionTesis = () => {
                                 )}
 
                                 {/* Botón para ver PDF */}
-                                <Link
-                                    href={`data:application/pdf;base64,${tesis.tesis}`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    variant="body2"
+                                <Button
+                                    variant="outlined"
                                     color="primary"
+                                    onClick={() => openPdfModal(tesis.tesis)}
                                     sx={{ display: 'block', mt: 2 }}
                                 >
                                     Ver Contenido PDF
-                                </Link>
+                                </Button>
 
                                 <Button
                                     startIcon={<DeleteIcon />}
@@ -173,6 +182,23 @@ const GestionTesis = () => {
                     </Grid>
                 ))}
             </Grid>
+
+            {/* Modal para visualizar el PDF */}
+            <Dialog open={openPdfViewer} onClose={closePdfModal} maxWidth="md" fullWidth>
+                <DialogContent>
+                    <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+                        <Typography variant="h6">Visualizar Tesis</Typography>
+                        <IconButton onClick={closePdfModal}>
+                            <CloseIcon />
+                        </IconButton>
+                    </Box>
+                    {selectedPdf && (
+                        <Worker workerUrl={`https://unpkg.com/pdfjs-dist@2.9.359/build/pdf.worker.min.js`}>
+                            <Viewer fileUrl={`data:application/pdf;base64,${selectedPdf}`} />
+                        </Worker>
+                    )}
+                </DialogContent>
+            </Dialog>
 
             {/* Dialogo para agregar nueva tesis */}
             <Dialog open={openDialog} onClose={closeDialog} fullWidth maxWidth="md">
