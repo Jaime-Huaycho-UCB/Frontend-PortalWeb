@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Container, Row, Col, Card, Button, Modal, Form } from 'react-bootstrap';
 import { AuthContext } from '../../contextos/ContextoAutenticacion';
-import { obtenerDocente, obtenerPerfil } from '../../librerias/PeticionesApi';
+import { obtenerPerfil } from '../../librerias/PeticionesApi';
 
 const Perfil = () => {
-  const { idDocente } = useContext(AuthContext);
+  const { idDocente,idUsuario,token } = useContext(AuthContext);
   const [docente, setDocente] = useState(null);
   const [papers, setPapers] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -17,18 +17,18 @@ const Perfil = () => {
   useEffect(() => {
     const cargarDocente = async () => {
       try {
-        const datosDocente = await obtenerPerfil(idDocente);
+        const datosDocente = await obtenerPerfil(idDocente,idUsuario,token);
         setDocente(datosDocente);
       } catch (error) {
         console.error("Error al cargar el perfil del docente:", error);
       }
     };
     cargarDocente();
-  }, [idDocente]);
+  }, [idDocente,idUsuario,token]);
 
   const handleAddPaper = () => {
     setPapers([...papers, newPaper]);
-    setNewPaper({ titulo: '', link: '', descripcion: '' });
+    setNewPaper({ titulo: '', link: ''});
     setShowModal(false);
   };
 

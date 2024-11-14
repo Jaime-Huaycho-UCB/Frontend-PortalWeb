@@ -285,9 +285,9 @@ export const obtenerContenidoTesis = async (idTesis) => {
     throw error;
   }
 };
-export const obtenerPerfil = async (idDocente) => {
+export const obtenerPerfil = async (idDocente,idUsuario,token) => {
   try {
-    const response = await instance.get(`/docentes/${idDocente}`);
+    const response = await instance.get(`docente/obtener/informacion`,{idDocente,idUsuario,token});
     return response.data;
   } catch (error) {
     console.error("Error al obtener los datos del docente:", error);
