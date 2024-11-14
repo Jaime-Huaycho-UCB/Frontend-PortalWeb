@@ -245,7 +245,7 @@ export const eliminarEstudiante = async (idEstudiante, idUsuario, token) => {
 };
 export const obtenerTesis = async () => {
   try {
-    const response = await instance.get('/tesis/obtener');
+    const response = await instance.get('estudiante/tesis/obtener/todo');
     return response.data;
   } catch (error) {
     console.error("Error al obtener las tesis:", error);
