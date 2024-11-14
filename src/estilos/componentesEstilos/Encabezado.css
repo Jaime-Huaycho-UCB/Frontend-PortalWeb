@@ -1,50 +1,70 @@
+/* Encabezado.css */
 
+/* Animación de desvanecimiento */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px); /* Desplazamiento hacia arriba para un efecto más suave */
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Aplicar animación de aparición a los elementos del encabezado */
+.encabezado, .encabezado-title, .navbar-links, .nav-button, .menu-item {
+  animation: fadeIn 0.8s ease-in-out forwards !important;
+}
+
+/* Estilo para el AppBar en Azul Marino */
 .encabezado {
-  background-color: #f5f5f5 !important; 
-  padding: 15px 25px !important;
-  border-bottom: 1px solid #ddd !important; 
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05) !important; 
+  background-color: #002855 !important;
 }
 
-.encabezado .titulo {
-  color: #333 !important; 
-  font-size: 22px !important;
+/* Estilo para el título de la página */
+.encabezado-title {
+  color: #FFFFFF !important;
+  text-decoration: none !important;
+  flex-grow: 1 !important;
+  font-size: 1.5rem !important;
   font-weight: bold !important;
-  letter-spacing: 1px !important;
-  text-transform: uppercase !important;
+  margin-right: auto !important;
+
+}
+
+/* Estilo para la barra de navegación */
+.navbar-links {
+  display: flex !important;
+  gap: 20px !important; /* Espacio entre los enlaces */
+  justify-content: space-evenly !important;
+  align-items: center !important;
+  flex-grow: 1 !important;
+  position: absolute !important;
+  transform: translateX(50%) !important;
+  margin-right: 90% !important;
+  margin-left: -25%;
+}
+
+/* Estilo para los botones de navegación */
+.nav-button {
+  color: #FFFFFF !important;
   transition: color 0.3s ease !important;
-}
-
-.encabezado .titulo:hover {
-  color: #da793c !important; 
-}
-
-.navbar-nav .nav-link {
-  color: #555 !important; 
-  font-size: 15px !important;
-  margin-left: 10px !important;
   font-weight: 500 !important;
-  text-transform: uppercase !important;
-  transition: color 0.3s ease !important;
+  white-space: nowrap;
 }
 
-.navbar-nav .nav-link:hover {
-  color: #da793c !important;
+.nav-button:hover {
+  color: #FFD700 !important; /* Dorado para resaltar al pasar el cursor */
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-  .encabezado .titulo {
-    font-size: 18px !important; 
-  }
+/* Estilo para el menú desplegable */
+.menu-item {
+  color: #002855 !important;
+  transition: background-color 0.3s ease !important;
+}
 
-  .navbar-nav .nav-link {
-    font-size: 14px !important;
-    margin-left: 0 !important;
-    margin-bottom: 10px !important;
-  }
-
-  .encabezado {
-    padding: 10px !important; 
-  }
+.menu-item:hover {
+  background-color: #F5F5F5 !important; /* Gris claro para efecto hover */
+  color: #BA0C2F !important; /* Rojo para destacar el texto en hover */
 }

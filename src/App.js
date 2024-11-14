@@ -51,7 +51,6 @@ function App() {
               <div className="wrapper">
                 <Encabezado />
                 <div className="main-content">
-                  <BarraDeBusqueda />
                   <Routes>
                     <Route path="/docentes" element={<ListaDocentes />} />
                     <Route path="/egresados" element={<ListaEgresados />} />

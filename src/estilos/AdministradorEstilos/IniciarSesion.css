@@ -1,84 +1,95 @@
-/* Fondo de pantalla */
-.login-background {
-    background-image: url('https://img.freepik.com/vector-premium/fondo-vector-monocromo-blanco-abstracto-folleto-diseno-folleto-sitio-web-fondo-pantalla-blanco-geometrico-pagina-inicio-presentacion-certificado_249611-6006.jpg?w=1380') !important;
-    background-size: cover !important;
-    background-position: center !important;
-    height: 100vh !important;
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-}
-  
-.login-container {
-    background: rgba(255, 255, 255, 0.1) !important;
-    backdrop-filter: blur(10px) !important;
-    padding: 30px !important; /* Ajuste de padding */
-    border-radius: 15px !important;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.37) !important;
-    max-width: 300px !important; 
-    width: 100% !important;
-    color: white !important;
-}
+/* IniciarSesion.css */
 
-.login-title {
-    font-size: 32px !important;
-    text-align: center !important;
-    margin-bottom: 20px !important;
+/* Fondo de video */
+.login-background {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .background-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+    opacity: 0.8;
+  }
+  
+  /* Contenedor de inicio de sesión */
+  .login-container {
+    position: relative;
+    z-index: 1;
+    background-color: rgba(255, 255, 255, 0.4) !important; 
+    backdrop-filter: blur(8px);
+    padding: 2rem;
+    border-radius: 16px;
+    max-width: 400px;
+    text-align: center;
+  }
+  
+  /* Título del formulario de inicio de sesión */
+  .login-title {
+    color: #002855 !important;
     font-weight: bold !important;
-}
+    margin-bottom: 1rem !important;
+    font-family:Georgia, 'Times New Roman', Times, serif;
+    font-size: 140% !important;
+  }
   
-.input-container {
-    position: relative !important;
-    margin-bottom: 20px !important;
-}
+  /* Campos de entrada */
+  .login-input .MuiOutlinedInput-root {
+    background-color: #FFFFFF;
+    border-radius: 8px;
+  }
   
-.input-container .form-control {
-    padding-left: 40px !important;
-    border-radius: 30px !important;
-    background: rgba(255, 255, 255, 0.2) !important;
-    border: none !important;
-    color: rgb(7, 2, 17) !important;
-}
+  .login-input .MuiInputBase-input {
+    color: #002855;
+  }
   
-.input-container .icon {
-    position: absolute !important;
-    left: 15px !important;
-    top: 50% !important;
-    transform: translateY(-50%) !important;
-    color: white !important;
-    font-size: 18px !important;
-}
+  /* Error de inicio de sesión */
+  .login-error {
+    margin-bottom: 1rem;
+    border-radius: 8px;
+  }
   
-.form-options {
-    display: flex !important;
-    justify-content: space-between !important;
-    align-items: center !important;
-    margin-bottom: 20px !important;
-}
+  /* Botón de inicio de sesión */
+  .login-button {
+    background-color: #002855 !important;
+    color: #FFFFFF !important;
+    border-radius: 20px !important;
+    padding: 10px 20px !important;
+    margin-top: 1rem;
+  }
   
-.login-button {
-    width: 100% !important;
-    background-color: #6a5acd !important;
-    border: none !important;
-    border-radius: 30px !important;
-    padding: 10px !important;
-    font-size: 16px !important;
-    transition: background-color 0.3s ease !important;
-}
+  .login-button:hover {
+    background-color: #001f3f !important;
+  }
   
-.login-button:hover {
-    background-color: #483d8b !important;
-}
+  /* Checkbox */
+  .login-checkbox .MuiCheckbox-root {
+    color: #002855 !important;
+  }
   
-.register-link {
-    text-align: center !important;
-}
+  /* Enlace de "Olvidaste tu contraseña?" */
+  .forgot-password {
+    color: #BA0C2F !important;
+    font-weight: bold !important;
+  }
   
-.register-link a {
-    color: #00aced !important;
-    text-decoration: underline !important;
-}
+  /* Enlace de registro */
+  .register-link {
+    margin-top: 1rem;
+  }
   
-.register-link a:hover {
-    color: #0084b4 !important;
-}
+  .register-button {
+    color: #BA0C2F !important;
+    font-weight: bold !important;
+  }
+  

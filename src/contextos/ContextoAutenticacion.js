@@ -30,17 +30,26 @@ export const AuthProvider = ({ children }) => {
   };
 
   const cerrarSesion = () => {
-    console.log("Cerrando sesión...");
-    setAuth({ permiso: null, idUsuario: null, idDocente: null, token: null });
-    localStorage.removeItem('auth');
+    setAuth({
+      permiso: null,
+      idUsuario: null,
+      idDocente: null,
+      token: null,
+    });
+    localStorage.clear();
   };
 
   useEffect(() => {
     const savedAuth = JSON.parse(localStorage.getItem('auth'));
-    if (savedAuth) {
+    
+    // Verifica que todos los valores esenciales estén presentes
+    if (savedAuth && savedAuth.permiso && savedAuth.idUsuario && savedAuth.idDocente && savedAuth.token) {
       setAuth(savedAuth);
       console.log("Valores de autenticación cargados desde localStorage:");
       console.log(savedAuth);
+    } else {
+      console.log("No se encontraron datos completos en localStorage para iniciar sesión automáticamente.");
+      localStorage.removeItem('auth'); // Limpia datos incompletos si los hay
     }
   }, []);
 

@@ -1,27 +1,33 @@
+// BarraDeBusqueda.js
 import React, { useState } from 'react';
-import { Form, FormControl, Button } from 'react-bootstrap';
-import '../estilos/componentesEstilos/BarraDeBusqueda.css'; 
+import { IconButton, InputBase } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
+import '../estilos/componentesEstilos/BarraDeBusqueda.css';
 
 const BarraDeBusqueda = () => {
+  const [expandido, setExpandido] = useState(false);
   const [query, setQuery] = useState('');
 
+  const handleExpandir = () => setExpandido(!expandido);
   const handleSearch = (e) => {
     e.preventDefault();
     alert(`Buscando: ${query}`);
   };
 
   return (
-    <Form className="barra-de-busqueda" onSubmit={handleSearch}> 
-      <FormControl
-        type="search"
-        placeholder="Buscar"
-        className="input-busqueda" 
-        aria-label="Buscar"
+    <form className={`barra-de-busqueda ${expandido ? 'expandido' : ''}`} onSubmit={handleSearch}>
+      <IconButton onClick={handleExpandir} className="boton-lupa">
+        <SearchIcon />
+        {!expandido && <span className="texto-buscar">Buscar</span>}
+      </IconButton>
+      <InputBase
+        className="input-busqueda"
+        placeholder="Buscar..."
         value={query}
         onChange={(e) => setQuery(e.target.value)}
+        style={{ display: expandido ? 'inline-flex' : 'none' }}
       />
-      <Button className="boton-busqueda" type="submit">Buscar</Button> 
-    </Form>
+    </form>
   );
 };
 

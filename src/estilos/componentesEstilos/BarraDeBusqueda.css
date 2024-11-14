@@ -1,43 +1,46 @@
-/* Estilos para la barra de búsqueda */
+/* BarraDeBusqueda.css */
+
 .barra-de-busqueda {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 20px auto;
-  width: 100%;
-  max-width: 600px;
+  color: #FFFFFF !important;
+  display: flex !important;
+  align-items: center !important;
+  transition: width 0.4s ease, opacity 0.4s ease !important;
+  width: 110px !important;
+  overflow: hidden !important;
+  gap: 5px;
+}
+
+.barra-de-busqueda.expandido {
+  color: #FFFFFF !important;
+  width: 250px !important; /* Ancho cuando está expandida */
 }
 
 .input-busqueda {
-  border: 2px solid #007bff;
-  border-radius: 5px;
-  padding: 10px;
-  width: 100%;
-  font-size: 16px;
-  transition: all 0.3s ease-in-out;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background-color: #FFFFFF;
+  border: none !important;
+  outline: none !important;
+  padding: 5px !important;
+  width: 100% !important;
+  font-size: 0.9rem !important;
+  border-radius: 20px;
 }
 
-.input-busqueda:focus {
-  outline: none;
-  border-color: #28a745;
-  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2);
+.boton-lupa {
+  color: #FFFFFF !important;
+  cursor: pointer !important;
+  padding: 5px !important;
+  
+}
+.boton-lupa:hover {
+  color: #FFD700 !important; /* Dorado para resaltar al pasar el cursor */
+}
+.texto-buscar {
+  font-size: 0.95rem; /* Tamaño más pequeño */
+  font-family: 'Roboto', sans-serif; /* Fuente estilizada, puedes cambiarla si tienes otra preferencia */
+  font-weight: bold; /* Peso de fuente ligero para un aspecto más elegante */
+  color: #FFFFFF;
+  letter-spacing: 0.5px; /* Espaciado entre letras para mejorar la legibilidad */
+  transition: opacity 0.4s ease;
+  opacity: 1;
 }
 
-.boton-busqueda {
-  background-color: #28a745;
-  border: none;
-  border-radius: 5px;
-  color: white;
-  padding: 10px 20px;
-  margin-left: 10px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: all 0.3s ease-in-out;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.boton-busqueda:hover {
-  background-color: #218838;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-}

@@ -1,51 +1,108 @@
 // Encabezado.js
 import React, { useContext } from 'react';
-import { Navbar, Nav, Container } from 'react-bootstrap';
+import { AppBar, Toolbar, IconButton, Typography, Button, Menu, MenuItem } from '@mui/material';
 import { Link } from 'react-router-dom';
+import MenuIcon from '@mui/icons-material/Menu';
 import { AuthContext } from '../contextos/ContextoAutenticacion';
+import BarraDeBusqueda from './BarraDeBusqueda';
 import '../estilos/componentesEstilos/Encabezado.css';
 
 const Encabezado = () => {
-  const { permiso } = useContext(AuthContext);
-  const permisoInt = parseInt(permiso, 10); 
   
+  const { permiso,cerrarSesion } = useContext(AuthContext);
+  const permisoInt = permiso !== null ? parseInt(permiso, 10) : -1;
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+
+  const handleMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   return (
-    <Navbar bg="light" expand="lg" className="encabezado">
-      <Container>
-        <Navbar.Brand as={Link} to="/">Mi Portal</Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
-            {permisoInt === 1 ? (
-              <>
-                <Nav.Link as={Link} to="/admin/gestion-docentes">Gestión Docentes</Nav.Link>
-                <Nav.Link as={Link} to="/admin/gestion-estudiantes">Gestión Estudiantes</Nav.Link>
-                <Nav.Link as={Link} to="/admin/gestion-noticias">Gestión Noticias</Nav.Link>
-                <Nav.Link as={Link} to="/admin/gestion-eventos">Gestión Eventos</Nav.Link>
-                <Nav.Link as={Link} to="/admin/crear-usuario">Crear Usuario Superior</Nav.Link>
-                <Nav.Link as={Link} to="/admin/perfil">Perfil</Nav.Link>
-              </>
-            ) : permisoInt === 0 ? (
-              <>
-                <Nav.Link as={Link} to="/admin/gestion-estudiantes">Gestión Estudiantes</Nav.Link>
-                <Nav.Link as={Link} to="/admin/gestion-noticias">Gestión Noticias</Nav.Link>
-                <Nav.Link as={Link} to="/admin/gestion-eventos">Gestión Eventos</Nav.Link>
-                <Nav.Link as={Link} to="/admin/perfil">Perfil</Nav.Link>
-              </>
-            ) : (
-              <>
-                <Nav.Link as={Link} to="/docentes">Docentes</Nav.Link>
-                <Nav.Link as={Link} to="/egresados">Estudiantes</Nav.Link>
-                <Nav.Link as={Link} to="/eventos">Eventos</Nav.Link>
-                <Nav.Link as={Link} to="/noticias">Noticias</Nav.Link>
-                <Nav.Link as={Link} to="/carrera">Carrera</Nav.Link>
-                <Nav.Link as={Link} to="/autoridades">Autoridades</Nav.Link>
-              </>
-            )}
-          </Nav>
-        </Navbar.Collapse>
-      </Container>
-    </Navbar>
+    <AppBar position="static" className="encabezado">
+      <Toolbar>
+        <IconButton edge="start" color="inherit" aria-label="menu" onClick={handleMenu} sx={{ mr: 3 }}>
+          <MenuIcon />
+        </IconButton>
+        <Typography variant="h6" component={Link} to="/" className="encabezado-title">
+          Mi Portal
+        </Typography>
+        <div className="navbar-links">
+          {permisoInt === 1 ? (
+            <>
+              <Button className="nav-button" component={Link} to="/admin/gestion-docentes">Gestión Docentes</Button>
+              <Button className="nav-button" component={Link} to="/admin/gestion-estudiantes">Gestión Estudiantes</Button>
+              <Button className="nav-button" component={Link} to="/admin/gestion-noticias">Gestión Noticias</Button>
+              <Button className="nav-button" component={Link} to="/admin/gestion-eventos">Gestión Eventos</Button>
+              <Button className="nav-button" component={Link} to="/admin/crear-usuario">Crear Usuario Superior</Button>
+              <Button className="nav-button" component={Link} to="/admin/perfil">Perfil</Button>
+            </>
+          ) : permisoInt === 0 ? (
+            <>
+              <Button className="nav-button" component={Link} to="/admin/gestion-estudiantes">Gestión Estudiantes</Button>
+              <Button className="nav-button" component={Link} to="/admin/gestion-noticias">Gestión Noticias</Button>
+              <Button className="nav-button" component={Link} to="/admin/gestion-eventos">Gestión Eventos</Button>
+              <Button className="nav-button" component={Link} to="/admin/perfil">Perfil</Button>
+            </>
+          ) : (
+            <>
+              <Button className="nav-button" component={Link} to="/docentes">Docentes</Button>
+              <Button className="nav-button" component={Link} to="/egresados">Estudiantes</Button>
+              <Button className="nav-button" component={Link} to="/eventos">Eventos</Button>
+              <Button className="nav-button" component={Link} to="/noticias">Noticias</Button>
+              <Button className="nav-button" component={Link} to="/carrera">Carrera</Button>
+              <Button className="nav-button" component={Link} to="/autoridades">Autoridades</Button>
+            </>
+          )}
+           <Button color="secondary" onClick={cerrarSesion} className="nav-button">
+            Cerrar Sesión
+          </Button>
+        </div>
+        {/* Barra de búsqueda expandible */}
+        <BarraDeBusqueda />
+      </Toolbar>
+      <Menu
+        id="menu-appbar"
+        anchorEl={anchorEl}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        keepMounted
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        open={open}
+        onClose={handleClose}
+      >
+        {permisoInt === 1 ? [
+          <MenuItem key="gestion-docentes" className="menu-item" component={Link} to="/admin/gestion-docentes" onClick={handleClose}>Gestión Docentes</MenuItem>,
+          <MenuItem key="gestion-estudiantes" className="menu-item" component={Link} to="/admin/gestion-estudiantes" onClick={handleClose}>Gestión Estudiantes</MenuItem>,
+          <MenuItem key="gestion-noticias" className="menu-item" component={Link} to="/admin/gestion-noticias" onClick={handleClose}>Gestión Noticias</MenuItem>,
+          <MenuItem key="gestion-eventos" className="menu-item" component={Link} to="/admin/gestion-eventos" onClick={handleClose}>Gestión Eventos</MenuItem>,
+          <MenuItem key="crear-usuario" className="menu-item" component={Link} to="/admin/crear-usuario" onClick={handleClose}>Crear Usuario Superior</MenuItem>,
+          <MenuItem key="perfil" className="menu-item" component={Link} to="/admin/perfil" onClick={handleClose}>Perfil</MenuItem>,
+        ] : permisoInt === 0 ? [
+          <MenuItem key="gestion-estudiantes" className="menu-item" component={Link} to="/admin/gestion-estudiantes" onClick={handleClose}>Gestión Estudiantes</MenuItem>,
+          <MenuItem key="gestion-noticias" className="menu-item" component={Link} to="/admin/gestion-noticias" onClick={handleClose}>Gestión Noticias</MenuItem>,
+          <MenuItem key="gestion-eventos" className="menu-item" component={Link} to="/admin/gestion-eventos" onClick={handleClose}>Gestión Eventos</MenuItem>,
+          <MenuItem key="perfil" className="menu-item" component={Link} to="/admin/perfil" onClick={handleClose}>Perfil</MenuItem>,
+        ] : [
+          <MenuItem key="docentes" className="menu-item" component={Link} to="/docentes" onClick={handleClose}>Docentes</MenuItem>,
+          <MenuItem key="egresados" className="menu-item" component={Link} to="/egresados" onClick={handleClose}>Estudiantes</MenuItem>,
+          <MenuItem key="eventos" className="menu-item" component={Link} to="/eventos" onClick={handleClose}>Eventos</MenuItem>,
+          <MenuItem key="noticias" className="menu-item" component={Link} to="/noticias" onClick={handleClose}>Noticias</MenuItem>,
+          <MenuItem key="carrera" className="menu-item" component={Link} to="/carrera" onClick={handleClose}>Carrera</MenuItem>,
+          <MenuItem key="autoridades" className="menu-item" component={Link} to="/autoridades" onClick={handleClose}>Autoridades</MenuItem>,
+        ]}
+      </Menu>
+    </AppBar>
   );
 };
 
