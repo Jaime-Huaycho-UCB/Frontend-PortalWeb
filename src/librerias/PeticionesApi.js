@@ -276,3 +276,12 @@ export const agregarTesis = async (tesisData, idUsuario, token, idEstudiante) =>
     throw error;
   }
 };
+export const obtenerContenidoTesis = async (idTesis) => {
+  try {
+    const response = await instance.get(`estudiante/tesis/obtener/contenido/${idTesis}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error al obtener el contenido de la tesis:", error);
+    throw error;
+  }
+};

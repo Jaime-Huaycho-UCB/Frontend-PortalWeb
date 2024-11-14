@@ -4,7 +4,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useLocation } from 'react-router-dom';
-import { agregarTesis, obtenerTesis, eliminarTesis } from '../../librerias/PeticionesApi';
+import { agregarTesis, obtenerTesis, eliminarTesis,obtenerContenidoTesis } from '../../librerias/PeticionesApi';
 import { AuthContext } from '../../contextos/ContextoAutenticacion';
 import { Worker, Viewer } from '@react-pdf-viewer/core';
 import '@react-pdf-viewer/core/lib/styles/index.css';
@@ -24,7 +24,7 @@ const GestionTesis = () => {
         resumen: '',
     });
     const [tesisList, setTesisList] = useState([]);
-
+    
     useEffect(() => {
         const cargarTesis = async () => {
             try {
@@ -90,15 +90,24 @@ const GestionTesis = () => {
     };
 
     const closeDialog = () => setOpenDialog(false);
-    const openPdfModal = (pdf) => {
-        setSelectedPdf(pdf);
-        setOpenPdfViewer(true);
+    const openPdfModal = async (idTesis) => {
+        try {
+            const response = await obtenerContenidoTesis(idTesis);
+            if (response.salida) {
+                setSelectedPdf(response.contenido); // Asegúrate de que 'contenido' contiene el PDF en formato base64
+                setOpenPdfViewer(true);
+            } else {
+                alert("Error al cargar el contenido de la tesis: " + response.mensaje);
+            }
+        } catch (error) {
+            console.error("Error al abrir el modal de PDF:", error);
+        }
     };
     const closePdfModal = () => {
         setSelectedPdf(null);
         setOpenPdfViewer(false);
     };
-
+    
     return (
         <Box sx={{ padding: 4 }}>
             <Typography variant="h4" align="center" gutterBottom>
@@ -163,7 +172,7 @@ const GestionTesis = () => {
                                 <Button
                                     variant="outlined"
                                     color="primary"
-                                    onClick={() => openPdfModal(tesis.tesis)}
+                                    onClick={() => openPdfModal(tesis.id)} // Pasa el ID de la tesis
                                     sx={{ display: 'block', mt: 2 }}
                                 >
                                     Ver Contenido PDF
