@@ -1,9 +1,10 @@
-import React, { useState, useContext } from 'react';
-import { Card, CardContent, Typography, Grid, Button, Box, Dialog, DialogContent, TextField, IconButton, DialogActions } from '@mui/material';
+import React, { useState, useEffect, useContext } from 'react';
+import { Card, CardContent, Typography, Grid, Button, Box, Dialog, DialogContent, TextField, IconButton, DialogActions, Link } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { useLocation } from 'react-router-dom';
-import { agregarTesis } from '../../librerias/PeticionesApi';
+import { agregarTesis, obtenerTesis, eliminarTesis } from '../../librerias/PeticionesApi';
 import { AuthContext } from '../../contextos/ContextoAutenticacion';
 
 const GestionTesis = () => {
@@ -17,6 +18,21 @@ const GestionTesis = () => {
         tesis: '',
         resumen: '',
     });
+    const [tesisList, setTesisList] = useState([]);
+
+    useEffect(() => {
+        const cargarTesis = async () => {
+            try {
+                const tesisData = await obtenerTesis();
+                if (tesisData.salida) {
+                    setTesisList(tesisData.tesises);
+                }
+            } catch (error) {
+                console.error("Error al obtener tesis:", error);
+            }
+        };
+        cargarTesis();
+    }, []);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -41,10 +57,10 @@ const GestionTesis = () => {
             resumen: nuevoTesis.resumen,
         };
         try {
-            const response = await agregarTesis(tesisData,idUsuario,token,idEstudiante);
+            const response = await agregarTesis(tesisData, idUsuario, token, idEstudiante);
             if (response.salida) {
                 alert("Tesis agregada exitosamente");
-               
+                setTesisList([...tesisList, response.tesis]);
             } else {
                 alert("Error al agregar la tesis: " + response.mensaje);
             }
@@ -52,6 +68,20 @@ const GestionTesis = () => {
             console.error("Error:", error);
         }
         setOpenDialog(false);
+    };
+
+    const handleDelete = async (idTesis) => {
+        try {
+            const response = await eliminarTesis(idTesis, idUsuario, token);
+            if (response.salida) {
+                alert("Tesis eliminada exitosamente");
+                setTesisList(tesisList.filter((tesis) => tesis.id !== idTesis));
+            } else {
+                alert("Error al eliminar la tesis: " + response.mensaje);
+            }
+        } catch (error) {
+            console.error("Error al eliminar la tesis:", error);
+        }
     };
 
     const closeDialog = () => setOpenDialog(false);
@@ -71,6 +101,80 @@ const GestionTesis = () => {
                 Agregar Tesis
             </Button>
 
+            {/* Lista de Tesis */}
+            <Grid container spacing={2}>
+                {tesisList.map((tesis) => (
+                    <Grid item xs={12} md={6} lg={4} key={tesis.id}>
+                        <Card>
+                            <CardContent>
+                                <Typography variant="h6">{tesis.titulo}</Typography>
+                                <Typography variant="body2" color="textSecondary" gutterBottom>
+                                    Fecha de Publicación: {tesis.fechaPublicacion}
+                                </Typography>
+                                <Typography variant="body2" gutterBottom>
+                                    Resumen: {tesis.resumen}
+                                </Typography>
+
+                                {/* Mostrar detalles del estudiante si existen */}
+                                {tesis.estudiante && (
+                                    <>
+                                        <Typography variant="subtitle2" color="primary">
+                                            Información del Estudiante
+                                        </Typography>
+                                        <Typography variant="body2">
+                                            Nombre: {tesis.estudiante.nombre}
+                                        </Typography>
+                                        <Typography variant="body2">
+                                            Nivel Academico: {tesis.estudiante.nivelAcademico}
+                                        </Typography>
+                                        <Typography variant="body2">
+                                            Correo: {tesis.estudiante.correo}
+                                        </Typography>
+
+                                        {/* Mostrar foto si está disponible */}
+                                        {tesis.estudiante.foto && (
+                                            <Box
+                                                component="img"
+                                                src={tesis.estudiante.foto}
+                                                alt="Foto del Estudiante"
+                                                sx={{
+                                                    width: 100,
+                                                    height: 100,
+                                                    borderRadius: '50%',
+                                                    mt: 2,
+                                                }}
+                                            />
+                                        )}
+                                    </>
+                                )}
+
+                                {/* Botón para ver PDF */}
+                                <Link
+                                    href={`data:application/pdf;base64,${tesis.tesis}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    variant="body2"
+                                    color="primary"
+                                    sx={{ display: 'block', mt: 2 }}
+                                >
+                                    Ver Contenido PDF
+                                </Link>
+
+                                <Button
+                                    startIcon={<DeleteIcon />}
+                                    color="secondary"
+                                    onClick={() => handleDelete(tesis.id)}
+                                    sx={{ mt: 2 }}
+                                >
+                                    Eliminar
+                                </Button>
+                            </CardContent>
+                        </Card>
+                    </Grid>
+                ))}
+            </Grid>
+
+            {/* Dialogo para agregar nueva tesis */}
             <Dialog open={openDialog} onClose={closeDialog} fullWidth maxWidth="md">
                 <DialogContent>
                     <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
