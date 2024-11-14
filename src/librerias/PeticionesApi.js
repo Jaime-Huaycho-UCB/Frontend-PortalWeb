@@ -181,7 +181,7 @@ export const actualizarNoticia = async (idNoticia, noticiaData, idUsuario, token
 
 export const eliminarNoticia = async (idNoticia, idUsuario, token) => {
   try {
-    const response = await instance.put(`/noticia/eliminar`, { data:idNoticia,idUsuario, token  });
+    const response = await instance.put(`/noticia/eliminar`, { idNoticia,idUsuario, token  });
     return response.data;
   } catch (error) {
     console.error("Error al eliminar noticia:", error);
