@@ -13,6 +13,18 @@ const Perfil = () => {
     link: '',
   });
 
+  // Función para cargar papers
+  const cargarPapers = async () => {
+    try {
+      const papersData = await obtenerPapers(idDocente);
+      if (papersData.salida && papersData.papers) {
+        setPapers(papersData.papers.filter(paper => paper && paper.titulo && paper.link));
+      }
+    } catch (error) {
+      console.error("Error al obtener los papers:", error);
+    }
+  };
+
   useEffect(() => {
     const cargarDocente = async () => {
       try {
@@ -23,20 +35,9 @@ const Perfil = () => {
       }
     };
 
-    const cargarPapers = async () => {
-      try {
-        const papersData = await obtenerPapers(idDocente);
-        if (papersData.salida) {
-          setPapers(papersData.papers); 
-        }
-      } catch (error) {
-        console.error("Error al obtener los papers:", error);
-      }
-    };
-
     cargarDocente();
-    cargarPapers();
-  }, [idDocente, idUsuario, token]);
+    cargarPapers(); // Carga inicial de papers
+  }, [idDocente, idUsuario, token,cargarPapers]);
 
   const handleAddPaper = async () => {
     const paperData = {
@@ -47,13 +48,16 @@ const Perfil = () => {
     try {
       const response = await agregarPaper(paperData, idDocente, idUsuario, token);
       if (response.salida) {
-        setPapers([...papers, response.paper]); 
         setNewPaper({ titulo: '', link: '' });
         setShowModal(false);
         alert("Paper añadido exitosamente");
+        
+        // Vuelve a cargar la lista de papers desde el backend
+        cargarPapers();
       } else {
         if (response.mensaje === 'TKIN') {
           cerrarSesion();
+          navigate('/iniciar-sesion');
         } else {
           console.error(response.mensaje);
         }
@@ -109,12 +113,14 @@ const Perfil = () => {
             <p>No hay papers agregados.</p>
           ) : (
             papers.map((paper, index) => (
-              <Card key={index} className="mb-3">
-                <Card.Body>
-                  <Card.Title>{paper.titulo}</Card.Title>
-                  <a href={paper.link} target="_blank" rel="noopener noreferrer">Ver Paper</a>
-                </Card.Body>
-              </Card>
+              paper && paper.titulo && paper.link && (
+                <Card key={index} className="mb-3">
+                  <Card.Body>
+                    <Card.Title>{paper.titulo}</Card.Title>
+                    <a href={paper.link} target="_blank" rel="noopener noreferrer">Ver Paper</a>
+                  </Card.Body>
+                </Card>
+              )
             ))
           )}
           <Button variant="primary" onClick={() => setShowModal(true)} className="mt-3">Añadir Paper</Button>
