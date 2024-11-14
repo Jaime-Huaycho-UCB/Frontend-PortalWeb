@@ -287,10 +287,36 @@ export const obtenerContenidoTesis = async (idTesis) => {
 };
 export const obtenerPerfil = async (idDocente,idUsuario,token) => {
   try {
-    const response = await instance.get(`docente/obtener/informacion`,{idDocente,idUsuario,token});
+    const response = await instance.post(`docente/obtener/informacion`,{idDocente,idUsuario,token});
     return response.data;
   } catch (error) {
     console.error("Error al obtener los datos del docente:", error);
+    throw error;
+  }
+};
+// PeticionesApi.js
+
+export const agregarPaper = async (paperData, idDocente, idUsuario, token) => {
+  try {
+    const response = await instance.post('docente/papers/ingresar', {
+      ...paperData,
+      idDocente,
+      idUsuario,
+      token,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error al agregar el paper:", error);
+    throw error;
+  }
+};
+
+export const obtenerPapers = async (idDocente) => {
+  try {
+    const response = await instance.get(`docente/papers/obtener/${idDocente}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error al obtener los papers:", error);
     throw error;
   }
 };

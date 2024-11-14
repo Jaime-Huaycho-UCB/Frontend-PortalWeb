@@ -1,35 +1,66 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Container, Row, Col, Card, Button, Modal, Form } from 'react-bootstrap';
 import { AuthContext } from '../../contextos/ContextoAutenticacion';
-import { obtenerPerfil } from '../../librerias/PeticionesApi';
+import { obtenerPerfil, obtenerPapers, agregarPaper } from '../../librerias/PeticionesApi';
 
 const Perfil = () => {
-  const { idDocente,idUsuario,token } = useContext(AuthContext);
+  const { idDocente, idUsuario, token, cerrarSesion } = useContext(AuthContext);
   const [docente, setDocente] = useState(null);
   const [papers, setPapers] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [newPaper, setNewPaper] = useState({
     titulo: '',
     link: '',
-    descripcion: '',
   });
 
   useEffect(() => {
     const cargarDocente = async () => {
       try {
-        const datosDocente = await obtenerPerfil(idDocente,idUsuario,token);
-        setDocente(datosDocente);
+        const datosDocente = await obtenerPerfil(idDocente, idUsuario, token);
+        setDocente(datosDocente.informacion);
       } catch (error) {
         console.error("Error al cargar el perfil del docente:", error);
       }
     };
-    cargarDocente();
-  }, [idDocente,idUsuario,token]);
 
-  const handleAddPaper = () => {
-    setPapers([...papers, newPaper]);
-    setNewPaper({ titulo: '', link: ''});
-    setShowModal(false);
+    const cargarPapers = async () => {
+      try {
+        const papersData = await obtenerPapers(idDocente);
+        if (papersData.salida) {
+          setPapers(papersData.papers); 
+        }
+      } catch (error) {
+        console.error("Error al obtener los papers:", error);
+      }
+    };
+
+    cargarDocente();
+    cargarPapers();
+  }, [idDocente, idUsuario, token]);
+
+  const handleAddPaper = async () => {
+    const paperData = {
+      titulo: newPaper.titulo,
+      link: newPaper.link,
+    };
+
+    try {
+      const response = await agregarPaper(paperData, idDocente, idUsuario, token);
+      if (response.salida) {
+        setPapers([...papers, response.paper]); 
+        setNewPaper({ titulo: '', link: '' });
+        setShowModal(false);
+        alert("Paper añadido exitosamente");
+      } else {
+        if (response.mensaje === 'TKIN') {
+          cerrarSesion();
+        } else {
+          console.error(response.mensaje);
+        }
+      }
+    } catch (error) {
+      console.error("Error al agregar el paper:", error);
+    }
   };
 
   const handleInputChange = (e) => {
@@ -111,7 +142,7 @@ const Perfil = () => {
               <Form.Label>Enlace del Paper</Form.Label>
               <Form.Control
                 type="text"
-                name="enlace"
+                name="link"
                 value={newPaper.link}
                 onChange={handleInputChange}
                 placeholder="Ingrese el enlace"
