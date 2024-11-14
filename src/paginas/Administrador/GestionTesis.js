@@ -75,9 +75,9 @@ const GestionTesis = () => {
         setOpenDialog(false);
     };
 
-    const handleDelete = async (idTesis) => {
+    const handleDelete = async (idTesis,idEstudiante) => {
         try {
-            const response = await eliminarTesis(idTesis, idUsuario, token);
+            const response = await eliminarTesis(idTesis,idEstudiante, idUsuario, token);
             if (response.salida) {
                 alert("Tesis eliminada exitosamente");
                 setTesisList(tesisList.filter((tesis) => tesis.id !== idTesis));
@@ -172,7 +172,7 @@ const GestionTesis = () => {
                                 <Button
                                     variant="outlined"
                                     color="primary"
-                                    onClick={() => openPdfModal(tesis.id)} // Pasa el ID de la tesis
+                                    onClick={() => openPdfModal(tesis.tesis.id)} // Pasa el ID de la tesis
                                     sx={{ display: 'block', mt: 2 }}
                                 >
                                     Ver Contenido PDF
@@ -181,7 +181,7 @@ const GestionTesis = () => {
                                 <Button
                                     startIcon={<DeleteIcon />}
                                     color="secondary"
-                                    onClick={() => handleDelete(tesis.id)}
+                                    onClick={() => handleDelete(tesis.tesis.id,tesis.estudiante.id)}
                                     sx={{ mt: 2 }}
                                 >
                                     Eliminar
@@ -203,7 +203,7 @@ const GestionTesis = () => {
                     </Box>
                     {selectedPdf && (
                        <Worker workerUrl={`https://unpkg.com/pdfjs-dist@3.0.279/build/pdf.worker.min.js`}>
-                            <Viewer fileUrl={`data:application/pdf;base64,${selectedPdf}`} />
+                            <Viewer fileUrl={`${selectedPdf}`} />
                         </Worker>
                    
                     )}

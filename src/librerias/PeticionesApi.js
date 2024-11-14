@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 // const BASE_URL = 'https://backend-portalweb-production.up.railway.app';  
-const BASE_URL = 'https://localhost:8000';  
+const BASE_URL = 'http://localhost:8000';  
 
 const instance = axios.create({
   baseURL: BASE_URL,
@@ -253,9 +253,9 @@ export const obtenerTesis = async () => {
     throw error;
   }
 };
-export const eliminarTesis = async (idTesis,idUsuario,token) => {
+export const eliminarTesis = async (idTesis,idEstudiante,idUsuario,token) => {
   try {
-    const response = await instance.put(`/tesis/eliminar`,{idTesis,idUsuario,token});
+    const response = await instance.put(`estudiante/tesis/eliminar`,{idTesis,idEstudiante,idUsuario,token});
     return response.data;
   } catch (error) {
     console.error("Error al eliminar la tesis:", error);
