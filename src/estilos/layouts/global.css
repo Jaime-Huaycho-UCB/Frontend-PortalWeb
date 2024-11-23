@@ -1,0 +1,118 @@
+/* ==========================
+   RESET DE ESTILOS
+========================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  /* ==========================
+     VARIABLES GLOBALES
+  ========================== */
+  :root {
+    --background-color: #ffffff;
+    --text-color: #000000;
+    --primary-color: #121d9b; /* Azul Marino */
+    --secondary-color: #e44023; /* Rojo */
+    --accent-color: #ffd700 !important; /* Dorado */
+    --gray-color: #f5f5f5; /* Gris Claro */
+  }
+  
+  /* Tema Oscuro */
+  [data-theme="dark"] {
+    --background-color: #121212;
+    --text-color: #e0e0e0;
+    --primary-color: #004080;
+    --secondary-color: #ff5a5a;
+    --accent-color: #ffa500;
+  }
+  
+  /* ==========================
+     ESTILOS GENERALES
+  ========================== */
+  body {
+    font-family: 'Arial', sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    background-color: var(--background-color);
+    color: var(--text-color);
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: bold;
+    color: var(--primary-color);
+  }
+  
+  a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  
+  a:hover {
+    color: var(--secondary-color);
+  }
+  
+  button {
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    border: none;
+    cursor: pointer;
+    background-color: var(--primary-color);
+    color: var(--text-color);
+    border-radius: 4px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  button:hover {
+    background-color: var(--secondary-color);
+    transform: scale(1.05);
+  }
+  
+  /* Listas */
+  ul, ol {
+    margin: 1rem 0;
+    padding-left: 1.5rem;
+  }
+  
+  /* ==========================
+     CONTENEDORES Y LAYOUT
+  ========================== */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem;
+  }
+  
+  .flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .grid {
+    display: grid;
+    gap: 1rem;
+  }
+  
+  /* ==========================
+     RESPONSIVIDAD
+  ========================== */
+  @media (max-width: 768px) {
+    body {
+      font-size: 14px;
+    }
+  
+    .container {
+      padding: 0.5rem;
+    }
+  
+    .flex {
+      flex-direction: column;
+      gap: 1rem;
+    }
+  }
+  
+
+  

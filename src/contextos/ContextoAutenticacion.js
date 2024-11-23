@@ -40,18 +40,12 @@ export const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    const savedAuth = JSON.parse(localStorage.getItem('auth'));
-    
-    // Verifica que todos los valores esenciales estén presentes
-    if (savedAuth && savedAuth.permiso && savedAuth.idUsuario && savedAuth.idDocente && savedAuth.token) {
-      setAuth(savedAuth);
-      console.log("Valores de autenticación cargados desde localStorage:");
-      console.log(savedAuth);
-    } else {
-      console.log("No se encontraron datos completos en localStorage para iniciar sesión automáticamente.");
-      localStorage.removeItem('auth'); // Limpia datos incompletos si los hay
-    }
+    // Limpia cualquier dato previo de localStorage al cargar la aplicación
+    localStorage.removeItem('auth');
+    console.log("Se ha limpiado cualquier información de autenticación previa.");
   }, []);
+  
+  
 
   return (
     <AuthContext.Provider value={{ ...auth, iniciarSesion, cerrarSesion }}>

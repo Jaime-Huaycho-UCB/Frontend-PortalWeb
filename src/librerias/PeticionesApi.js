@@ -1,8 +1,8 @@
 // src/librerias/PeticionesApi.js
 import axios from 'axios';
 
-// const BASE_URL = 'https://backend-portalweb-production.up.railway.app';  
-const BASE_URL = 'http://localhost:8000';  
+ const BASE_URL = 'https://backend-portalweb-production.up.railway.app';  
+// const BASE_URL = 'http://localhost:8000';  
 
 const instance = axios.create({
   baseURL: BASE_URL,
@@ -23,7 +23,7 @@ export const obtenerDocentes = async (idUsuario, token) => {
 
 export const obtenerDocentesTodo = async () => {
   try {
-    const response = await instance.get('/docente/obtener/todo');
+    const response = await instance.get('/docente/obtener/todo/0');
     return response.data;
   } catch (error) {
     console.error("Error al obtener docentes:", error);
@@ -317,6 +317,52 @@ export const obtenerPapers = async (idDocente) => {
     return response.data;
   } catch (error) {
     console.error("Error al obtener los papers:", error);
+    throw error;
+  }
+};
+// Obtener contactos
+export const obtenerContactos = async () => {
+  try {
+    const response = await instance.get('contacto/obtener');
+    return response.data;
+  } catch (error) {
+    console.error('Error al obtener contactos:', error);
+    throw error;
+  }
+};
+
+// Agregar un contacto
+export const agregarContacto = async (contactoData, idUsuario, token) => {
+  try {
+    const response = await instance.post('contacto/agregar', { ...contactoData, idUsuario, token });
+    return response.data;
+  } catch (error) {
+    console.error('Error al agregar contacto:', error);
+    throw error;
+  }
+};
+// Eliminar un contacto (ID en el cuerpo)
+export const eliminarContacto = async (idContacto, idUsuario, token) => {
+  try {
+    const response = await instance.put('/contacto/eliminar', {idContacto, idUsuario, token },);
+    return response.data;
+  } catch (error) {
+    console.error('Error al eliminar contacto:', error);
+    throw error;
+  }
+};
+
+export const actualizarContacto = async (idContacto, contactoData, idUsuario, token) => {
+  try {
+    const response = await instance.put('contacto/actualizar', {
+      idContacto,
+      ...contactoData,
+      idUsuario,
+      token,
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error al actualizar contacto:', error);
     throw error;
   }
 };

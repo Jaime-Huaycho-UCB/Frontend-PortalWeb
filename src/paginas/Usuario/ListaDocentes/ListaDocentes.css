@@ -1,0 +1,332 @@
+/* Contenedor Principal */
+.docentes-container {
+  padding: 80px 20px !important;
+  max-width: 1200px !important;
+  margin: 0 auto !important;
+  background-color: var(--background-color) !important;
+  color: var(--text-color) !important;
+}
+
+/* Encabezado */
+.docente-header {
+  text-align: center !important;
+  margin-bottom: 40px !important;
+}
+
+.titulo3 {
+  font-size: 2.4rem !important;
+  font-weight: 600 !important;
+  color: var(--primary-color) !important;
+  margin-bottom: 10px !important;
+}
+
+.docente-description {
+  font-size: 1rem !important;
+  color: var(--secondary-color) !important;
+  line-height: 1.5 !important;
+}
+
+/* Skeleton Loader */
+.skeleton-card {
+  width: 100%;
+  height: 300px;
+  background: linear-gradient(90deg, #e0e0e0 25%, #f5f5f5 50%, #e0e0e0 75%);
+  background-size: 200% 100%;
+  border-radius: 10px;
+  animation: skeleton-loading 1.5s infinite;
+}
+
+@keyframes skeleton-loading {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
+/* Grid de Docentes */
+.docentes-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)) !important;
+  gap: 30px !important;
+}
+
+/* Tarjetas de Docentes */
+.docente-card {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  background-color: var(--gray-color) !important;
+  border-radius: 10px !important;
+  overflow: hidden !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+  transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+  animation: fadeIn 0.6s ease-out !important;
+}
+
+.docente-card:hover {
+  transform: translateY(-5px) scale(1.02) !important;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2) !important;
+}
+
+.card-image-section {
+  width: 100% !important;
+  height: 200px !important;
+  overflow: hidden !important;
+}
+
+.docente-image {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+}
+
+.card-text-section {
+  padding: 20px !important;
+  text-align: center !important;
+}
+
+.docente-nombre {
+  font-size: 1.4rem !important;
+  font-weight: 600 !important;
+  color: var(--primary-color) !important;
+  margin-bottom: 10px !important;
+}
+
+.docente-titulo {
+  font-size: 1rem !important;
+  color: var(--secondary-color) !important;
+}
+
+.docente-correo {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  font-size: 0.9rem !important;
+  margin-bottom: 15px !important;
+}
+
+.btn-ver-mas {
+  padding: 10px 20px !important;
+  font-size: 0.9rem !important;
+  background-color: var(--primary-color) !important;
+  color: var(--background-color) !important;
+  border: none !important;
+  border-radius: 5px !important;
+  cursor: pointer !important;
+  transition: transform 0.2s ease, background-color 0.3s ease !important;
+}
+
+.btn-ver-mas:hover {
+  background-color: var(--secondary-color) !important;
+  transform: scale(1.05) !important;
+}
+/* Estilo General del Modal */
+/* Estilo General del Modal */
+.docente-modal .modal-dialog {
+  max-width: 500px !important; /* Define un ancho máximo fijo para el modal */
+  width: 100% !important; /* Responsivo */
+}
+
+.docente-modal .modal-content {
+  padding: 20px !important;
+  border-radius: 15px !important;
+  background-color: var(--background-color) !important;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2) !important;
+  max-height: 80vh !important; /* Altura máxima para evitar que el modal crezca demasiado */
+  overflow-y: auto !important; /* Agrega scroll si el contenido supera la altura */
+}
+
+/* Encabezado del Modal */
+.modal-title {
+  font-size: 1.5rem !important;
+  font-weight: 600 !important;
+  text-align: center !important;
+  color: var(--primary-color) !important;
+  margin-bottom: 15px !important;
+}
+
+/* Contenedor del Cuerpo del Modal */
+.modal-content-container {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  text-align: center !important;
+}
+/* Contenedor de la Imagen */
+.modal-image-wrapper {
+  width: 150px !important; /* Fija un tamaño consistente */
+  height: 150px !important; /* Fija un tamaño consistente */
+  border-radius: 15px !important; /* Opcional: redondear los bordes */
+  overflow: hidden !important;
+  margin: 0 auto 20px !important; /* Centrar la imagen y agregar margen inferior */
+}
+
+/* Imagen */
+.modal-image {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important; /* Asegura que la imagen se ajuste sin distorsión */
+}
+
+/* Subtítulo del Modal */
+.modal-subtitle {
+  font-size: 1.2rem !important;
+  font-weight: 500 !important;
+  color: var(--secondary-color) !important;
+  margin-bottom: 10px !important;
+}
+
+/* Contacto del Modal */
+.modal-contact {
+  font-size: 1rem !important;
+  color: var(--text-color) !important;
+  margin-bottom: 20px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+/* Descripción del Modal */
+.modal-description {
+  font-size: 0.95rem !important;
+  color: var(--text-color) !important;
+  line-height: 1.6 !important;
+}
+
+/* Botón de Cerrar */
+.btn-cerrar {
+  padding: 10px 20px !important;
+  font-size: 1rem !important;
+  background-color: var(--secondary-color) !important;
+  color: var(--text-color) !important;
+  border: none !important;
+  border-radius: 5px !important;
+  cursor: pointer !important;
+  transition: background-color 0.3s ease !important;
+}
+
+.btn-cerrar:hover {
+  background-color: var(--primary-color) !important;
+}
+
+/* Responsividad del Modal */
+@media (max-width: 768px) {
+  .modal-content-container {
+    padding: 10px !important;
+  }
+
+  .modal-title {
+    font-size: 1.2rem !important;
+  }
+
+  .modal-image-wrapper {
+    width: 120px !important;
+    height: 120px !important;
+  }
+
+  .modal-subtitle {
+    font-size: 1rem !important;
+  }
+
+  .modal-description {
+    font-size: 0.9rem !important;
+  }
+}
+/* Animación de Entrada */
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Animación de Salida */
+@keyframes modalFadeOut {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+}
+
+/* Aplicar Animaciones */
+.docente-modal .modal-content {
+  animation: modalFadeIn 0.3s ease-out;
+}
+
+.docente-modal.closing .modal-content {
+  animation: modalFadeOut 0.3s ease-in;
+}
+
+/* Modal de Imagen */
+/* Botón Ver Foto */
+.btn-ver-foto {
+  margin-top: 10px !important;
+  padding: 10px 20px !important;
+  background-color: var(--primary-color) !important;
+  color: var(--text-color) !important;
+  border: none !important;
+  border-radius: 5px !important;
+  cursor: pointer !important;
+  transition: background-color 0.3s ease !important;
+}
+
+.btn-ver-foto:hover {
+  background-color: var(--secondary-color) !important;
+}
+
+/* Modal de Imagen */
+.image-modal .modal-content {
+  padding: 0 !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+.image-modal-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-height: 80vh; /* Limitar la altura máxima */
+  overflow: hidden; /* Evitar desbordes */
+}
+
+.zoomable-image {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 80vh; /* Ajusta la imagen dentro del modal */
+  transition: transform 0.3s ease-in-out;
+  cursor: zoom-in; /* Mostrar un cursor de zoom */
+}
+
+/* Zoom In */
+.zoomable-image:hover {
+  transform: scale(1.5); /* Amplía la imagen al pasar el cursor */
+  cursor: zoom-out; /* Cambiar el cursor cuando el zoom está activo */
+}
+
+/* Botón de Cerrar */
+.btn-cerrar {
+  padding: 10px 20px;
+  background-color: var(--secondary-color);
+  color: var(--text-color);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-cerrar:hover {
+  background-color: var(--primary-color);
+}

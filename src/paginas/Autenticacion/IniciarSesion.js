@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Box, TextField, Button, Typography, Checkbox, FormControlLabel, Alert, Paper } from '@mui/material';
 import { AuthContext } from '../../contextos/ContextoAutenticacion';
 import axios from 'axios';
-import '../../estilos/AdministradorEstilos/IniciarSesion.css';
+import './IniciarSesion.css';
 
 const IniciarSesion = () => {
   const [email, setEmail] = useState('');
@@ -17,7 +17,7 @@ const IniciarSesion = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post('http://localhost:8000/usuario/inicioSesion', {
+      const response = await axios.post('https://backend-portalweb-production.up.railway.app/usuario/inicioSesion', {
         correo: email,
         contrasena: password,
       });
@@ -99,3 +99,4 @@ const IniciarSesion = () => {
 };
 
 export default IniciarSesion;
+

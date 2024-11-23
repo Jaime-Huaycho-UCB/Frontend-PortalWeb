@@ -1,0 +1,81 @@
+/* Sobrescritura para el tema oscuro */
+
+body {
+    background-color: #121212 !important; /* Fondo oscuro */
+    color: #ffffff !important; /* Texto claro */
+  }
+  
+  /* Barra Lateral */
+  .barra-lateral {
+    background-color: #1e1e1e !important; /* Fondo oscuro */
+    color: #ffffff !important; /* Texto claro */
+  }
+  
+  .barra-lateral a {
+    color: #bbbbbb !important; /* Enlaces claros */
+  }
+  
+  .barra-lateral a:hover {
+    color: #ffffff !important; /* Hover sobre enlaces */
+  }
+  
+  /* Pie de Página */
+  .pie-pagina {
+    background-color: #1e1e1e !important; /* Fondo oscuro */
+    color: #bbbbbb !important; /* Texto claro */
+  }
+  
+  .pie-pagina a {
+    color: #ffffff !important; /* Enlaces claros */
+  }
+  
+  /* Lista de Docentes */
+  .lista-docentes .tarjeta {
+    background-color: #242424 !important; /* Fondo de las tarjetas */
+    color: #ffffff !important; /* Texto */
+    border: 1px solid #333333 !important; /* Borde oscuro */
+  }
+  
+  .lista-docentes .tarjeta:hover {
+    background-color: #333333 !important; /* Hover */
+  }
+  
+  /* Lista de Noticias */
+  .lista-noticias .tarjeta {
+    background-color: #242424 !important; /* Fondo oscuro */
+    color: #ffffff !important; /* Texto claro */
+    border: 1px solid #333333 !important;
+  }
+  
+  .lista-noticias .tarjeta:hover {
+    background-color: #333333 !important;
+  }
+  
+  /* Lista de Egresados */
+  .lista-egresados .tarjeta {
+    background-color: #242424 !important; /* Fondo oscuro */
+    color: #ffffff !important; /* Texto claro */
+    border: 1px solid #333333 !important;
+  }
+  
+  .lista-egresados .tarjeta:hover {
+    background-color: #333333 !important;
+  }
+  
+  /* General: Títulos y Texto */
+  h1, h2, h3, h4, h5, h6 {
+    color: #ffffff !important; /* Títulos claros */
+  }
+  
+  p {
+    color: #bbbbbb !important; /* Texto general claro */
+  }
+  
+  a {
+    color: #ffcc00 !important; /* Enlaces destacados */
+  }
+  
+  a:hover {
+    color: #ffffff !important; /* Hover sobre enlaces */
+  }
+  

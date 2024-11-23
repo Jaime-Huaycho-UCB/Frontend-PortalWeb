@@ -1,0 +1,36 @@
+.barra-lateral {
+    width: 250px;
+    background-color: #343a40;
+    color: white;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .barra-lateral a {
+    color: white;
+    text-decoration: none;
+    margin: 10px 0;
+    font-size: 18px;
+    font-weight: 600;
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .barra-lateral a:hover {
+    color: #f8f9fa;
+    background-color: #495057;
+    padding: 10px 15px;
+    border-radius: 5px;
+  }
+  
+  .barra-lateral .logo {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 30px;
+  }
+  

@@ -1,31 +1,24 @@
 // App.js
-import React, { useContext } from 'react';
+import React, { useContext,useEffect,useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';  
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
-import ListaDocentes from './paginas/Usuario/ListaDocentes';
-import ListaEgresados from './paginas/Usuario/ListaEgresados';
-import ListaEventos from './paginas/Usuario/ListaEventos';
-import ListaNoticias from './paginas/Usuario/ListaNoticias';
-import PaginaCarrera from './paginas/Usuario/PaginaCarrera';
-import PaginaAutoridades from './paginas/Usuario/PaginaAutoridades';
-import Perfil from './paginas/Usuario/Perfil';
-import Encabezado from './componentes/Encabezado';
-import PieDePagina from './componentes/PieDePagina';
-import BarraDeBusqueda from './componentes/BarraDeBusqueda';
+import ListaDocentes from './paginas/Usuario/ListaDocentes/ListaDocentes';
+import ListaEgresados from './paginas/Usuario/ListaEgresadosCompleto/ListaEgresados';
+import ListaEventos from './paginas/Usuario/ListaEventosCompleto/ListaEventos';
+import ListaNoticias from './paginas/Usuario/ListaNoticiasCompleto/ListaNoticias';
+import Perfil from './paginas/Usuario/PerfilCompleto/Perfil';
+import Encabezado from './componentes/EncabezadoCompleto/Encabezado';
+import PieDePagina from './componentes/PiePagina/PieDePagina';
 import IniciarSesion from './paginas/Autenticacion/IniciarSesion';
-import Registro from './paginas/Autenticacion/Registro';
-import PanelAdministrador from './paginas/Administrador/PanelAdministrador';
-import GestionTesis from './paginas/Administrador/GestionTesis';
-
-import GestionDocentes from './paginas/Administrador/GestionDocentes';
-import GestionEstudiantes from './paginas/Administrador/GestionEstudiantes';
-import GestionNoticias from './paginas/Administrador/GestionNoticias';
-import GestionEventos from './paginas/Administrador/GestionEventos';
+import GestionTesis from './paginas/Administrador/GestionarTesisCompleto/GestionTesis';
+import GestionDocentes from './paginas/Administrador/GestionarDocentesCompleto/GestionDocentes';
+import GestionEstudiantes from './paginas/Administrador/GestionarEstudiantesCompleto/GestionEstudiantes';
+import GestionNoticias from './paginas/Administrador/GestionarNoticiasCompleto/GestionNoticias';
+import GestionEventos from './paginas/Administrador/GestionarEventosCompleto/GestionEventos';
 import { AuthContext, AuthProvider } from './contextos/ContextoAutenticacion';
-import CrearUsuarioSuperior from './paginas/Administrador/CrearUsuarioSuperior';
-import './estilos/layouts/global.css';
-import Inicio from './componentes/Inicio';
-
+import CrearUsuarioSuperior from './paginas/Administrador/CrearUsuarioCompleto/CrearUsuarioSuperior';
+import Inicio from './componentes/inicioCompleto/Inicio';
+import './estilos/layouts/global.css'
 
 const RutaProtegida = ({ children, rolesPermitidos }) => {
   const { permiso } = useContext(AuthContext);
@@ -36,14 +29,13 @@ const RutaProtegida = ({ children, rolesPermitidos }) => {
 };
 
 function App() {
+
   return (
     <AuthProvider>
       <Router>
         <Routes>
           {/* Rutas de autenticación SIN encabezado ni pie de página */}
           <Route path="/iniciar-sesion" element={<IniciarSesion />} />
-          <Route path="/registro" element={<Registro />} />
-
           {/* Rutas generales del portal */}
           <Route
             path="*"
@@ -56,17 +48,10 @@ function App() {
                     <Route path="/egresados" element={<ListaEgresados />} />
                     <Route path="/eventos" element={<ListaEventos />} />
                     <Route path="/noticias" element={<ListaNoticias />} />
-                    <Route path="/carrera" element={<PaginaCarrera />} />
-                    <Route path="/autoridades" element={<PaginaAutoridades />} />
                     <Route path="/" element={<Inicio />} />
 
 
                     {/* Rutas protegidas */}
-                    <Route path="/admin" element={
-                      <RutaProtegida rolesPermitidos={[1, 0]}>
-                        <PanelAdministrador />
-                      </RutaProtegida>
-                    } />
                     <Route path="/admin/gestion-docentes" element={
                       <RutaProtegida rolesPermitidos={[1]}>
                         <GestionDocentes />
