@@ -19,7 +19,8 @@ import { AuthContext, AuthProvider } from './contextos/ContextoAutenticacion';
 import CrearUsuarioSuperior from './paginas/Administrador/CrearUsuarioCompleto/CrearUsuarioSuperior';
 import Inicio from './componentes/inicioCompleto/Inicio';
 import './estilos/layouts/global.css'
-
+import EnviarSolicitud from './componentes/EnviarSolicitudCompleto/EnviarSolicitud';
+import Mensajes from './componentes/MensajesCompleto/Mensajes';
 const RutaProtegida = ({ children, rolesPermitidos }) => {
   const { permiso } = useContext(AuthContext);
 
@@ -48,13 +49,19 @@ function App() {
                     <Route path="/egresados" element={<ListaEgresados />} />
                     <Route path="/eventos" element={<ListaEventos />} />
                     <Route path="/noticias" element={<ListaNoticias />} />
+                    <Route path='/solicitud' element={<EnviarSolicitud />}/>
                     <Route path="/" element={<Inicio />} />
-
+                    
 
                     {/* Rutas protegidas */}
                     <Route path="/admin/gestion-docentes" element={
                       <RutaProtegida rolesPermitidos={[1]}>
                         <GestionDocentes />
+                      </RutaProtegida>
+                    } />
+                      <Route path="/admin/mensajes" element={
+                      <RutaProtegida rolesPermitidos={[1]}>
+                        <Mensajes />
                       </RutaProtegida>
                     } />
                     <Route path="/admin/gestion-estudiantes" element={

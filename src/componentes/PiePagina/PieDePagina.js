@@ -9,6 +9,7 @@ import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 import { AuthContext } from '../../contextos/ContextoAutenticacion.js';
 
 const PieDePagina = () => {
+  const { idUsuario, token } = useContext(AuthContext);
   const [contactos, setContactos] = useState([]);
   const [nuevoContacto, setNuevoContacto] = useState({
     nombre: '',
@@ -17,41 +18,41 @@ const PieDePagina = () => {
   });
   const [editarContacto, setEditarContacto] = useState(false); // Controla el estado de edición
   const [idContactoEditar, setIdContactoEditar] = useState(null); // Solo para actualizar/eliminar
-  const { idUsuario, token } = useContext(AuthContext);
+  
+// Obtener contactos desde el backend
+const fetchContactos = async () => {
+  try {
+    const data = await obtenerContactos();
+    setContactos(data.contactos || []);
+  } catch (error) {
+    console.error('Error al cargar contactos:', error);
+  }
+};
 
-  // Obtener contactos al montar el componente
-  useEffect(() => {
-    const fetchContactos = async () => {
-      try {
-        const data = await obtenerContactos();
-        setContactos(data.contactos || []); // Maneja contactos como un arreglo
-      } catch (error) {
-        console.error('Error al cargar contactos:', error);
-      }
-    };
+// Cargar contactos al montar el componente
+useEffect(() => {
+  fetchContactos();
+}, []);
 
-    fetchContactos();
-  }, []);
-
-  // Función para agregar un nuevo contacto
-  const agregarNuevoContacto = async () => {
-    try {
-      console.log('Datos enviados:', nuevoContacto, idUsuario, token);
-      const contactoAgregado = await agregarContacto(nuevoContacto, idUsuario, token);
-      setContactos((prevContactos) => [...prevContactos, contactoAgregado]);
-      limpiarFormulario();
-    } catch (error) {
-      console.error('Error al agregar contacto:', error.response?.data || error.message);
-    }
-  };
-
+// Función para agregar un nuevo contacto
+const agregarNuevoContacto = async () => {
+  try {
+    console.log('Datos enviados:', nuevoContacto, idUsuario, token);
+    await agregarContacto(nuevoContacto, idUsuario, token);
+    await fetchContactos(); // Actualiza la lista después de agregar
+    limpiarFormulario();
+  } catch (error) {
+    console.error('Error al agregar contacto:', error.response?.data || error.message);
+  }
+};
   // Función para actualizar un contacto existente
   const actualizarContactoExistente = async () => {
     try {
+      console.log(nuevoContacto);
       await actualizarContacto(idContactoEditar, nuevoContacto, idUsuario, token);
       setContactos((prevContactos) =>
         prevContactos.map((contacto) =>
-          contacto.idContacto === idContactoEditar ? { ...nuevoContacto, idContacto: idContactoEditar } : contacto
+          contacto.id === idContactoEditar ? { ...nuevoContacto, id: idContactoEditar } : contacto
         )
       );
       limpiarFormulario();
@@ -73,10 +74,12 @@ const PieDePagina = () => {
   // Función para eliminar un contacto
   const handleEliminarContacto = async (idContacto) => {
     try {
+      console.log(idContacto,idUsuario,token);
       await eliminarContacto(idContacto, idUsuario, token);
       setContactos((prevContactos) =>
         prevContactos.filter((contacto) => contacto.idContacto !== idContacto)
       );
+     fetchContactos();
     } catch (error) {
       console.error('Error al eliminar contacto:', error);
     }
@@ -89,7 +92,7 @@ const PieDePagina = () => {
       correo: contacto.correo,
       papel: contacto.papel,
     });
-    setIdContactoEditar(contacto.idContacto); // Almacena el id para actualizar
+    setIdContactoEditar(contacto.id); // Almacena el id para actualizar
     setEditarContacto(true);
   };
 
@@ -122,7 +125,7 @@ const PieDePagina = () => {
                     <Button
                       variant="danger"
                       size="sm"
-                      onClick={() => handleEliminarContacto(contacto.idContacto)}
+                      onClick={() => handleEliminarContacto(contacto.id)}
                     >
                       Eliminar
                     </Button>{' '}
@@ -148,6 +151,9 @@ const PieDePagina = () => {
               </li>
               <li>
                 <a href="/registro" className="text-dark">Registrarse</a>
+              </li>
+              <li>
+                <a href="/solicitud" className="text-dark">Enviar Solicitud</a>
               </li>
             </ul>
           </Col>

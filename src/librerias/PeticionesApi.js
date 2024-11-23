@@ -334,7 +334,7 @@ export const obtenerContactos = async () => {
 // Agregar un contacto
 export const agregarContacto = async (contactoData, idUsuario, token) => {
   try {
-    const response = await instance.post('contacto/agregar', { ...contactoData, idUsuario, token });
+    const response = await instance.post('/contacto/agregar', { ...contactoData, idUsuario, token });
     return response.data;
   } catch (error) {
     console.error('Error al agregar contacto:', error);
@@ -354,7 +354,7 @@ export const eliminarContacto = async (idContacto, idUsuario, token) => {
 
 export const actualizarContacto = async (idContacto, contactoData, idUsuario, token) => {
   try {
-    const response = await instance.put('contacto/actualizar', {
+    const response = await instance.put('/contacto/actualizar', {
       idContacto,
       ...contactoData,
       idUsuario,
@@ -363,6 +363,42 @@ export const actualizarContacto = async (idContacto, contactoData, idUsuario, to
     return response.data;
   } catch (error) {
     console.error('Error al actualizar contacto:', error);
+    throw error;
+  }
+};
+export const enviarSolicitud = async (solicitudData) => {
+  try {
+    const response = await instance.post('/solicitud/enviar', solicitudData);
+    return response.data;
+  } catch (error) {
+    console.error('Error al enviar la solicitud:', error.response?.data || error.message);
+    throw error;
+  }
+};
+// Función para obtener mensajes
+export const obtenerMensajes = async (idUsuario, token) => {
+  try {
+    const response = await instance.post('/solicitud/obtener', {
+      idUsuario,
+      token,
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error al obtener mensajes:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
+// Función para eliminar un mensaje
+export const eliminarMensaje = async (idSolicitud, idUsuario, token) => {
+  try {
+    const response = await instance.put(`/solicitud/eliminar/`, {idSolicitud,
+      idUsuario,
+      token,
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error al eliminar mensaje:', error.response?.data || error.message);
     throw error;
   }
 };
