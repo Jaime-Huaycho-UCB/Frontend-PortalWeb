@@ -74,6 +74,7 @@ const Encabezado = () => {
               <Button className="nav-button" component={Link} to="/admin/gestion-eventos">Gestión Eventos</Button>
               <Button className="nav-button" component={Link} to="/admin/crear-usuario">Crear Usuario Superior</Button>
               <Button className="nav-button" component={Link} to="/admin/mensajes">Buzon</Button>
+              <Button className="nav-button" component={Link} to="/admin/publicacion">Chasqui Postas</Button>
               <Button className="nav-button" component={Link} to="/admin/perfil">Perfil</Button>
             </>
           ) : permisoInt === 0 ? (

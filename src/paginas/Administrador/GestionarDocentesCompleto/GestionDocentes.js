@@ -34,7 +34,7 @@ const GestionDocentes = () => {
 
     obtenerDocentesTodo()
       .then((data) => {
-        if (data.salida) setDocentes(data.docentes);
+        if (data.salida) setDocentes(data.docentes || []);
       })
       .catch(console.error);
 
@@ -144,6 +144,7 @@ const GestionDocentes = () => {
       handleClose();
     } catch (error) {
       console.error(error);
+      console.log()
     }
   };
 

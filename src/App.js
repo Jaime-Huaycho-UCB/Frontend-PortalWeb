@@ -21,6 +21,7 @@ import Inicio from './componentes/inicioCompleto/Inicio';
 import './estilos/layouts/global.css'
 import EnviarSolicitud from './componentes/EnviarSolicitudCompleto/EnviarSolicitud';
 import Mensajes from './componentes/MensajesCompleto/Mensajes';
+import Publicaciones from './paginas/Administrador/PublicacionesCompleto/Publicaciones';
 const RutaProtegida = ({ children, rolesPermitidos }) => {
   const { permiso } = useContext(AuthContext);
 
@@ -57,6 +58,11 @@ function App() {
                     <Route path="/admin/gestion-docentes" element={
                       <RutaProtegida rolesPermitidos={[1]}>
                         <GestionDocentes />
+                      </RutaProtegida>
+                    } />
+                    <Route path="/admin/publicacion" element={
+                      <RutaProtegida rolesPermitidos={[1,0]}>
+                        <Publicaciones />
                       </RutaProtegida>
                     } />
                       <Route path="/admin/mensajes" element={

@@ -402,3 +402,49 @@ export const eliminarMensaje = async (idSolicitud, idUsuario, token) => {
     throw error;
   }
 };
+export const agregarPublicacion = async (publicacionData, idUsuario, token) => {
+  try {
+    const response = await instance.post('/publicacion/agregar', { ...publicacionData, idUsuario, token });
+    return response.data;
+  } catch (error) {
+    console.error('Error al agregar publicación:', error.response?.data || error.message);
+    throw error;
+  }
+};
+
+export const obtenerPublicaciones = async () => {
+  try {
+    const response = await instance.get('/publicacion/obtener');
+    return response.data;
+  } catch (error) {
+    console.error('Error al obtener publicaciones:', error.response?.data || error.message);
+    throw error;
+  }
+};
+export const actualizarPublicacion = async (publicacionData, idUsuario, token) => {
+  try {
+    const response = await instance.put('/publicacion/actualizar', {
+      ...publicacionData,
+      idUsuario,
+      token,
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error al actualizar publicación:', error.response?.data || error.message);
+    throw new Error(error.response?.data?.message || 'No se pudo actualizar la publicación.');
+  }
+};
+
+export const eliminarPublicacion = async (id, idUsuario, token) => {
+  try {
+    const response = await instance.put('/publicacion/eliminar', {
+      id,
+      idUsuario,
+      token,
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error al eliminar publicación:', error.response?.data || error.message);
+    throw new Error(error.response?.data?.message || 'No se pudo eliminar la publicación.');
+  }
+};
