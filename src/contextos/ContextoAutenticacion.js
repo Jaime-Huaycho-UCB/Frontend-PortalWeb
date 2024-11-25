@@ -1,4 +1,3 @@
-// ContextoAutenticacion.js
 import React, { createContext, useState, useEffect } from 'react';
 
 export const AuthContext = createContext();
@@ -11,6 +10,8 @@ export const AuthProvider = ({ children }) => {
     token: null,
   });
 
+  const [tema, setTema] = useState(localStorage.getItem('tema') || 'light'); // Estado para el tema
+
   const iniciarSesion = (nuevoPermiso, nuevoIdUsuario, nuevoIdDocente, nuevoToken) => {
     const newAuth = {
       permiso: nuevoPermiso,
@@ -20,8 +21,6 @@ export const AuthProvider = ({ children }) => {
     };
     setAuth(newAuth);
     localStorage.setItem('auth', JSON.stringify(newAuth));
-
-    // Agregar console.log para ver los valores cuando se inicie sesión
     console.log("Iniciando sesión con los siguientes datos:");
     console.log("Permiso:", nuevoPermiso);
     console.log("idUsuario:", nuevoIdUsuario);
@@ -39,16 +38,24 @@ export const AuthProvider = ({ children }) => {
     localStorage.clear();
   };
 
+  const toggleTema = () => {
+    const nuevoTema = tema === 'light' ? 'dark' : 'light';
+    setTema(nuevoTema);
+    localStorage.setItem('tema', nuevoTema); // Persistencia del tema en el almacenamiento local
+    document.documentElement.setAttribute('data-theme', nuevoTema);
+  };
+
   useEffect(() => {
-    // Limpia cualquier dato previo de localStorage al cargar la aplicación
+    // Aplica el tema al cargar la aplicación
+    document.documentElement.setAttribute('data-theme', tema);
+
+    // Limpia datos de autenticación al cargar por seguridad
     localStorage.removeItem('auth');
     console.log("Se ha limpiado cualquier información de autenticación previa.");
-  }, []);
-  
-  
+  }, [tema]);
 
   return (
-    <AuthContext.Provider value={{ ...auth, iniciarSesion, cerrarSesion }}>
+    <AuthContext.Provider value={{ ...auth, iniciarSesion, cerrarSesion, tema, toggleTema }}>
       {children}
     </AuthContext.Provider>
   );

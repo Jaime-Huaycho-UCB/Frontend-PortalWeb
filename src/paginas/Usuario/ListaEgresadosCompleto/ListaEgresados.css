@@ -1,12 +1,13 @@
 /* Contenedor Principal */
-.egresados-container2 {
+.egresados-container3 {
   padding: 40px 20px !important;
   background-color: var(--background-color) !important;
   color: var(--text-color) !important;
+  margin-top: 6% !important;
 }
 
 /* Títulos */
-.titulo-principal2 {
+.titulo-principal3 {
   font-size: 2.5rem !important;
   font-weight: bold !important;
   color: var(--primary-color) !important;
@@ -14,7 +15,7 @@
   margin-bottom: 20px !important;
 }
 
-.descripcion-principal2 {
+.descripcion-principal3 {
   font-size: 1.2rem !important;
   color: var(--secondary-color) !important;
   text-align: center !important;
@@ -22,14 +23,14 @@
 }
 
 /* Grid de Egresados */
-.grid-egresados2 {
+.grid-egresados3 {
   display: grid !important;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)) !important;
   gap: 20px !important;
 }
 
 /* Tarjetas */
-.egresado-card2 {
+.egresado-card3 {
   border-radius: 10px !important;
   overflow: hidden !important;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1) !important;
@@ -37,45 +38,45 @@
   background-color: var(--gray-light) !important;
 }
 
-.egresado-card2:hover {
+.egresado-card3:hover {
   transform: translateY(-5px) !important;
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2) !important;
 }
 
-.egresado-image2 {
+.egresado-image3 {
   object-fit: cover !important;
 }
 
-.egresado-content2 {
+.egresado-content3 {
   padding: 15px !important;
 }
 
-.egresado-nombre2 {
+.egresado-nombre3 {
   font-size: 1.5rem !important;
   font-weight: bold !important;
   margin-bottom: 10px !important;
   color: var(--primary-color) !important;
 }
 
-.egresado-titulo2,
-.egresado-email2 {
+.egresado-titulo3,
+.egresado-email3 {
   font-size: 1rem !important;
   margin-bottom: 5px !important;
 }
 
 /* Botones */
-.btn-ver-mas2 {
+.btn-ver-mas3 {
   color: var(--primary-color) !important;
   border: 1px solid var(--primary-color) !important;
 }
 
-.btn-ver-mas2:hover {
+.btn-ver-mas3:hover {
   background-color: var(--primary-color) !important;
   color: #fff !important;
 }
 
 /* Modal */
-.modal-box2 {
+.modal-box3 {
   background-color: var(--background-color) !important;
   border-radius: 10px !important;
   padding: 30px !important;
@@ -83,30 +84,30 @@
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2) !important;
 }
 
-.modal-titulo2 {
+.modal-titulo3 {
   font-size: 2rem !important;
   margin-bottom: 20px !important;
   color: var(--primary-color) !important;
 }
 
-.modal-image2 {
+.modal-image3 {
   width: 100% !important;
   max-width: 300px !important;
   border-radius: 10px !important;
   margin-bottom: 20px !important;
 }
 
-.modal-texto2 {
+.modal-texto3 {
   font-size: 1rem !important;
   margin-bottom: 10px !important;
 }
 
-.btn-cerrar2 {
+.btn-cerrar3 {
   background-color: var(--secondary-color) !important;
   color: #fff !important;
   border-radius: 5px !important;
 }
 
-.btn-cerrar2:hover {
+.btn-cerrar3:hover {
   background-color: var(--primary-color) !important;
 }

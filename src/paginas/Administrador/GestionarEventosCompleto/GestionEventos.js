@@ -3,7 +3,7 @@ import { VerticalTimeline, VerticalTimelineElement } from 'react-vertical-timeli
 import 'react-vertical-timeline-component/style.min.css';
 import {
     Card, CardContent, Typography, Box, Dialog, DialogContent, DialogTitle,
-    TextField, Button, DialogActions, IconButton, Tooltip
+    TextField, Button, DialogActions, IconButton, Tooltip,FormControl,InputLabel,Select,MenuItem
 } from '@mui/material';
 import { Event, Edit, Delete, Close, Add } from '@mui/icons-material';
 import { agregarEvento, obtenerEventos, actualizarEvento, eliminarEvento } from '../../../librerias/PeticionesApi';
@@ -27,22 +27,27 @@ const GestionEventos = () => {
         fotoBase64: '',
     });
 
-    const cargarEventos = useCallback(async () => {
+    const cargarEventos = useCallback(async (id) => {
         try {
-            const data = await obtenerEventos();
+            const data = await obtenerEventos(id);
             if (data.salida) {
                 setEventos(data.eventos);
-            } else if (data.mensaje === 'TKIN') {
+            } else {
+                if(!data.salida){
+                setEventos([]);
+            }else if (data.mensaje === 'TKIN') {
                 cerrarSesion();
                 navigate('/iniciar-sesion');
             }
+        }
+            
         } catch (error) {
             console.error(error);
         }
     }, [cerrarSesion, navigate]);
 
     useEffect(() => {
-        cargarEventos();
+        cargarEventos(0);
     }, [cargarEventos]);
 
     const agregarNuevoEvento = useCallback(async () => {
@@ -128,12 +133,15 @@ const GestionEventos = () => {
             reader.readAsDataURL(file);
         }
     };
-
+    const [filtroSeleccionado, setFiltroSeleccionado] = useState(0);
     return (
         <Box className="gestion-eventos-container">
             <Typography variant="h4" align="center" gutterBottom>
                 Gestión de Eventos
             </Typography>
+            
+      
+
             <Box display="flex" justifyContent="center" mb={3}>
                 <Button
                     variant="contained"
@@ -149,6 +157,24 @@ const GestionEventos = () => {
                     Agregar Evento
                 </Button>
             </Box>
+            <FormControl fullWidth margin="dense" className="select-field">
+  <InputLabel>Filtrar</InputLabel>
+  <Select
+    value={filtroSeleccionado} // Estado que controla la selección actual
+    onChange={(e) => {
+      const filtroId = e.target.value;
+      setFiltroSeleccionado(filtroId); // Actualiza el filtro seleccionado
+      cargarEventos(filtroId); // Llama a cargarDatos con el filtro correspondiente
+    }}
+  >
+    {/* Opción por defecto */}
+    <MenuItem value={0}>Obtener Todo</MenuItem>
+    <MenuItem value={1}>Eventos Actuales</MenuItem>
+    <MenuItem value={2}>Eventos Pasados</MenuItem>
+    
+    
+  </Select>
+</FormControl>
             <VerticalTimeline>
                 {eventos.map((evento) => (
                     <VerticalTimelineElement

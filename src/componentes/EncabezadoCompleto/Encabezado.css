@@ -1,136 +1,113 @@
-/* Encabezado.css */
-
-/* Animación de desvanecimiento */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-20px); /* Desplazamiento hacia arriba para un efecto más suave */
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Aplicar animación de aparición a los elementos del encabezado */
-.encabezado, .encabezado-title, .navbar-links, .nav-button, .menu-item {
-  animation: fadeIn 0.8s ease-in-out forwards !important;
-}
-
+/* Estilo general del encabezado */
 .encabezado {
-  background: rgba(235, 230, 230, 0.8) !important; /* Fondo translúcido */
-  backdrop-filter: blur(10px) !important; /* Efecto de desenfoque */
-  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2) !important; /* Sombra elegante */
+  position: fixed !important;
+  top: 0 !important;
+  width: 100% !important;
+  z-index: 1000 !important;
+  background: rgba(27, 41, 81, 0.5) !important; /* Transparencia con el color #1b2951 */
+  transition: background-color 0.3s ease-in-out !important;
+  backdrop-filter: blur(6px) !important; /* Efecto de desenfoque */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15) !important;
+  padding: 10px 15px !important;
+}
+
+/* Fondo sólido al pasar el cursor */
+.encabezado:hover {
+  background: #1b2951 !important; /* Color sólido al hacer hover */
+}
+
+/* Título del encabezado */
+.encabezado-title {
+  font-family: 'Roboto Slab', serif !important;
+  font-weight: 700 !important;
+  color: #ffffff !important;
+  text-decoration: none !important;
+  font-size: 1.4rem !important;
+  margin-right: 20px !important;
+  transition: color 0.3s ease-in-out !important;
+}
+
+.encabezado-title:hover {
+  color: #ffd700 !important; /* Cambio de color al hover */
+  transform: scale(1.05) !important;
+}
+
+/* Botones de navegación */
+.navbar-links {
   display: flex !important;
   align-items: center !important;
-  justify-content: space-between !important;
-  padding: 10px 20px !important;
-  position: sticky !important; /* Mantiene el encabezado visible al hacer scroll */
-  top: 0 !important;
-  z-index: 1000 !important;
-  font-family: 'Poppins', sans-serif !important; /* Tipografía moderna */
+  gap: 5px !important;
+  margin-left: auto !important;
+  position: relative !important;
 }
 
-/* Estilo para el título de la página */
-.encabezado-title {
-  color: #000 !important;
-  text-decoration: none !important;
-  flex-grow: 1 !important;
-  font-size: 1.5rem !important;
-  font-weight: bold !important;
-  margin-right: auto !important;
-}
-
-/* Estilo para la barra de navegación */
-.navbar-links {
-  display: flex;
-  gap: 20px; /* Espacio entre los enlaces */
-  justify-content: space-evenly;
-  align-items: center;
-}
-
-/* Estilo para los botones de navegación */
 .nav-button {
-  color:#002855 !important;
-  transition: color 0.3s ease !important;
+  font-family: 'Roboto', sans-serif !important;
+  color: white !important;
+  margin: 0 8px !important;
+  font-size: 1rem !important;
   font-weight: 500 !important;
-  white-space: nowrap;
+  text-transform: capitalize !important;
+  position: relative !important; /* Necesario para el subrayado */
+  padding: 5px 8px !important;
+  transition: color 0.3s ease-in-out !important;
+  text-decoration: none !important;
+}
+
+/* Efecto de subrayado */
+.nav-button::after {
+  content: "" !important;
+  position: absolute !important;
+  left: 0 !important;
+  bottom: -2px !important; /* Ubicación debajo del texto */
+  width: 0 !important;
+  height: 2px !important; /* Grosor del subrayado */
+  background: #ffd700 !important; /* Color dorado */
+  transition: width 0.3s ease-in-out !important;
 }
 
 .nav-button:hover {
-  color: #FFD700 !important; /* Dorado para resaltar al pasar el cursor */
+  color: #ffd700 !important;
 }
 
-/* Estilo para el menú desplegable */
-.menu-item {
-  color: #002855 !important;
-  transition: background-color 0.3s ease !important;
+.nav-button:hover::after {
+  width: 100% !important; /* Subrayado completo al hacer hover */
 }
 
-.menu-item:hover {
-  background-color: #F5F5F5 !important; /* Gris claro para efecto hover */
-  color: #BA0C2F !important; /* Rojo para destacar el texto en hover */
-}
-
-/* -----------------------
-   Media Queries para Responsividad
------------------------ */
-
-/* Pantallas medianas (Tabletas) */
+/* Responsive refinado */
 @media (max-width: 768px) {
-  .encabezado {
-    flex-wrap: wrap; /* Permite que los elementos se reorganicen en varias filas */
-    padding: 5px;
-  }
-
-  .encabezado-title {
-    font-size: 1.2rem;
-  }
-
   .navbar-links {
-    display: none;
-  }
-}
-
-/* Pantallas pequeñas (Teléfonos) */
-@media (max-width: 480px) {
-  .encabezado {
-    padding: 5px;
-  }
-
-  .encabezado-title {
-    font-size: 1rem;
-    text-align: center; /* Centra el título */
-    flex-grow: unset;
-    margin: 0 auto;
-  }
-
-  .navbar-links {
-    display: none; /* Oculta los enlaces para usar un menú hamburguesa */
-  }
-
-  .menu-icon {
-    display: block; /* Muestra el ícono de menú */
-    color: #FFFFFF;
-    font-size: 1.5rem;
-    cursor: pointer;
+    
+    display: none !important;
+    
   }
 
   .nav-button {
-    font-size: 0.9rem; /* Reduce el tamaño del texto en los botones */
+    margin: 5px 0 !important;
+    font-size: 0.9rem !important;
+
   }
 
-  /* Menú desplegable para pantallas pequeñas */
-  .navbar-links.active {
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    background-color: #002855;
-    padding: 10px;
-    gap: 10px;
+  .encabezado-title {
+    font-size: 1.2rem !important;
   }
+}
+
+/* Transición al hacer scroll (fondo sólido) */
+.encabezado.scrolled {
+  background: #1b2951 !important; /* Fondo sólido al hacer scroll */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
+}
+/* Contenedor principal del interruptor */
+.toggle-icon {
+  font-size: 24px;
+  cursor: pointer;
+  color: var(--accent-color);
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.toggle-icon[data-theme="dark"] {
+  color: var(--secondary-color);
+  transform: rotate(360deg);
 }
 

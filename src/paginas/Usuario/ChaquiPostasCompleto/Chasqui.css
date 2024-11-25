@@ -1,0 +1,155 @@
+/* Contenedor principal */
+.facebook-container2 {
+    max-width: 70% !important;
+    margin: 0 auto !important;
+    padding: 20px !important;
+    background-color: var(--background-color) !important;
+    font-family: 'Arial', sans-serif !important;
+    margin-top: 8% !important;
+    border-radius: 15px !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1) !important;
+    animation: fadeIn 1s ease !important;
+}
+
+/* Publicación */
+.facebook-post2 {
+    background: linear-gradient(135deg, #ffffff, #f9f9f9) !important;
+    border-radius: 15px !important;
+    margin-bottom: 20px !important;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1) !important;
+    overflow: hidden !important;
+    transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+    animation: popUp 0.5s ease forwards !important;
+    padding: 20px !important;
+}
+
+.facebook-post2:hover {
+    transform: translateY(-5px) !important;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2) !important;
+    background: linear-gradient(135deg, #ffecd2, #fcb69f) !important;
+
+}
+
+/* Encabezado */
+.facebook-header2 {
+    display: flex !important;
+    align-items: center !important;
+    gap: 15px !important;
+    margin-bottom: 15px !important;
+}
+
+.facebook-avatar2 img {
+    width: 55px !important;
+    height: 55px !important;
+    border-radius: 50% !important;
+    background: #ddd !important;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1) !important;
+    transition: transform 0.3s ease !important;
+}
+
+.facebook-avatar2 img:hover {
+    transform: scale(1.1) !important;
+}
+
+.facebook-author2 {
+    font-size: 1.2rem !important;
+    font-weight: bold !important;
+    color: #1b2951 !important;
+}
+
+.facebook-date2 {
+    font-size: 0.9rem !important;
+    color: #777 !important;
+}
+
+/* Contenido */
+.facebook-content2 {
+    margin-bottom: 15px !important;
+    font-size: 1rem !important;
+    color: #555 !important;
+    line-height: 1.6 !important;
+}
+
+.facebook-content2 img {
+    width: 100% !important;
+    border-radius: 12px !important;
+    margin-top: 15px !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1) !important;
+    transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+.facebook-content2 img:hover {
+    transform: scale(1.05) !important;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3) !important;
+}
+
+
+
+/* Skeleton para carga */
+.facebook-loading2 {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 20px !important;
+}
+
+.facebook-skeleton2 {
+    height: 150px !important;
+    background: linear-gradient(90deg, #e0e0e0 25%, #f5f5f5 50%, #e0e0e0 75%) ;
+    background-size: 200% 100% !important;
+    border-radius: 15px !important;
+    animation: skeleton-loading 1.5s infinite !important ;
+}
+
+@keyframes skeleton-loading {
+    from {
+        background-position: 200% 0 ;
+    }
+    to {
+        background-position: -200% 0 ;
+    }
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from {
+        opacity: 0 ;
+        transform: translateY(30px) ;
+    }
+    to {
+        opacity: 1 ;
+        transform: translateY(0) ;
+    }
+}
+
+@keyframes popUp {
+    from {
+        opacity: 0 ;
+        transform: scale(0.95) ;
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) ;
+    }
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+    .facebook-container2 {
+        max-width: 95% !important;
+        margin-top: 5% !important;
+        padding: 15px !important;
+    }
+
+    .facebook-post2 {
+        padding: 15px !important;
+    }
+
+    .facebook-avatar2 img {
+        width: 45px !important;
+        height: 45px !important;
+    }
+
+    .facebook-content2 img {
+        margin-top: 10px !important;
+    }
+}

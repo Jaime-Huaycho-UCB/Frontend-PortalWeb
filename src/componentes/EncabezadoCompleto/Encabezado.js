@@ -1,18 +1,32 @@
-// Encabezado.js
-import React, { useContext,useState } from 'react';
-import { AppBar, Toolbar, IconButton, Typography, Button, Menu, MenuItem } from '@mui/material';
+import React, { useContext, useState } from 'react';
+import {
+  AppBar,
+  Toolbar,
+  IconButton,
+  Typography,
+  Button,
+  Menu,
+  MenuItem,Box
+} from '@mui/material';
 import { Link } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
-import { AuthContext } from '../../contextos/ContextoAutenticacion';
-import BarraDeBusqueda from '../BarraBusquedaCompleto/BarraDeBusqueda';
+import PersonIcon from '@mui/icons-material/Person';
+import GroupIcon from '@mui/icons-material/Group';
+import EventIcon from '@mui/icons-material/Event';
+import ArticleIcon from '@mui/icons-material/Article';
+import PostAddIcon from '@mui/icons-material/PostAdd';
+import MailIcon from '@mui/icons-material/Mail';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import ScienceIcon from '@mui/icons-material/Science';
+import LocalLibraryIcon from '@mui/icons-material/LocalLibrary';
 import './Encabezado.css';
+import { AuthContext } from "../../contextos/ContextoAutenticacion.js";
 
 const Encabezado = () => {
-  
-  const { permiso,cerrarSesion } = useContext(AuthContext);
+  const { permiso, cerrarSesion } = useContext(AuthContext);
   const permisoInt = permiso !== null ? parseInt(permiso, 10) : -1;
-
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const { tema, toggleTema } = useContext(AuthContext);
+  const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
   const handleMenu = (event) => {
@@ -22,99 +36,199 @@ const Encabezado = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const [esOscuro, setEsOscuro] = useState(false); // Estado para manejar el tema
-  const activarTemaOscuro = async () => {
-    // Importar dinámicamente el archivo CSS del tema oscuro
-    await import('../../estilos/temas/oscuro.css');
-    document.body.classList.add('oscuro'); // Agregar clase oscuro
-  };
-
-  const desactivarTemaOscuro = () => {
-    // "Desactivar" el tema oscuro al eliminar la clase del body
-    document.body.classList.remove('oscuro');
-    // Remover los efectos del archivo CSS del tema oscuro
-    const link = document.querySelector(`link[href="./estilos/temas/oscuro.css"]`);
-    if (link) {
-      link.disabled = true; // Desactiva el archivo CSS
-      link.parentNode.removeChild(link); // Lo elimina completamente
-    }
-  };
-
-  const alternarTema = async () => {
-    const nuevoTema = !esOscuro;
-    setEsOscuro(nuevoTema);
-
-    if (nuevoTema) {
-      activarTemaOscuro();
-    } else {
-      desactivarTemaOscuro();
-    }
-
-    // Guardar en localStorage
-    localStorage.setItem('temaOscuro', nuevoTema);
-  };
 
   return (
     <AppBar position="static" className="encabezado">
-      
       <Toolbar>
-        <IconButton edge="start" color="inherit" aria-label="menu" onClick={handleMenu} sx={{ mr: 3 }}>
+        <IconButton
+          edge="start"
+          color="inherit"
+          aria-label="menu"
+          onClick={handleMenu}
+          sx={{ mr: 3 }}
+        >
           <MenuIcon />
         </IconButton>
-        <Typography variant="h6" component={Link} to="/" className="encabezado-title">
-          Mi Portal
-        </Typography>
-    
+        <Box sx={{ flexGrow: 1 }}>
+  <Link to="/" className="encabezado-title">
+    <img
+      src="/image.png" // Ruta de tu imagen
+      alt="Logo Mi Portal"
+      style={{
+        height: '60%', // Ajusta la altura de la imagen
+        width: '60%', // Mantén la proporción de la imagen
+        display: 'block',
+      }}
+    />
+  </Link>
+</Box>
+
+
         <div className="navbar-links">
           {permisoInt === 1 ? (
             <>
-              <Button className="nav-button" component={Link} to="/admin/gestion-docentes">Gestión Docentes</Button>
-              <Button className="nav-button" component={Link} to="/admin/gestion-estudiantes">Gestión Estudiantes</Button>
-              <Button className="nav-button" component={Link} to="/admin/gestion-noticias">Gestión Noticias</Button>
-              <Button className="nav-button" component={Link} to="/admin/gestion-eventos">Gestión Eventos</Button>
-              <Button className="nav-button" component={Link} to="/admin/crear-usuario">Crear Usuario Superior</Button>
-              <Button className="nav-button" component={Link} to="/admin/mensajes">Buzon</Button>
-              <Button className="nav-button" component={Link} to="/admin/publicacion">Chasqui Postas</Button>
-              <Button className="nav-button" component={Link} to="/admin/perfil">Perfil</Button>
+              <Button
+                startIcon={<PersonIcon />}
+                className="nav-button"
+                component={Link}
+                to="/admin/gestion-docentes"
+              >
+                Docentes
+              </Button>
+              <Button
+                startIcon={<GroupIcon />}
+                className="nav-button"
+                component={Link}
+                to="/admin/gestion-estudiantes"
+              >
+                Estudiantes
+              </Button>
+              <Button
+                startIcon={<ArticleIcon />}
+                className="nav-button"
+                component={Link}
+                to="/admin/gestion-noticias"
+              >
+                Noticias
+              </Button>
+              <Button
+                startIcon={<EventIcon />}
+                className="nav-button"
+                component={Link}
+                to="/admin/gestion-eventos"
+              >
+                Eventos
+              </Button>
+              <Button
+                startIcon={<PostAddIcon />}
+                className="nav-button"
+                component={Link}
+                to="/admin/publicacion"
+              >
+                Chasqui Posta
+              </Button>
+              <Button
+                startIcon={<MailIcon />}
+                className="nav-button"
+                component={Link}
+                to="/admin/mensajes"
+              >
+                Buzón
+              </Button>
+              <Button
+                startIcon={<PersonIcon />}
+                className="nav-button"
+                component={Link}
+                to="/admin/perfil"
+              >
+                Perfil
+              </Button>
             </>
           ) : permisoInt === 0 ? (
             <>
-              <Button className="nav-button" component={Link} to="/admin/gestion-estudiantes">Gestión Estudiantes</Button>
-              <Button className="nav-button" component={Link} to="/admin/gestion-noticias">Gestión Noticias</Button>
-              <Button className="nav-button" component={Link} to="/admin/gestion-eventos">Gestión Eventos</Button>
-              <Button className="nav-button" component={Link} to="/admin/perfil">Perfil</Button>
+              <Button
+                startIcon={<GroupIcon />}
+                className="nav-button"
+                component={Link}
+                to="/admin/gestion-estudiantes"
+              >
+                Estudiantes
+              </Button>
+              <Button
+                startIcon={<ArticleIcon />}
+                className="nav-button"
+                component={Link}
+                to="/admin/gestion-noticias"
+              >
+                Noticias
+              </Button>
+              <Button
+                startIcon={<EventIcon />}
+                className="nav-button"
+                component={Link}
+                to="/admin/gestion-eventos"
+              >
+                Eventos
+              </Button>
+              <Button
+                startIcon={<PersonIcon />}
+                className="nav-button"
+                component={Link}
+                to="/admin/perfil"
+              >
+                Perfil
+              </Button>
+              
             </>
           ) : (
             <>
-              <Button className="nav-button" component={Link} to="/docentes">Docentes</Button>
-              <Button className="nav-button" component={Link} to="/egresados">Estudiantes</Button>
-              <Button className="nav-button" component={Link} to="/eventos">Eventos</Button>
-              <Button className="nav-button" component={Link} to="/noticias">Noticias</Button>
-              <Button className="nav-button" component={Link} to="/carrera">Carrera</Button>
-              <Button className="nav-button" component={Link} to="/autoridades">Autoridades</Button>
+              <Button
+                startIcon={<PersonIcon />}
+                className="nav-button"
+                component={Link}
+                to="/docentes"
+              >
+                Docentes
+              </Button>
+              <Button
+                startIcon={<GroupIcon />}
+                className="nav-button"
+                component={Link}
+                to="/egresados"
+              >
+                Egresados
+              </Button>
+              <Button
+                startIcon={<EventIcon />}
+                className="nav-button"
+                component={Link}
+                to="/eventos"
+              >
+                Eventos
+              </Button>
+              <Button
+                startIcon={<ArticleIcon />}
+                className="nav-button"
+                component={Link}
+                to="/noticias"
+              >
+                Noticias
+              </Button>
+              <Button
+                startIcon={<ScienceIcon />}
+                className="nav-button"
+                component={Link}
+                to="/noticias"
+              >
+                Soc.Cientifica
+              </Button>
+              <Button
+                startIcon={<ArticleIcon />}
+                className="nav-button"
+                component={Link}
+                to="/chasqui"
+              >
+                Chasqui Postas
+              </Button>
+              <Button
+                startIcon={<LocalLibraryIcon />}
+                className="nav-button"
+                component={Link}
+                to="/Tesis"
+              >
+                Biblioteca Tesis
+              </Button>
             </>
           )}
-           <Button color="secondary" onClick={cerrarSesion} className="nav-button">
-            Cerrar Sesión
-          </Button>
-        </div>
-        {/* Barra de búsqueda expandible */}
-        <BarraDeBusqueda />
-        {/* <div>
-      
-      <label className="interruptor">
-        <input
-          type="checkbox"
-          checked={esOscuro}
-          onChange={alternarTema}
-        />
-        <span className="slider"></span>
-      </label>
+        <span
+  className="toggle-icon"
+  onClick={toggleTema}
+  data-theme={tema}
+>
+  {tema === 'light' ? '☀️' : '🌙'}
+</span>
 
-      <div className="contenido">
-        <h2>Tema {esOscuro ? 'Oscuro' : 'Claro'}</h2>
-    </div>
-    </div> */}
+        </div>
       </Toolbar>
       <Menu
         id="menu-appbar"
@@ -131,26 +245,24 @@ const Encabezado = () => {
         open={open}
         onClose={handleClose}
       >
-        {permisoInt === 1 ? [
-          <MenuItem key="gestion-docentes" className="menu-item" component={Link} to="/admin/gestion-docentes" onClick={handleClose}>Gestión Docentes</MenuItem>,
-          <MenuItem key="gestion-estudiantes" className="menu-item" component={Link} to="/admin/gestion-estudiantes" onClick={handleClose}>Gestión Estudiantes</MenuItem>,
-          <MenuItem key="gestion-noticias" className="menu-item" component={Link} to="/admin/gestion-noticias" onClick={handleClose}>Gestión Noticias</MenuItem>,
-          <MenuItem key="gestion-eventos" className="menu-item" component={Link} to="/admin/gestion-eventos" onClick={handleClose}>Gestión Eventos</MenuItem>,
-          <MenuItem key="crear-usuario" className="menu-item" component={Link} to="/admin/crear-usuario" onClick={handleClose}>Crear Usuario Superior</MenuItem>,
-          <MenuItem key="perfil" className="menu-item" component={Link} to="/admin/perfil" onClick={handleClose}>Perfil</MenuItem>,
-        ] : permisoInt === 0 ? [
-          <MenuItem key="gestion-estudiantes" className="menu-item" component={Link} to="/admin/gestion-estudiantes" onClick={handleClose}>Gestión Estudiantes</MenuItem>,
-          <MenuItem key="gestion-noticias" className="menu-item" component={Link} to="/admin/gestion-noticias" onClick={handleClose}>Gestión Noticias</MenuItem>,
-          <MenuItem key="gestion-eventos" className="menu-item" component={Link} to="/admin/gestion-eventos" onClick={handleClose}>Gestión Eventos</MenuItem>,
-          <MenuItem key="perfil" className="menu-item" component={Link} to="/admin/perfil" onClick={handleClose}>Perfil</MenuItem>,
-        ] : [
-          <MenuItem key="docentes" className="menu-item" component={Link} to="/docentes" onClick={handleClose}>Docentes</MenuItem>,
-          <MenuItem key="egresados" className="menu-item" component={Link} to="/egresados" onClick={handleClose}>Estudiantes</MenuItem>,
-          <MenuItem key="eventos" className="menu-item" component={Link} to="/eventos" onClick={handleClose}>Eventos</MenuItem>,
-          <MenuItem key="noticias" className="menu-item" component={Link} to="/noticias" onClick={handleClose}>Noticias</MenuItem>,
-          <MenuItem key="carrera" className="menu-item" component={Link} to="/carrera" onClick={handleClose}>Carrera</MenuItem>,
-          <MenuItem key="autoridades" className="menu-item" component={Link} to="/autoridades" onClick={handleClose}>Autoridades</MenuItem>,
-        ]}
+        <MenuItem component={Link} to="/admin/gestion-docentes" onClick={handleClose}>
+          Docentes
+        </MenuItem>
+        <MenuItem component={Link} to="/admin/gestion-estudiantes" onClick={handleClose}>
+          Egresados
+        </MenuItem>
+        <MenuItem component={Link} to="/admin/gestion-noticias" onClick={handleClose}>
+          Noticias
+        </MenuItem>
+        <MenuItem component={Link} to="/admin/gestion-eventos" onClick={handleClose}>
+          Eventos
+        </MenuItem>
+        <MenuItem component={Link} to="/admin/publicacion" onClick={handleClose}>
+          chasqui posta
+        </MenuItem>
+        <MenuItem component={Link} to="/admin/mensajes" onClick={handleClose}>
+          Buzon
+        </MenuItem>
       </Menu>
     </AppBar>
   );

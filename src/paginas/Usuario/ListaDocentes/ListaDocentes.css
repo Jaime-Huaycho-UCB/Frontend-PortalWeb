@@ -4,44 +4,47 @@
   max-width: 1200px !important;
   margin: 0 auto !important;
   background-color: var(--background-color) !important;
-  color: var(--text-color) !important;
+  color: var(--accent-color) !important;
+  margin-top: 5% !important
+  ;
+
 }
 
 /* Encabezado */
 .docente-header {
   text-align: center !important;
-  margin-bottom: 40px !important;
+  margin-bottom: 60px !important;
 }
 
 .titulo3 {
   font-size: 2.4rem !important;
   font-weight: 600 !important;
-  color: var(--primary-color) !important;
+  color: var(--text-color-septimo) !important;
   margin-bottom: 10px !important;
 }
 
 .docente-description {
   font-size: 1rem !important;
-  color: var(--secondary-color) !important;
+  color: var(--accent-color) !important;
   line-height: 1.5 !important;
 }
 
 /* Skeleton Loader */
-.skeleton-card {
+.skeleton-card2 {
   width: 100%;
   height: 300px;
-  background: linear-gradient(90deg, #e0e0e0 25%, #f5f5f5 50%, #e0e0e0 75%);
+  background: linear-gradient(90deg, #e0e0e0 25%, #f5f5f5 50%, #e0e0e0 75%) ;
   background-size: 200% 100%;
   border-radius: 10px;
-  animation: skeleton-loading 1.5s infinite;
+  animation: skeleton-loading 1.5s infinite ;
 }
 
 @keyframes skeleton-loading {
   from {
-    background-position: 200% 0;
+    background-position: 200% 0 ;
   }
   to {
-    background-position: -200% 0;
+    background-position: -200% 0 ;
   }
 }
 
@@ -57,7 +60,7 @@
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
-  background-color: var(--gray-color) !important;
+  background: var(--background-color-card) !important;
   border-radius: 10px !important;
   overflow: hidden !important;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
@@ -111,8 +114,8 @@
 .btn-ver-mas {
   padding: 10px 20px !important;
   font-size: 0.9rem !important;
-  background-color: var(--primary-color) !important;
-  color: var(--background-color) !important;
+  background-color: #2c3e50 !important;
+  color: #fff !important;
   border: none !important;
   border-radius: 5px !important;
   cursor: pointer !important;
@@ -144,7 +147,7 @@
   font-size: 1.5rem !important;
   font-weight: 600 !important;
   text-align: center !important;
-  color: var(--primary-color) !important;
+  color: #fff !important;
   margin-bottom: 15px !important;
 }
 
@@ -201,7 +204,7 @@
   padding: 10px 20px !important;
   font-size: 1rem !important;
   background-color: var(--secondary-color) !important;
-  color: var(--text-color) !important;
+  color: #fff !important;
   border: none !important;
   border-radius: 5px !important;
   cursor: pointer !important;

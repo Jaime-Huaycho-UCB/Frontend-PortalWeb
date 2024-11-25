@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
 import {
-  Button, Dialog, DialogActions, DialogContent, DialogTitle, Card, CardContent, CardMedia, Grid, TextField, Select, MenuItem, FormControl, InputLabel, CircularProgress, Snackbar, Alert, Switch, FormControlLabel
+  Button, Dialog, DialogActions, DialogContent, DialogTitle, Card, CardContent,Typography, CardMedia, Grid, TextField, Select, MenuItem, FormControl, InputLabel, CircularProgress, Snackbar, Alert, Switch, FormControlLabel
 } from '@mui/material';
 import {
-  obtenerEstudiantes, agregarEstudiante, actualizarEstudiante, eliminarEstudiante, obtenerNivelesAcademicos
+  obtenerEstudiantes, agregarEstudiante, actualizarEstudiante, eliminarEstudiante, obtenerNivelesAcademicos,obtenerFiltros
 } from '../../../librerias/PeticionesApi';
 import { AuthContext } from '../../../contextos/ContextoAutenticacion';
 import { useNavigate } from 'react-router-dom';
@@ -20,6 +20,7 @@ const GestionEstudiantes = () => {
   const [loading, setLoading] = useState(false);
   const [estudianteIdActualizar, setEstudianteIdActualizar] = useState(null);
   const [estudianteIdEliminar, setEstudianteIdEliminar] = useState(null);
+  const [filtros, setFiltros] = useState([]);
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
   const navigate = useNavigate();
   const { cerrarSesion } = useContext(AuthContext);
@@ -28,6 +29,8 @@ const GestionEstudiantes = () => {
     nombre: '',
     correo: '',
     nivelAcademico: '',
+    anio: '',
+    semestre:'',
     foto: '',
   });
 
@@ -37,29 +40,38 @@ const GestionEstudiantes = () => {
   const setFotoBase64 = (base64) => {
     setNuevoEstudiante((prevEstudiante) => ({ ...prevEstudiante, foto: base64 }));
   };
-
+  const cargarDatos = async (id) => {
+    try {
+      setLoading(true);
+  
+      // Obtener estudiantes
+      const estudiantesResponse = id === 0 
+        ? await obtenerEstudiantes(0) // Trae todos los estudiantes
+        : await obtenerEstudiantes(id); // Filtra por el ID
+      if (estudiantesResponse.salida) {
+        setEstudiantes(estudiantesResponse.estudiantes || []);
+      }else{
+        setEstudiantes([]);
+      }
+  
+      // Obtener niveles académicos
+      const nivelesResponse = await obtenerNivelesAcademicos();
+      if (nivelesResponse.salida) {
+        setNivelesAcademicos(nivelesResponse.nivelesAcademicos || []);
+      }
+    } catch (error) {
+      console.error(error);
+      setSnackbar({ open: true, message: 'Error al cargar datos', severity: 'error' });
+    } finally {
+      setLoading(false);
+    }
+  };
+  
   useEffect(() => {
-    setLoading(true);
-    obtenerEstudiantes()
-      .then((data) => {
-        if (data.salida) setEstudiantes(data.estudiantes || []);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error(error);
-        setLoading(false);
-        setSnackbar({ open: true, message: 'Error al cargar estudiantes', severity: 'error' });
-      });
-
-    obtenerNivelesAcademicos()
-      .then((niveles) => {
-        setNivelesAcademicos(niveles.nivelesAcademicos || []);
-      })
-      .catch((error) => {
-        console.error(error);
-        setSnackbar({ open: true, message: 'Error al cargar niveles académicos', severity: 'error' });
-      });
-  }, []);
+    cargarDatos(0);
+    cargarFiltros();
+  }, []); // Dependencias permanecen vacías para ejecutarlo solo una vez al montar el componente
+  
 
   const handleClose = () => {
     setShow(false);
@@ -69,6 +81,8 @@ const GestionEstudiantes = () => {
       nombre: '',
       correo: '',
       nivelAcademico: '',
+      anio: '',
+    semestre:'', 
       foto: '',
     });
   };
@@ -95,7 +109,9 @@ const GestionEstudiantes = () => {
         }
       } else {
         setUltimoEstudianteId(response.estudianteId);
+
         obtenerEstudiantes().then((data) => setEstudiantes(data.estudiantes));
+        cargarFiltros();
         handleClose();
         setSnackbar({ open: true, message: response.mensaje, severity: 'success' });
       }
@@ -126,7 +142,7 @@ const GestionEstudiantes = () => {
           setSnackbar({ open: true, message: response.mensaje, severity: 'error' });
         }
       } else {
-        obtenerEstudiantes().then((data) => setEstudiantes(data.estudiantes));
+        cargarDatos(0);
         setShowEliminarDialog(false);
         setEstudianteIdEliminar(null);
         setSnackbar({ open: true, message: 'Estudiante eliminado con éxito', severity: 'success' });
@@ -139,13 +155,24 @@ const GestionEstudiantes = () => {
   };
 
   const iniciarActualizacion = (estudiante) => {
-    setIsUpdating(true);
-    setEstudianteIdActualizar(estudiante.id);
-    setNuevoEstudiante(estudiante);
-    setActualizarFoto(false);
-    handleShow();
+    console.log(estudiante);
+    setIsUpdating(true); // Cambiar el estado para indicar que estamos actualizando
+    setEstudianteIdActualizar(estudiante.id); // Guardar el ID del estudiante a actualizar
+  
+    // Configurar los valores del estudiante en el estado
+    setNuevoEstudiante({
+      nombre: estudiante.nombre || '', // Manejar valores nulos
+      correo: estudiante.correo || '',
+      nivelAcademico: estudiante.nivelAcademico || '',
+      anio: estudiante.anio || '',
+      semestre: estudiante.semestre || '',
+      foto: estudiante.foto || '',
+    });
+  
+    setActualizarFoto(false); // Por defecto, no actualizar foto
+    setTimeout(() => handleShow(), 0); // Abrir el modal después de configurar los valores
   };
-
+  
   const actualizarEstudianteExistente = async () => {
     setLoading(true);
     const estudianteData = {
@@ -166,7 +193,8 @@ const GestionEstudiantes = () => {
           setSnackbar({ open: true, message: response.mensaje, severity: 'error' });
         }
       } else {
-        obtenerEstudiantes().then((data) => setEstudiantes(data.estudiantes));
+        cargarDatos(0);
+        cargarFiltros();
         handleClose();
         setSnackbar({ open: true, message: 'Estudiante actualizado con éxito', severity: 'success' });
       }
@@ -181,13 +209,51 @@ const GestionEstudiantes = () => {
     navigate('/admin/gestion-tesis', { state: { openModal: true, idEstudiante } });
 };
 
+  const cargarFiltros = async () => {
+    try {
+      const data = await obtenerFiltros();
+      if(data.salida){
+      console.log(data.semestres);
+      setFiltros(data.semestres|| []); // Suponemos que la API devuelve un objeto con la clave "filtros"
+      }
+    } catch (error) {
+      console.error("Error al cargar los filtros:", error);
+    }
+  };
 
+
+const [filtroSeleccionado, setFiltroSeleccionado] = useState(0);
   return (
     <div className="gestion-estudiantes-container">
       <h2 className="titulo-gestion">Gestión de Estudiantes</h2>
       <Button variant="contained" color="primary" onClick={handleShow} className="add-estudiante-btn">
         {loading ? <CircularProgress size={24} /> : 'Agregar Estudiante'}
       </Button>
+      <Typography variant="h4" align="center" gutterBottom>
+        Filtrar Egresados
+      </Typography>
+      <FormControl fullWidth margin="dense" className="select-field">
+  <InputLabel>Filtrar</InputLabel>
+  <Select
+    value={filtroSeleccionado} // Estado que controla la selección actual
+    onChange={(e) => {
+      const filtroId = e.target.value;
+      setFiltroSeleccionado(filtroId); // Actualiza el filtro seleccionado
+      cargarDatos(filtroId); // Llama a cargarDatos con el filtro correspondiente
+    }}
+  >
+    {/* Opción por defecto */}
+    <MenuItem value={0}>Obtener Todo</MenuItem>
+    {filtros.map((filtro) => (
+      <MenuItem key={filtro.id} value={filtro.id}>
+        {filtro.cadena}
+      </MenuItem>
+    ))}
+  </Select>
+</FormControl>
+
+
+
       <Grid container spacing={5} className="grid-estudiantes" justifyContent="center">
   {estudiantes.map((estudiante) => (
     <Grid item xs={4} sm={4} md={4} key={estudiante.id}>
@@ -204,6 +270,7 @@ const GestionEstudiantes = () => {
           <h3>{estudiante.nombre}</h3>
           <p>Email: {estudiante.correo || 'N/A'}</p>
           <p>Nivel Académico: {estudiante.nivelAcademico || 'N/A'}</p>
+          <p>semestre: {estudiante.semestre || 'N/A'}</p>
           <div className="button-container">
             <Button variant="contained" color="warning" onClick={() => iniciarActualizacion(estudiante)} className="button-update">
               Actualizar
@@ -227,91 +294,68 @@ const GestionEstudiantes = () => {
 </Grid>
 
 
-      <Dialog
-  open={show}
-  onClose={handleClose}
-  PaperProps={{
-    style: {
-      padding: '20px',
-      borderRadius: '15px',
-      maxInlineSize: '500px', // Correcto: maxInlineSize
-      inlineSize: '100%',     // Correcto: inlineSize
-      backgroundColor: 'rgba(255, 255, 255, 0.9)', // Fondo semitransparente
-      boxShadow: '0px 4px 15px rgba(0, 0, 0, 0.3)', // Sombra
-      margin: 'auto', // Centrado en la pantalla
-    },
-  }}
-  className="dialog"
->
+<Dialog open={show} onClose={handleClose}>
+  <DialogTitle>{isUpdating ? 'Actualizar Estudiante' : 'Agregar Estudiante'}</DialogTitle>
+  <DialogContent>
+    <TextField
+      label="Nombre"
+      fullWidth
+      margin="dense"
+      value={nuevoEstudiante.nombre} // Vinculado al estado
+      onChange={(e) => setNuevoEstudiante({ ...nuevoEstudiante, nombre: e.target.value })}
+    />
+    <TextField
+      label="Email"
+      fullWidth
+      margin="dense"
+      value={nuevoEstudiante.correo} // Vinculado al estado
+      onChange={(e) => setNuevoEstudiante({ ...nuevoEstudiante, correo: e.target.value })}
+    />
+    <TextField
+      label="Año"
+      fullWidth
+      margin="dense"
+      type="number"
+      value={nuevoEstudiante.anio} // Vinculado al estado
+      onChange={(e) => setNuevoEstudiante({ ...nuevoEstudiante, anio: parseInt(e.target.value, 10) || '' })}
+    />
+    <FormControl fullWidth margin="dense">
+      <InputLabel>Semestre</InputLabel>
+      <Select
+        value={nuevoEstudiante.semestre || ''}
+        onChange={(e) =>
+          setNuevoEstudiante({ ...nuevoEstudiante, semestre: parseInt(e.target.value, 10) })
+        }
+      >
+        <MenuItem value={1}>1</MenuItem>
+        <MenuItem value={2}>2</MenuItem>
+      </Select>
+    </FormControl>
+    <FormControl fullWidth margin="dense">
+      <InputLabel>Nivel Académico</InputLabel>
+      <Select
+        value={nuevoEstudiante.nivelAcademico || ''}
+        onChange={(e) =>
+          setNuevoEstudiante({ ...nuevoEstudiante, nivelAcademico: e.target.value })
+        }
+      >
+        <MenuItem value="">Selecciona un nivel</MenuItem>
+        {nivelesAcademicos.map((nivel) => (
+          <MenuItem key={nivel.id} value={nivel.id}>
+            {nivel.nombre}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
+  </DialogContent>
+  <DialogActions>
+    <Button onClick={handleClose} color="secondary">Cancelar</Button>
+    <Button onClick={isUpdating ? actualizarEstudianteExistente : agregarNuevoEstudiante} color="primary">
+      {loading ? <CircularProgress size={24} /> : isUpdating ? 'Actualizar' : 'Guardar'}
+    </Button>
+  </DialogActions>
+</Dialog>
 
-
-        <DialogTitle className="dialog-title">{isUpdating ? 'Actualizar Estudiante' : 'Agregar Estudiante'}</DialogTitle>
-        <DialogContent>
-          <TextField
-            label="Nombre"
-            fullWidth
-            margin="dense"
-            value={nuevoEstudiante.nombre}
-            onChange={(e) => setNuevoEstudiante({ ...nuevoEstudiante, nombre: e.target.value })}
-            className="text-field"
-          />
-          <TextField
-            label="Email"
-            fullWidth
-            margin="dense"
-            value={nuevoEstudiante.correo}
-            onChange={(e) => setNuevoEstudiante({ ...nuevoEstudiante, correo: e.target.value })}
-            className="text-field"
-          />
-          <FormControl fullWidth margin="dense" className="select-field">
-            <InputLabel>Nivel Académico</InputLabel>
-            <Select
-              value={nuevoEstudiante.nivelAcademico}
-              onChange={(e) => setNuevoEstudiante({ ...nuevoEstudiante, nivelAcademico: e.target.value })}
-            >
-              <MenuItem value="">Selecciona un nivel</MenuItem>
-              {nivelesAcademicos.map((nivel) => (
-                <MenuItem key={nivel.id} value={nivel.id}>
-                  {nivel.nombre}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <FormControlLabel
-            control={<Switch checked={actualizarFoto} onChange={() => setActualizarFoto(!actualizarFoto)} />}
-            label="Actualizar Foto"
-            className="switch-update-foto"
-          />
-          {actualizarFoto && (
-            <Button
-              variant="contained"
-              component="label"
-              className="upload-button"
-            >
-              Subir Foto
-              <input
-                type="file"
-                hidden
-                accept="image/*"
-                onChange={(e) => {
-                  const file = e.target.files[0];
-                  const reader = new FileReader();
-                  reader.onloadend = () => {
-                    setFotoBase64(reader.result.split(',')[1]);
-                  };
-                  if (file) reader.readAsDataURL(file);
-                }}
-              />
-            </Button>
-          )}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color="secondary" className="button-cancelar">Cancelar</Button>
-          <Button onClick={isUpdating ? actualizarEstudianteExistente : agregarNuevoEstudiante} color="primary" className="button-guardar">
-            {loading ? <CircularProgress size={24} /> : isUpdating ? 'Actualizar' : 'Guardar'}
-          </Button>
-        </DialogActions>
-      </Dialog>
 
 
       <Dialog open={showEliminarDialog} onClose={() => setShowEliminarDialog(false)} className="dialog-eliminar">

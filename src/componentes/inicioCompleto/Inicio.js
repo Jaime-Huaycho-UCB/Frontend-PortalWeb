@@ -113,9 +113,10 @@ const Inicio = () => {
     };
   }, []);
   return (
+    <div className='wrapper'>
     <Container className="container">
     {/* Pantalla de Bienvenida */}
-    <div className="welcome-section">
+    <div id='welcome-section1' className="welcome-section">
   <video className="background-video" autoPlay loop muted>
     <source src="/UCB3.mp4" type="video/mp4" />
     Tu navegador no soporta videos.
@@ -369,6 +370,7 @@ const Inicio = () => {
 
 
     </Container>
+    </div>
   );
 };
 

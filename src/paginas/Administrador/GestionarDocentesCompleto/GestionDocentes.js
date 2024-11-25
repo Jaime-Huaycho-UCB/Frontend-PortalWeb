@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Button, Modal, Card, Row, Col, Form } from 'react-bootstrap';
+import{MenuItem,Typography,FormControl,InputLabel,Select} from '@mui/material'
 import { manejarCambioFoto, agregarDocente, actualizarDocente, eliminarDocente, obtenerTitulos, obtenerDocentesTodo } from '../../../librerias/PeticionesApi';
 import './GestionDocentes.css';
 import { AuthContext } from '../../../contextos/ContextoAutenticacion';
@@ -16,6 +17,7 @@ const GestionDocentes = () => {
   const [docenteIdEliminar, setDocenteIdEliminar] = useState(null);
   const navigate = useNavigate();
   const { cerrarSesion } = useContext(AuthContext); 
+  
 
   const [nuevoDocente, setNuevoDocente] = useState({
     nombre: '',
@@ -30,21 +32,28 @@ const GestionDocentes = () => {
     setNuevoDocente((prevDocente) => ({ ...prevDocente, fotoBase64: base64 }));
   };
 
-  useEffect(() => {  
-
-    obtenerDocentesTodo()
-      .then((data) => {
-        if (data.salida) setDocentes(data.docentes || []);
-      })
-      .catch(console.error);
-
-    obtenerTitulos()
-      .then((titulos) => {
-        setTitulos(titulos);
-      })
-      .catch(console.error);
+    
+  const cargarDocentes = async (id) => {
+    try {
+      // Obtener docentes
+      const data = await obtenerDocentesTodo(id);
+      if (data.salida) {
+        setDocentes(data.docentes);
+      }else{
+        setDocentes([]);
+      }
+  
+      // Obtener títulos
+      const titulos = await obtenerTitulos();
+      setTitulos(titulos || []);
+    } catch (error) {
+      console.error("Error al cargar docentes o títulos:", error);
+    }
+  };
+  
+  useEffect(() => {
+    cargarDocentes(0);
   }, []);
-
   const handleClose = () => {
     setShow(false);
     setIsUpdating(false);
@@ -147,7 +156,7 @@ const GestionDocentes = () => {
       console.log()
     }
   };
-
+  const [filtroSeleccionado, setFiltroSeleccionado] = useState(0);
   return (
     <div className="gestion-docentes-container">
       <div className="header">
@@ -156,7 +165,28 @@ const GestionDocentes = () => {
           Agregar Docente
         </Button>
       </div>
-
+      <Typography variant="h4" align="center" gutterBottom>
+        Filtrar Docentes
+      </Typography>
+      <FormControl fullWidth margin="dense" className="select-field">
+  <InputLabel>Filtrar</InputLabel>
+  <Select
+    value={filtroSeleccionado} // Estado que controla la selección actual
+    onChange={(e) => {
+      const filtroId = e.target.value;
+      setFiltroSeleccionado(filtroId); // Actualiza el filtro seleccionado
+      cargarDocentes(filtroId); // Llama a cargarDatos con el filtro correspondiente
+    }}
+  >
+    {/* Opción por defecto */}
+    <MenuItem value={0}>Obtener Todo</MenuItem>
+    {titulos.map((titulo) => (
+      <MenuItem key={titulo.id} value={titulo.id}>
+        {titulo.nombre}
+      </MenuItem>
+    ))}
+  </Select>
+</FormControl>
       <Row>
         {docentes.map((docente) => (
           <Col md={4} key={docente.id}>

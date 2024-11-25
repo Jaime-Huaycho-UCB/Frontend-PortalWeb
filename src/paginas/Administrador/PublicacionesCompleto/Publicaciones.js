@@ -1,13 +1,15 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { obtenerPublicaciones, agregarPublicacion, manejarCambioFoto, eliminarPublicacion, actualizarPublicacion } from '../../../librerias/PeticionesApi';
 import { AuthContext } from '../../../contextos/ContextoAutenticacion';
-import { Container, Row, Col, Form, Button, Card } from 'react-bootstrap';
 
+import { Container, Row, Col, Card,Form,FormControl, Button, InputGroup} from 'react-bootstrap';
+import './Publicacion.css'
 const Publicaciones = () => {
   const { idUsuario, token } = useContext(AuthContext);
   const [publicaciones, setPublicaciones] = useState([]);
   const [nuevaPublicacion, setNuevaPublicacion] = useState({
     nombre: '',
+    numero:'',
     foto: '',
     contenido: '',
     redactor: '',
@@ -15,11 +17,11 @@ const Publicaciones = () => {
   const [fotoBase64, setFotoBase64] = useState('');
   const [contenidoExpandido, setContenidoExpandido] = useState({}); // Controla qué publicaciones están expandidas
   const [publicacionAEditar, setPublicacionAEditar] = useState(null); // Controla si se está editando
-
+  const [busqueda, setBusqueda] = useState('');
   // Obtener publicaciones desde el backend
-  const fetchPublicaciones = async () => {
+  const fetchPublicaciones = async (Numero) => {
     try {
-      const data = await obtenerPublicaciones(idUsuario, token);
+      const data = await obtenerPublicaciones(Numero);
       setPublicaciones(data.publicaciones || []);
     } catch (error) {
       console.error('Error al cargar publicaciones:', error);
@@ -28,7 +30,7 @@ const Publicaciones = () => {
 
   // Cargar publicaciones al montar el componente
   useEffect(() => {
-    fetchPublicaciones();
+    fetchPublicaciones(0);
   }, []);
 
   // Manejo de cambios en el formulario
@@ -39,30 +41,45 @@ const Publicaciones = () => {
   // Manejo del envío de una nueva publicación o actualización
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
-      const publicacionData = { ...nuevaPublicacion, foto: fotoBase64 };
+        const publicacionData = { ...nuevaPublicacion, foto: fotoBase64 };
+        console.log(publicacionData);
+        let response;
 
-      if (publicacionAEditar) {
-        await actualizarPublicacion(publicacionAEditar.id, publicacionData, idUsuario, token);
-      } else {
-        // Agregar nueva publicación
-        await agregarPublicacion(publicacionData, idUsuario, token);
-      }
+        if (publicacionAEditar) {
+          
+            response = await actualizarPublicacion(publicacionAEditar.id, publicacionData, idUsuario, token);
+            
+        } else {
+            response = await agregarPublicacion(publicacionData, idUsuario, token);
+        }
 
-      setNuevaPublicacion({ nombre: '', contenido: '', redactor: '', foto: '' });
-      setFotoBase64('');
-      setPublicacionAEditar(null); // Reiniciar el estado de edición
-      fetchPublicaciones();
+        console.log('Respuesta del backend:', response); // Agrega este log para depurar
+
+        if (response && response.salida) {
+            console.log('Operación exitosa:', response.mensaje || 'Operación realizada correctamente');
+            setNuevaPublicacion({ nombre: '', numero: '', contenido: '', redactor: '', foto: '' });
+            setFotoBase64('');
+            setPublicacionAEditar(null); // Reiniciar el estado de edición
+            fetchPublicaciones(0); // Actualiza la lista de publicaciones
+        } else {
+            console.error('Error en la operación:', response?.mensaje || 'Ocurrió un error inesperado');
+        }
     } catch (error) {
-      console.error('Error al guardar publicación:', error);
+        console.error('Error al guardar publicación:', error);
     }
-  };
+};
+
+
+  
 
   // Manejo de eliminación de publicaciones
   const handleEliminar = async (id) => {
     try {
       await eliminarPublicacion(id, idUsuario, token);
       setPublicaciones((prev) => prev.filter((pub) => pub.id !== id));
+      fetchPublicaciones(0);
     } catch (error) {
       console.error('Error al eliminar publicación:', error);
     }
@@ -86,9 +103,20 @@ const Publicaciones = () => {
       [id]: !prev[id],
     }));
   };
+  
+  const handleSearch = () => {
+    const numeroBusqueda = parseInt(busqueda, 10); // Convierte la búsqueda en número
+    if (!isNaN(numeroBusqueda)) {
+      fetchPublicaciones(numeroBusqueda); // Llama a fetchPublicaciones con el número ingresado
+    } else {
+      console.error('Por favor ingresa un número válido');
+    }
+  };
+  
+
 
   return (
-    <Container>
+    <Container className='hijita1'>
       {/* Sección para crear o actualizar publicación */}
       <Row className="mt-4">
         <Col md={{ span: 8, offset: 2 }}>
@@ -114,6 +142,17 @@ const Publicaciones = () => {
                   required
                 />
               </Form.Group>
+              <Form.Group controlId="formNumero">
+              <Form.Control
+                type="number" // Establece el tipo como número
+                placeholder="Número de chasquiposta"
+                value={nuevaPublicacion.numero}
+                onChange={(e) => handleChange('numero', parseInt(e.target.value, 10) || '')} // Asegura que sea un número o vacío
+                className="mb-3"
+                required
+              />
+            </Form.Group>
+
               <Form.Group controlId="formContenido">
                 <Form.Control
                   as="textarea"
@@ -139,6 +178,18 @@ const Publicaciones = () => {
           </Card>
         </Col>
       </Row>
+      <Form className="d-flex mb-4" style={{ maxWidth: '500px', margin: '0 auto' }}>
+        <FormControl
+          type="search"
+          placeholder="Buscar por número..."
+          className="me-2"
+          value={busqueda}
+          onChange={(e) => setBusqueda(e.target.value)} // Actualiza el estado de búsqueda
+        />
+        <Button variant="primary" onClick={handleSearch}>
+          Buscar
+        </Button>
+      </Form>
 
       {/* Muro de publicaciones */}
       <Row className="mt-5">
@@ -149,6 +200,8 @@ const Publicaciones = () => {
                 <Card.Header className="d-flex justify-content-between align-items-center">
                   <div>
                     <strong>{publicacion.nombre}</strong>
+                    <br />
+                    <strong>{publicacion.numero}</strong>
                     <br />
                     <small>{publicacion.redactor}</small>
                   </div>

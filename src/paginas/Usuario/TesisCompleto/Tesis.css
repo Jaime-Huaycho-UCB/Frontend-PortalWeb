@@ -1,0 +1,212 @@
+/* Contenedor Principal */
+.tesis-container7 {
+    padding: 7rem !important;
+    background: var(--background-color-card) !important;
+    min-height: 100vh !important;
+    font-family: 'Arial', sans-serif !important;
+    animation: fadeIn 1s ease-in-out !important;
+}
+
+/* Título */
+.tesis-title7 {
+    text-align: center !important;
+    font-size: 2.5rem !important;
+    font-weight: bold !important;
+    color: var(--text-color-quinto) !important;
+    margin-bottom: 2rem !important;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2) !important;
+    animation: slideDown 1s ease-in-out !important;
+}
+
+/* Lista de Tesis */
+.tesis-list7 {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 60px !important;
+    animation: fadeInUp 0.8s ease-out !important;
+}
+
+/* Tarjeta de Tesis */
+.tesis-card7 {
+    background: var(--background-color-card) !important;
+    border-radius: 15px !important;
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.1) !important;
+    padding: 20px !important;
+    animation: popIn 0.6s ease-out !important;
+    transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+    margin-top: 3% !important;
+}
+
+.tesis-card7:hover {
+    transform: translateY(-10px) scale(1.03) !important;
+    box-shadow: 0px 12px 24px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Contenido de la Tarjeta */
+.tesis-card-content7 {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 15px !important;
+}
+
+/* Estilo del Título de Tesis */
+.tesis-title-text7 {
+    font-size: 1.8rem !important;
+    color: var(--text-color-septimo) !important;
+    font-weight: bold !important;
+    transition: color 0.3s ease !important;
+}
+
+.tesis-title-text7:hover {
+    color: #004085 !important;
+}
+
+/* Fecha */
+.tesis-date7 {
+    font-size: 1rem !important;
+    color: var(--text-color-cuarto) !important;
+    font-style: italic !important;
+}
+
+/* Resumen */
+.tesis-summary7 {
+    font-size: 1.1rem !important;
+    color: var(--text-color-secondary) !important;
+    line-height: 1.8 !important;
+    text-align: justify !important;
+}
+
+/* Información del Estudiante */
+.tesis-student-info7 {
+    background-color: #f1f8e9 !important;
+    padding: 15px !important;
+    border-radius: 10px !important;
+    margin-top: 15px !important;
+    box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+.tesis-student-title7 {
+    color: #388e3c !important;
+    font-weight: bold !important;
+    margin-bottom: 8px !important;
+    text-decoration: underline !important;
+}
+
+.tesis-student-photo7 {
+    width: 90px !important;
+    height: 90px !important;
+    border-radius: 50% !important;
+    margin-top: 10px !important;
+    border: 3px solid #ffd700 !important;
+    transition: transform 0.3s ease !important;
+}
+
+.tesis-student-photo7:hover {
+    transform: scale(1.1) !important;
+}
+
+/* Botón Ver PDF */
+.tesis-view-button7 {
+    background-color: #002855 !important;
+    color: white !important;
+    padding: 12px 18px !important;
+    border: none !important;
+    border-radius: 8px !important;
+    cursor: pointer !important;
+    font-size: 1rem !important;
+    transition: background-color 0.3s ease, transform 0.3s ease !important;
+}
+
+.tesis-view-button7:hover {
+    background-color: #004085 !important;
+    transform: scale(1.05) !important;
+}
+
+/* Skeleton */
+.skeleton-card7 {
+    height: 180px !important;
+    background: linear-gradient(90deg, #e0e0e0 25%, #f5f5f5 50%, #e0e0e0 75%) ;
+    background-size: 200% 100% !important;
+    border-radius: 15px !important;
+    animation: skeleton-loading 1.5s infinite ;
+}
+
+/* Animaciones */
+@keyframes skeleton-loading {
+    from {
+        background-position: 200% 0;
+    }
+    to {
+        background-position: -200% 0;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes popIn {
+    from {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+    .tesis-container7 {
+        padding: 2rem !important;
+    }
+
+    .tesis-title7 {
+        font-size: 1.8rem !important;
+    }
+
+    .tesis-list7 {
+        gap: 15px !important;
+    }
+
+    .tesis-card7 {
+        padding: 15px !important;
+    }
+
+    .tesis-title-text7 {
+        font-size: 1.5rem !important;
+    }
+
+    .tesis-student-photo7 {
+        width: 70px !important;
+        height: 70px !important;
+    }
+}

@@ -21,9 +21,10 @@ export const obtenerDocentes = async (idUsuario, token) => {
   }
 };
 
-export const obtenerDocentesTodo = async () => {
+export const obtenerDocentesTodo = async (idTitulo) => {
   try {
-    const response = await instance.get('/docente/obtener/todo/0');
+    const response = await instance.get(`/docente/obtener/todo/${idTitulo}`);
+
     return response.data;
   } catch (error) {
     console.error("Error al obtener docentes:", error);
@@ -121,9 +122,10 @@ export const agregarEvento = async (eventoData, idUsuario, token) => {
   }
 };
 
-export const obtenerEventos = async () => {
+export const obtenerEventos = async (idEvento) => {
   try {
-    const response = await instance.get('/evento/obtener');
+    const response = await instance.get(`/evento/obtener/${idEvento}`);
+
     return response.data;
   } catch (error) {
     console.error("Error al obtener eventos:", error);
@@ -190,9 +192,10 @@ export const eliminarNoticia = async (idNoticia, idUsuario, token) => {
   }
 };
 // Obtener estudiantes
-export const obtenerEstudiantes = async () => {
+export const obtenerEstudiantes = async (idSemestre) => {
   try {
-    const response = await instance.get('/estudiante/obtener');
+    const response = await instance.get(`/estudiante/obtener/${idSemestre}`);
+
     return response.data;
   } catch (error) {
     console.error("Error al obtener estudiantes:", error);
@@ -412,9 +415,10 @@ export const agregarPublicacion = async (publicacionData, idUsuario, token) => {
   }
 };
 
-export const obtenerPublicaciones = async () => {
+export const obtenerPublicaciones = async (Numero) => {
   try {
-    const response = await instance.get('/publicacion/obtener');
+    const response = await instance.get(`/publicacion/obtener/${Numero}`);
+
     return response.data;
   } catch (error) {
     console.error('Error al obtener publicaciones:', error.response?.data || error.message);
@@ -435,10 +439,11 @@ export const actualizarPublicacion = async (publicacionData, idUsuario, token) =
   }
 };
 
-export const eliminarPublicacion = async (id, idUsuario, token) => {
+export const eliminarPublicacion = async (idPublicacion, idUsuario, token) => {
   try {
     const response = await instance.put('/publicacion/eliminar', {
-      id,
+      idPublicacion
+      ,
       idUsuario,
       token,
     });
@@ -446,5 +451,15 @@ export const eliminarPublicacion = async (id, idUsuario, token) => {
   } catch (error) {
     console.error('Error al eliminar publicación:', error.response?.data || error.message);
     throw new Error(error.response?.data?.message || 'No se pudo eliminar la publicación.');
+  }
+};
+
+export const obtenerFiltros = async () => {
+  try {
+    const response = await instance.get("/estudiante/semestre/obtener");
+    return response.data; // Retorna los datos obtenidos de la API
+  } catch (error) {
+    console.error("Error al obtener filtros:", error);
+    throw error; // Propaga el error si necesitas manejarlo en otro lugar
   }
 };

@@ -22,8 +22,12 @@ import './estilos/layouts/global.css'
 import EnviarSolicitud from './componentes/EnviarSolicitudCompleto/EnviarSolicitud';
 import Mensajes from './componentes/MensajesCompleto/Mensajes';
 import Publicaciones from './paginas/Administrador/PublicacionesCompleto/Publicaciones';
+import IconosFlotantes from './componentes/IconosFlotantesCompleto/IconosFlotantes';
+import Chasqui from './paginas/Usuario/ChaquiPostasCompleto/Chasqui';
+import Tesis from './paginas/Usuario/TesisCompleto/tesis';
 const RutaProtegida = ({ children, rolesPermitidos }) => {
   const { permiso } = useContext(AuthContext);
+ 
 
   if (permiso === null) return <Navigate to="/iniciar-sesion" replace />;
   if (!rolesPermitidos.includes(permiso)) return <Navigate to="/" replace />; 
@@ -31,6 +35,24 @@ const RutaProtegida = ({ children, rolesPermitidos }) => {
 };
 
 function App() {
+  const [mostrarIconos, setMostrarIconos] = useState(true);
+  
+  useEffect(() => {
+    const observarScroll = () => {
+      const welcomeSection = document.getElementById("welcome-section1");
+      if (welcomeSection) {
+        const rect = welcomeSection.getBoundingClientRect();
+        setMostrarIconos(rect.bottom <= 0); 
+      }
+    };
+
+    window.addEventListener("scroll", observarScroll);
+
+    return () => {
+      window.removeEventListener("scroll", observarScroll);
+    };
+  }, []);
+
 
   return (
     <AuthProvider>
@@ -50,7 +72,8 @@ function App() {
                     <Route path="/egresados" element={<ListaEgresados />} />
                     <Route path="/eventos" element={<ListaEventos />} />
                     <Route path="/noticias" element={<ListaNoticias />} />
-                    <Route path='/solicitud' element={<EnviarSolicitud />}/>
+                    <Route path="/chasqui" element={<Chasqui />} />
+                    <Route path='/Tesis'  element={<Tesis />} />
                     <Route path="/" element={<Inicio />} />
                     
 
@@ -102,7 +125,10 @@ function App() {
                     } />
                   </Routes>
                 </div>
+                {mostrarIconos && <EnviarSolicitud />}
+                {mostrarIconos && <IconosFlotantes />}
                 <PieDePagina />
+                
               </div>
             }
           />

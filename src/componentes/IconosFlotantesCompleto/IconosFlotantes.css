@@ -1,0 +1,108 @@
+/* Contenedor de íconos flotantes */
+.iconos-flotantes6 {
+    position: fixed !important;
+    top: 50% !important;
+    right: 94% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 20px !important;
+    transform: translateY(-50%) !important;
+    z-index: 1000 !important;
+    animation: slideIn 0.8s cubic-bezier(0.25, 1, 0.5, 1) !important; /* Entrada suave */
+}
+
+/* Efecto de aparición desde la derecha */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        right: -100px;
+    }
+    to {
+        opacity: 1;
+        right: 20px;
+    }
+}
+
+/* Estilo para cada ícono */
+.icono6 {
+    position: relative !important;
+    width: 65px !important; /* Tamaño más grande */
+    height: 65px !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    background-color: rgba(27, 41, 81, 0.8) !important; /* Azul marino */
+    border-radius: 50% !important;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4) !important; /* Sombra más marcada */
+    color: #ffff !important;
+    font-size: 2rem !important;
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), background-color 0.4s ease, box-shadow 0.4s ease !important;
+    cursor: pointer !important;
+    animation: float 2s infinite ease-in-out !important; /* Animación flotante */
+}
+
+/* Animación flotante individual para cada ícono */
+.icono6:nth-child(1) {
+    animation-delay: 0s !important;
+}
+
+.icono6:nth-child(2) {
+    animation-delay: 0.3s !important;
+}
+
+.icono6:nth-child(3) {
+    animation-delay: 0.6s !important;
+}
+
+/* Animación de movimiento hacia arriba y abajo */
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+/* Hover con efectos de escala y color */
+.icono6:hover {
+    transform: scale(1.2) !important;
+    background-color: #f39c12 !important; /* Naranja vibrante */
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.6) !important; /* Sombra más grande */
+}
+
+/* Efecto de pulsación */
+.icono6::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 3px solid rgba(243, 156, 18, 0.4) !important; /* Naranja translúcido */
+    border-radius: 50%;
+    animation: pulse 2s infinite ease-out !important;
+    z-index: -1;
+}
+
+/* Animación de pulsación */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 0.6;
+    }
+    100% {
+        transform: scale(1.5);
+        opacity: 0;
+    }
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+    .icono6 {
+        width: 50px !important;
+        height: 50px !important;
+        font-size: 1.5rem !important;
+    }
+    .iconos-flotantes6 {
+        gap: 10px !important;
+    }
+}
