@@ -1,139 +1,150 @@
-.gestion-estudiantes-container {
-    inline-size: 100% !important;
-    padding: 20px !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-  }
-  
-  .gestion-estudiantes-container .titulo-gestion {
-    font-size: 24px !important;
-    font-weight: bold !important;
-    color: #333 !important;
-    margin-block-end: 20px !important; 
-    text-align: center !important;
-  }
-  
-  .gestion-estudiantes-container .add-estudiante-btn,
-  .gestion-estudiantes-container .add-tesis-btn {
-    background-color: #3f51b5 !important;
-    color: white !important;
-    margin: 10px !important;
-    border-radius: 20px !important;
-    padding: 10px 20px !important;
-    transition: transform 0.3s ease !important;
-  }
-  
-  .gestion-estudiantes-container .add-estudiante-btn:hover,
-  .gestion-estudiantes-container .add-tesis-btn:hover {
-    transform: scale(1.05) !important;
-  }
-  
-  .gestion-estudiantes-container .grid-estudiantes {
-    inline-size: 100% !important;
-    max-inline-size: 1200px !important;
-    display: flex !important ;
-    flex-wrap: wrap !important;
-    justify-content: center !important;
-  }
-  
-  .gestion-estudiantes-container .card {
-    border-radius: 20px !important;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
-    transition: all 0.3s ease !important;
-    overflow: hidden !important;
-    height: 420px !important;
-    position: relative !important;
-    opacity: 1 !important;
-  }
-  
-  .gestion-estudiantes-container .card-content {
-    padding: 20px !important;
-    text-align: center !important;
-  }
-  
-  .gestion-estudiantes-container .button-container {
-    display: flex !important;
-    justify-content: space-around !important;
-    margin-block-start: 10px !important;
-  }
-  
-  .gestion-estudiantes-container .dialog .MuiDialog-paper {
-    padding: 20px !important;
-    border-radius: 15px !important;
-    max-inline-size: 500px !important;
-    inline-size: 100% !important;
-    background-color: rgba(255, 255, 255, 0.9) !important;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3) !important;
-    margin: auto !important;
-  }
-  
-  .gestion-estudiantes-container .dialog-title {
-    font-size: 24px !important;
-    font-weight: bold !important;
-    color: #333333 !important;
-    text-align: center !important;
-    margin-block-end: 10px !important;
-  }
-  
-  .gestion-estudiantes-container .button-cancelar,
-  .gestion-estudiantes-container .button-guardar {
-    border-radius: 20px !important;
-    padding: 8px 16px !important;
-    font-weight: bold !important;
-  }
-  
-  .gestion-estudiantes-container .button-cancelar {
-    background-color: #f44336 !important;
-    color: white !important;
-  }
-  
-  .gestion-estudiantes-container .button-cancelar:hover {
-    background-color: #d32f2f !important;
-  }
-  
-  .gestion-estudiantes-container .button-guardar {
-    background-color: #4CAF50 !important;
-    color: white !important;
-  }
-  
-  .gestion-estudiantes-container .button-guardar:hover {
-    background-color: #388E3C !important;
-  }
-  
-  .gestion-estudiantes-container .text-field,
-  .gestion-estudiantes-container .select-field,
-  .gestion-estudiantes-container .switch-update-foto {
-    margin-block-end: 15px !important;
-  }
-  
-  .gestion-estudiantes-container .card-media img {
-    inline-size: 100% !important;
-    block-size: 100% !important;
-    object-fit: cover !important;
-    border-radius: 8px !important;
-  }
-  
-  .gestion-estudiantes-container .card:hover {
-    transform: translateY(-9px) !important;
-    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3) !important;
-    height: 500px !important;
-  }
-  
-  .gestion-estudiantes-container .agregar-tesis-btn {
-    position: absolute !important;
-    inset-block-end: -40px !important;
-    inset-inline-start: 50% !important;
-    transform: translateX(-50%) !important;
-    opacity: 0 !important;
-    transition: bottom 0.4s ease, opacity 0.4s ease !important;
-    bottom: 20px !important;
-    left: 50% !important;
-  }
-  
-  .gestion-estudiantes-container .card:hover .agregar-tesis-btn {
-    inset-block-end: 20px !important;
-    opacity: 1 !important;
-    left: 50% !important;
-  }
-  
+/* Contenedor principal */
+.gestion-estudiantes-container1 {
+  inline-size: 100% !important;
+  padding: 20px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  background-color: var(--background-color) !important;
+  color: var(--text-color-septimor) !important;
+  transition: background-color 0.3s ease, color 0.3s ease !important;
+  margin-top: 9%;
+}
+
+/* Título */
+.gestion-estudiantes-container1 .titulo-gestion1 {
+  font-size: 24px !important;
+  font-weight: bold !important;
+  color: var(--text-color-secondary) !important;
+  margin-block-end: 20px !important;
+  text-align: center !important;
+}
+
+/* Botones principales */
+.gestion-estudiantes-container1 .add-estudiante-btn1,
+.gestion-estudiantes-container1 .add-tesis-btn1 {
+  background-color: var(--text-color-quinto) !important;
+  color: var(--text-color-septimo) !important;
+  margin: 10px !important;
+  border-radius: 20px !important;
+  padding: 10px 20px !important;
+  transition: transform 0.3s ease, background-color 0.3s ease !important;
+}
+
+.gestion-estudiantes-container1 .add-estudiante-btn1:hover,
+.gestion-estudiantes-container1 .add-tesis-btn1:hover {
+  transform: scale(1.05) !important;
+  background-color: var(--secondary-color) !important;
+}
+
+/* Grid */
+.gestion-estudiantes-container1 .grid-estudiantes1 {
+  inline-size: 100% !important;
+  max-inline-size: 1200px !important;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  justify-content: center !important;
+}
+
+/* Tarjetas */
+.gestion-estudiantes-container1 .card1 {
+  background: var(--background-color-card) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
+  transition: all 0.3s ease !important;
+  overflow: hidden !important;
+  height: 420px !important;
+  position: relative !important;
+}
+
+.gestion-estudiantes-container1 .card1:hover {
+  transform: translateY(-9px) !important;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3) !important;
+  height: 500px !important;
+}
+
+/* Contenido de la tarjeta */
+.gestion-estudiantes-container1 .card-content1 {
+  padding: 20px !important;
+  text-align: center !important;
+  color: var(--text-color-septimo) !important;
+}
+
+/* Botones dentro de las tarjetas */
+.gestion-estudiantes-container1 .button-container1 {
+  display: flex !important;
+  justify-content: space-around !important;
+  margin-block-start: 10px !important;
+}
+
+.gestion-estudiantes-container1 .button-cancelar1 {
+  background-color: var(--secondary-color) !important;
+  color: var(--text-color-septimo) !important;
+}
+
+.gestion-estudiantes-container1 .button-cancelar1:hover {
+  background-color: var(--backgraund-color-tercero) !important;
+}
+
+.gestion-estudiantes-container1 .button-guardar1 {
+  background-color: var(--accent-color) !important;
+  color: var(--text-color-septimo) !important;
+}
+
+.gestion-estudiantes-container1 .button-guardar1:hover {
+  background-color: var(--primary-color) !important;
+}
+
+/* Campos de texto */
+.gestion-estudiantes-container1 .text-field1,
+.gestion-estudiantes-container1 .select-field1,
+.gestion-estudiantes-container1 .switch-update-foto1 {
+  margin-block-end: 15px !important;
+}
+
+/* Imagen en las tarjetas */
+.gestion-estudiantes-container1 .card-media1 img {
+  inline-size: 100% !important;
+  block-size: 100% !important;
+  object-fit: cover !important;
+  border-radius: 8px !important;
+}
+
+/* Botón flotante para agregar tesis */
+.gestion-estudiantes-container1 .agregar-tesis-btn1 {
+  position: absolute !important;
+  inset-block-end: -40px !important;
+  inset-inline-start: 50% !important;
+  transform: translateX(-50%) !important;
+  opacity: 0 !important;
+  transition: bottom 0.4s ease, opacity 0.4s ease !important;
+  bottom: 20px !important;
+  left: 50% !important;
+  background-color: var(--secondary-color) !important;
+  color:#fff !important;
+}
+
+.gestion-estudiantes-container1 .card1:hover .agregar-tesis-btn1 {
+  inset-block-end: 20px !important;
+  opacity: 1 !important;
+  left: 50% ;
+}
+
+/* Diálogo */
+.gestion-estudiantes-container1 .dialog1 .MuiDialog-paper1 {
+  padding: 20px !important;
+  border-radius: 15px !important;
+  max-inline-size: 500px !important;
+  inline-size: 100% !important;
+  background-color: var(--background-color) !important;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3) !important;
+  margin: auto !important;
+}
+
+.gestion-estudiantes-container1 .dialog-title1 {
+  font-size: 24px !important;
+  font-weight: bold !important;
+  color: var(--text-color-secondary) !important;
+  text-align: center !important;
+  margin-block-end: 10px !important;
+}

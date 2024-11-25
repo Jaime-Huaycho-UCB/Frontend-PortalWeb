@@ -18,7 +18,7 @@
   background-color: var(--background-color) !important; /* Fondo elegante */
   overflow: hidden !important; /* Oculta cualquier contenido desbordado */
   z-index: 1 !important; /* Asegura que esté en la capa correcta */
-  right: 16.89%;
+  right: 31%;
 }
 
 /* Contenido principal */

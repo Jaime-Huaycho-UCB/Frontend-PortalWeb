@@ -5,7 +5,7 @@ import { manejarCambioFoto, agregarDocente, actualizarDocente, eliminarDocente, 
 import './GestionDocentes.css';
 import { AuthContext } from '../../../contextos/ContextoAutenticacion';
 import { useNavigate } from 'react-router-dom';
-
+import { FilterList } from '@mui/icons-material'; 
 const GestionDocentes = () => {
   const { idUsuario, token } = useContext(AuthContext);
   const [docentes, setDocentes] = useState([]);
@@ -83,7 +83,7 @@ const GestionDocentes = () => {
           console.error(response.mensaje)
         }
       }
-      obtenerDocentesTodo().then((data) => setDocentes(data.docentes));
+     cargarDocentes(0);
       handleClose();
     } catch (error) {
       console.error(error);
@@ -168,25 +168,30 @@ const GestionDocentes = () => {
       <Typography variant="h4" align="center" gutterBottom>
         Filtrar Docentes
       </Typography>
-      <FormControl fullWidth margin="dense" className="select-field">
-  <InputLabel>Filtrar</InputLabel>
-  <Select
-    value={filtroSeleccionado} // Estado que controla la selección actual
-    onChange={(e) => {
-      const filtroId = e.target.value;
-      setFiltroSeleccionado(filtroId); // Actualiza el filtro seleccionado
-      cargarDocentes(filtroId); // Llama a cargarDatos con el filtro correspondiente
-    }}
-  >
-    {/* Opción por defecto */}
-    <MenuItem value={0}>Obtener Todo</MenuItem>
-    {titulos.map((titulo) => (
-      <MenuItem key={titulo.id} value={titulo.id}>
-        {titulo.nombre}
-      </MenuItem>
-    ))}
-  </Select>
-</FormControl>
+      <div className="filtro-docentes-container">
+      <FormControl fullWidth className="filtro-form-control">
+        <div className="filtro-header">
+          <FilterList className="filtro-icon" />
+          <InputLabel className="filtro-label">Filtrar</InputLabel>
+        </div>
+        <Select
+          value={filtroSeleccionado}
+          onChange={(e) => {
+            const filtroId = e.target.value;
+            setFiltroSeleccionado(filtroId);
+            cargarDocentes(filtroId);
+          }}
+          className="filtro-select"
+        >
+          <MenuItem value={0} className="filtro-menu-item">Obtener Todo</MenuItem>
+          {titulos.map((titulo) => (
+            <MenuItem key={titulo.id} value={titulo.id} className="filtro-menu-item">
+              {titulo.nombre}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+    </div>
       <Row>
         {docentes.map((docente) => (
           <Col md={4} key={docente.id}>

@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { obtenerMensajes, eliminarMensaje } from '../../librerias/PeticionesApi.js'; // Ajusta la ruta
+import { obtenerMensajes, eliminarMensaje } from '../../librerias/PeticionesApi.js';
 import { Container, Row, Col, ListGroup, Button, Modal } from 'react-bootstrap';
 import { AuthContext } from '../../contextos/ContextoAutenticacion.js';
+import './mesaje.css';
 
 const Mensajes = () => {
   const { idUsuario, token } = useContext(AuthContext);
@@ -9,7 +10,6 @@ const Mensajes = () => {
   const [mensajeSeleccionado, setMensajeSeleccionado] = useState(null);
   const [mostrarModal, setMostrarModal] = useState(false);
 
-  // Función para cargar mensajes desde el backend
   const fetchMensajes = async () => {
     try {
       const data = await obtenerMensajes(idUsuario, token);
@@ -19,12 +19,10 @@ const Mensajes = () => {
     }
   };
 
-  // Cargar mensajes al montar el componente
   useEffect(() => {
     fetchMensajes();
   }, []);
 
-  // Función para eliminar un mensaje
   const handleEliminarMensaje = async (idSolicitud) => {
     try {
       await eliminarMensaje(idSolicitud, idUsuario, token);
@@ -36,36 +34,37 @@ const Mensajes = () => {
     }
   };
 
-  // Función para mostrar el contenido de un mensaje
   const handleVerMensaje = (mensaje) => {
     setMensajeSeleccionado(mensaje);
     setMostrarModal(true);
   };
 
-  // Función para cerrar el modal
   const handleCerrarModal = () => {
     setMensajeSeleccionado(null);
     setMostrarModal(false);
   };
 
   return (
-    <Container>
+    <Container className='mensajes-contenedor11'>
       <Row>
         <Col>
-          <h3 className="mt-4">Mensajes</h3>
-          <ListGroup>
+          <h3 className="mensajes-titulo11">Mensajes</h3>
+          <ListGroup className="mensajes-lista11">
             {mensajes.length > 0 ? (
               mensajes.map((mensaje) => (
-                <ListGroup.Item key={mensaje.id} className="d-flex justify-content-between align-items-center">
+                <ListGroup.Item
+                  key={mensaje.id}
+                  className="mensaje-item11 d-flex justify-content-between align-items-center"
+                >
                   <div>
-                    <strong>{mensaje.nombres}</strong> - {mensaje.correo}
+                    <strong className="mensaje-nombre11">{mensaje.nombres}</strong> - {mensaje.correo}
                   </div>
                   <div>
                     <Button
                       variant="info"
                       size="sm"
                       onClick={() => handleVerMensaje(mensaje)}
-                      className="me-2"
+                      className="btn-ver11"
                     >
                       Ver
                     </Button>
@@ -73,6 +72,7 @@ const Mensajes = () => {
                       variant="danger"
                       size="sm"
                       onClick={() => handleEliminarMensaje(mensaje.id)}
+                      className="btn-eliminar11"
                     >
                       Eliminar
                     </Button>
@@ -80,16 +80,15 @@ const Mensajes = () => {
                 </ListGroup.Item>
               ))
             ) : (
-              <p>No hay mensajes disponibles.</p>
+              <p className="sin-mensajes11">No hay mensajes disponibles.</p>
             )}
           </ListGroup>
         </Col>
       </Row>
 
-      {/* Modal para mostrar el contenido del mensaje */}
-      <Modal show={mostrarModal} onHide={handleCerrarModal}>
-        <Modal.Header closeButton>
-          <Modal.Title>Detalles del Mensaje</Modal.Title>
+      <Modal show={mostrarModal} onHide={handleCerrarModal} className="mensaje-modal11">
+        <Modal.Header closeButton className="modal-header">
+          <Modal.Title className="modal-titulo11">Detalles del Mensaje</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {mensajeSeleccionado && (
@@ -103,7 +102,7 @@ const Mensajes = () => {
           )}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleCerrarModal}>
+          <Button variant="secondary" onClick={handleCerrarModal} className="btn-cerrar11">
             Cerrar
           </Button>
         </Modal.Footer>

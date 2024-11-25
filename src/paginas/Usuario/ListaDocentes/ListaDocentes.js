@@ -74,6 +74,7 @@ const ListaDocentes = () => {
         Profesionales dedicados a formar líderes con excelencia académica.
       </p>
     </header>
+    
 
     {/* Grid de Docentes */}
     <section className="docentes-grid">
@@ -109,6 +110,7 @@ const ListaDocentes = () => {
                 >
                   Ver más
                 </button>
+                
               </div>
             </article>
           ))}

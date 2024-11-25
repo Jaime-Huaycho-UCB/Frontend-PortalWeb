@@ -2,7 +2,7 @@
 .iconos-flotantes6 {
     position: fixed !important;
     top: 50% !important;
-    right: 94% !important;
+    right: 5% !important; /* Más cerca del borde derecho */
     display: flex !important;
     flex-direction: column !important;
     gap: 20px !important;
@@ -19,21 +19,21 @@
     }
     to {
         opacity: 1;
-        right: 20px;
+        right: 5%; /* Más cerca del borde */
     }
 }
 
 /* Estilo para cada ícono */
 .icono6 {
     position: relative !important;
-    width: 65px !important; /* Tamaño más grande */
+    width: 65px !important; /* Tamaño predeterminado */
     height: 65px !important;
     display: flex !important;
     justify-content: center !important;
     align-items: center !important;
     background-color: rgba(27, 41, 81, 0.8) !important; /* Azul marino */
     border-radius: 50% !important;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4) !important; /* Sombra más marcada */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4) !important; /* Sombra */
     color: #ffff !important;
     font-size: 2rem !important;
     transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), background-color 0.4s ease, box-shadow 0.4s ease !important;
@@ -95,14 +95,41 @@
     }
 }
 
-/* Responsivo */
+/* Responsivo para pantallas medianas */
+@media (max-width: 1024px) {
+    .iconos-flotantes6 {
+        right: 4% !important;
+        gap: 15px !important;
+    }
+    .icono6 {
+        width: 55px !important;
+        height: 55px !important;
+        font-size: 1.8rem !important;
+    }
+}
+
+/* Responsivo para pantallas pequeñas */
 @media (max-width: 768px) {
+    .iconos-flotantes6 {
+        right: 3% !important;
+        gap: 12px !important;
+    }
     .icono6 {
         width: 50px !important;
         height: 50px !important;
-        font-size: 1.5rem !important;
+        font-size: 1.6rem !important;
     }
+}
+
+/* Responsivo para pantallas muy pequeñas */
+@media (max-width: 480px) {
     .iconos-flotantes6 {
+        right: 2% !important;
         gap: 10px !important;
+    }
+    .icono6 {
+        width: 40px !important;
+        height: 40px !important;
+        font-size: 1.4rem !important;
     }
 }

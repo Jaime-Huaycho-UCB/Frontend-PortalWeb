@@ -1,85 +1,186 @@
 .gestion-docentes-container {
-    padding: 20px !important;
-    background-color: #f8f9fa !important;
-    opacity: 1 !important;
-  }
-  
-  .header {
-    display: flex !important;
-    justify-content: space-between !important;
-    align-items: center !important;
-    margin-bottom: 20px !important;
-  }
-  
-  h2 {
-    color: #343a40 !important;
-    font-size: 28px !important;
-    font-weight: bold !important;
-    text-transform: uppercase !important;
-  }
-  
-  .add-docente-btn {
-    transition: all 0.3s ease !important;
-    background-color: #007bff !important;
-    border: none !important;
-  }
-  
-  .add-docente-btn:hover {
-    background-color: #0056b3 !important;
-    transform: scale(1.05) !important;
-  }
-  
-  .docente-card {
-    background-color: white !important;
-    border-radius: 8px !important;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15) !important;
-    transition: transform 0.3s ease, box-shadow 0.3s ease !important;
-    opacity: 1 !important;
-  }
-  
-  .docente-card:hover {
-    transform: scale(1.03) !important;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25) !important;
-  }
-  
-  .docente-foto {
-    height: 200px !important;
-    object-fit: cover !important;
-  }
-  
-  .modal-content {
-    border-radius: 10px !important;
-  }
-  
-  .modal-header {
-    background-color: #007bff !important;
-    color: white !important;
-    border-top-left-radius: 10px !important;
-    border-top-right-radius: 10px !important;
-  }
-  
-  .modal-title {
-    font-size: 24px !important;
-    font-weight: bold !important;
-  }
-  
-  .vista-previa {
-    margin-top: 10px !important;
-  }
-  
-  .foto-previa {
-    max-width: 100px !important;
-    max-height: 100px !important;
-    border-radius: 8px !important;
-    object-fit: cover !important;
-  }
-  
-  .modal-body input {
-    transition: border-color 0.3s ease !important;
-  }
-  
-  .modal-body input:focus {
-    border-color: #007bff !important;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5) !important;
-  }
-  
+  padding: 20px !important;
+  background-color: var(--background-color) !important;
+  opacity: 1 !important;
+  margin-top: 8% !important;
+  margin-bottom: 20%;
+  color: var(--text-color-septimo);
+}
+
+.header {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  margin-bottom: 20px !important;
+}
+
+h2 {
+  color: var(--text-color-septimo) !important;
+  font-size: 28px !important;
+  font-weight: bold !important;
+  text-transform: uppercase !important;
+}
+
+.add-docente-btn {
+  transition: all 0.3s ease !important;
+  background-color: var(--text-color-septimo) !important;
+  color: var(--background-color) !important;
+  border: none !important;
+}
+
+.add-docente-btn:hover {
+  background-color: var(--text-color-quinto) !important;
+  transform: scale(1.05) !important;
+}
+
+.docente-card {
+  background: var(--background-color-card) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15) !important;
+  transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+  opacity: 1 !important;
+  color: var(--text-color);
+}
+
+.docente-card:hover {
+  transform: scale(1.03) !important;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25) !important;
+}
+
+.docente-foto {
+  height: 200px !important;
+  object-fit: cover !important;
+}
+
+.modal-content {
+  border-radius: 10px !important;
+  background-color: var(--background-color) !important;
+  color: var(--text-color);
+}
+
+.modal-header {
+  background-color: var(--primary-color) !important;
+  color: var(--text-color-septimo) !important;
+  border-top-left-radius: 10px !important;
+  border-top-right-radius: 10px !important;
+}
+
+.modal-title {
+  font-size: 24px !important;
+  font-weight: bold !important;
+}
+
+.vista-previa {
+  margin-top: 10px !important;
+}
+
+.foto-previa {
+  max-width: 100px !important;
+  max-height: 100px !important;
+  border-radius: 8px !important;
+  object-fit: cover !important;
+  border: 1px solid var(--gray-color);
+}
+
+.modal-body input {
+  transition: border-color 0.3s ease !important;
+  border-color: var(--gray-color);
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+.modal-body input:focus {
+  border-color: var(--primary-color) !important;
+  box-shadow: 0 0 5px var(--primary-color) !important;
+}
+/* Contenedor principal */
+.filtro-docentes-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+  padding: 10px;
+  background-color: var(--background-color-card);
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}
+
+/* Efecto hover en el contenedor */
+.filtro-docentes-container:hover {
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
+}
+
+/* FormControl principal */
+.filtro-form-control {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+/* Encabezado del filtro */
+.filtro-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Ícono del filtro */
+.filtro-icon {
+  color: var(--primary-color);
+  font-size: 24px;
+}
+
+/* Etiqueta del filtro */
+.filtro-label {
+  font-size: 16px;
+  color: var(--text-color-secondary);
+  font-weight: 600;
+  margin-left: 5px;
+}
+
+/* Select principal */
+.filtro-select {
+  background-color: var(--gray-color);
+  color: var(--text-color);
+  border-radius: 8px;
+  padding: 8px 10px;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Hover en el Select */
+.filtro-select:hover {
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Estilo de las opciones */
+.filtro-menu-item {
+  font-size: 14px;
+  color: var(--text-color);
+  padding: 8px 15px;
+  transition: background-color 0.3s ease;
+}
+
+/* Hover en las opciones */
+.filtro-menu-item:hover {
+  background-color: var(--backgraund-color-2);
+}
+
+/* Opción seleccionada */
+.filtro-menu-item.Mui-selected {
+  background-color: var(--secondary-color) !important;
+  color: var(--text-color-septimo) !important;
+}
+
+/* Transición para el Select */
+.MuiInputBase-root {
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+/* Foco en el Select */
+.MuiInputBase-root:focus {
+  border-color: var(--primary-color);
+  background-color: var(--accent-color);
+}

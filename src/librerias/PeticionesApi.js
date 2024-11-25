@@ -425,9 +425,10 @@ export const obtenerPublicaciones = async (Numero) => {
     throw error;
   }
 };
-export const actualizarPublicacion = async (publicacionData, idUsuario, token) => {
+export const actualizarPublicacion = async ( idPublicacion,publicacionData, idUsuario, token) => {
   try {
     const response = await instance.put('/publicacion/actualizar', {
+      idPublicacion,
       ...publicacionData,
       idUsuario,
       token,

@@ -224,15 +224,15 @@ const GestionEstudiantes = () => {
 
 const [filtroSeleccionado, setFiltroSeleccionado] = useState(0);
   return (
-    <div className="gestion-estudiantes-container">
-      <h2 className="titulo-gestion">Gestión de Estudiantes</h2>
-      <Button variant="contained" color="primary" onClick={handleShow} className="add-estudiante-btn">
+    <div className="gestion-estudiantes-container1">
+      <h2 className="titulo-gestion1">Gestión de Estudiantes</h2>
+      <Button variant="contained" color="primary" onClick={handleShow} className="add-estudiante-btn1">
         {loading ? <CircularProgress size={24} /> : 'Agregar Estudiante'}
       </Button>
       <Typography variant="h4" align="center" gutterBottom>
         Filtrar Egresados
       </Typography>
-      <FormControl fullWidth margin="dense" className="select-field">
+      <FormControl fullWidth margin="dense" className="select-field1">
   <InputLabel>Filtrar</InputLabel>
   <Select
     value={filtroSeleccionado} // Estado que controla la selección actual
@@ -254,28 +254,28 @@ const [filtroSeleccionado, setFiltroSeleccionado] = useState(0);
 
 
 
-      <Grid container spacing={5} className="grid-estudiantes" justifyContent="center">
+      <Grid container spacing={5} className="grid-estudiantes1" justifyContent="center">
   {estudiantes.map((estudiante) => (
     <Grid item xs={4} sm={4} md={4} key={estudiante.id}>
-      <Card className="card">
+      <Card className="card1">
         <CardMedia
           component="img"
-          className="card-media"
+          className="card-media1"
           height="200"
           image={estudiante.foto || 'https://cdn-icons-png.freepik.com/256/2307/2307607.png'}
           alt="Foto del Estudiante"
           style={{ objectFit: 'cover' }}
         />
-        <CardContent className="card-content">
+        <CardContent className="card-content1">
           <h3>{estudiante.nombre}</h3>
           <p>Email: {estudiante.correo || 'N/A'}</p>
           <p>Nivel Académico: {estudiante.nivelAcademico || 'N/A'}</p>
           <p>semestre: {estudiante.semestre || 'N/A'}</p>
-          <div className="button-container">
-            <Button variant="contained" color="warning" onClick={() => iniciarActualizacion(estudiante)} className="button-update">
+          <div className="button-containe1r">
+            <Button variant="contained" color="warning" onClick={() => iniciarActualizacion(estudiante)} className="button-update1">
               Actualizar
             </Button>
-            <Button variant="contained" color="error" onClick={() => iniciarEliminacion(estudiante.id)} className="button-delete">
+            <Button variant="contained" color="error" onClick={() => iniciarEliminacion(estudiante.id)} className="button-delete1">
               Eliminar
             </Button>
           </div>
@@ -283,7 +283,7 @@ const [filtroSeleccionado, setFiltroSeleccionado] = useState(0);
             variant="contained"
             color="primary"
             onClick={() => agregarTesis(estudiante.id)}
-            className="agregar-tesis-btn"
+            className="agregar-tesis-btn1"
           >
             Agregar Tesis
           </Button>
@@ -358,12 +358,12 @@ const [filtroSeleccionado, setFiltroSeleccionado] = useState(0);
 
 
 
-      <Dialog open={showEliminarDialog} onClose={() => setShowEliminarDialog(false)} className="dialog-eliminar">
-        <DialogTitle className="dialog-title">Confirmar Eliminación</DialogTitle>
+      <Dialog open={showEliminarDialog} onClose={() => setShowEliminarDialog(false)} className="dialog-eliminar1">
+        <DialogTitle className="dialog-title1">Confirmar Eliminación</DialogTitle>
         <DialogContent>¿Estás seguro de que deseas eliminar este estudiante?</DialogContent>
         <DialogActions>
-          <Button onClick={() => setShowEliminarDialog(false)} color="secondary" className="button-cancelar">Cancelar</Button>
-          <Button onClick={confirmarEliminacion} color="error" className="button-eliminar">
+          <Button onClick={() => setShowEliminarDialog(false)} color="secondary" className="button-cancelar1">Cancelar</Button>
+          <Button onClick={confirmarEliminacion} color="error" className="button-eliminar1">
             {loading ? <CircularProgress size={24} /> : 'Eliminar'}
           </Button>
         </DialogActions>

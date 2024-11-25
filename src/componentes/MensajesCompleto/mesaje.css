@@ -1,0 +1,103 @@
+.mensajes-contenedor11 {
+    padding: 20px;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
+    min-height: 100vh;
+    margin-top: 9% !important;
+  }
+  
+  .mensajes-titulo11 {
+    font-size: 28px;
+    font-weight: bold;
+    color: var(--text-color-secondary);
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  .mensajes-lista11 {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: var(--background-color);
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+  }
+  
+  .mensaje-item11 {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    padding: 10px 15px;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .mensaje-item11:hover {
+    background-color: var(--background-color-card);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  .mensaje-nombre11 {
+    font-weight: bold;
+    color: var(--primary-color);
+  }
+  
+  .sin-mensajes11 {
+    text-align: center;
+    font-size: 18px;
+    color: var(--text-color-septimo);
+  }
+  
+  .btn-ver11 {
+    background-color: var(--accent-color);
+    color: var(--text-color-septimo);
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: 14px;
+    transition: transform 0.3s ease;
+  }
+  
+  .btn-ver11:hover {
+    transform: scale(1.1);
+  }
+  
+  .btn-eliminar11 {
+    background-color: var(--secondary-color);
+    color: var(--text-color-septimo);
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: 14px;
+    transition: transform 0.3s ease;
+  }
+  
+  .btn-eliminar11:hover {
+    transform: scale(1.1);
+  }
+  
+  .mensaje-modal11 .modal-header11 {
+    background-color: var(--primary-color);
+    color: var(--text-color-septimo);
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+  }
+  
+  .mensaje-modal11 .modal-titulo11 {
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .btn-cerrar11 {
+    background-color: var(--gray-color);
+    color: var(--text-color);
+    border: none;
+    padding: 5px 15px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+  }
+  
+  .btn-cerrar11:hover {
+    background-color: var(--primary-color);
+    transform: scale(1.05);
+  }
+  
