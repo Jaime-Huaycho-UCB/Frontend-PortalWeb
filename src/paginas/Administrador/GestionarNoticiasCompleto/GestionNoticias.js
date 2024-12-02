@@ -37,7 +37,7 @@ const GestionNoticias = () => {
       const data = await obtenerNoticias();
       if (data.salida) {
         setNoticias(data.noticias);
-        setFilteredNoticias(data.noticias);
+        // setFilteredNoticias(data.noticias);
       } 
     } catch (error) {
       console.error("Error al cargar noticias:", error);
@@ -115,19 +115,23 @@ const GestionNoticias = () => {
     try {
       const response = await eliminarNoticia(id, idUsuario, token);
       if (!response.salida) {
-        if(response.mensaje==='TKIN'){
+        if(response.mensaje === 'TKIN') {
           cerrarSesion();
           navigate('/iniciar-sesion');
           return;
-        }else{
+        } else {
           console.log(response.mensaje);
         }
+      } else {
+        // Actualizar el estado de noticias manualmente
+        setNoticias(prevNoticias => prevNoticias.filter(noticia => noticia.id !== id));
+        cargarNoticias(); // Cargar las noticias actualizadas
       }
-      cargarNoticias();
     } catch (error) {
       console.error("Error al eliminar noticia:", error);
     }
   };
+  
 
   
   const handleSearchChange = (e) => {
