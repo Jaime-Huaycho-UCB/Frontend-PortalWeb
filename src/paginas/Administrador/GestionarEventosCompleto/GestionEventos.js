@@ -6,7 +6,7 @@ import {
     TextField, Button, DialogActions, IconButton, Tooltip,FormControl,InputLabel,Select,MenuItem
 } from '@mui/material';
 import { Event, Edit, Delete, Close, Add } from '@mui/icons-material';
-import { agregarEvento, obtenerEventos, actualizarEvento, eliminarEvento } from '../../../librerias/PeticionesApi';
+import { agregarEvento, obtenerEventos, actualizarEvento, eliminarEvento,manejarCambioFoto } from '../../../librerias/PeticionesApi';
 import { AuthContext } from '../../../contextos/ContextoAutenticacion';
 import { useNavigate } from 'react-router-dom';
 
@@ -124,15 +124,11 @@ const GestionEventos = () => {
     }, [cargarEventos, cerrarSesion, navigate, idUsuario, token]);
 
     const handleFileChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setNuevoEvento((prevEvento) => ({ ...prevEvento, fotoBase64: reader.result }));
-            };
-            reader.readAsDataURL(file);
-        }
-    };
+        manejarCambioFoto(e, (fotoBase64) => {
+          setNuevoEvento({ ...nuevoEvento, fotoBase64 });
+        });
+      };
+    
     const [filtroSeleccionado, setFiltroSeleccionado] = useState(0);
     return (
         <Box className="gestion-eventos-container">
@@ -261,17 +257,23 @@ const GestionEventos = () => {
                         onChange={(e) => setNuevoEvento({ ...nuevoEvento, descripcion: e.target.value })}
                         margin="normal"
                     />
-                    <Button variant="contained" component="label" fullWidth sx={{ mt: 2 }}>
-                        Subir Foto
-                        <input type="file" hidden onChange={handleFileChange} />
-                    </Button>
-                    {nuevoEvento.fotoBase64 && (
-                        <img
-                            src={nuevoEvento.fotoBase64}
-                            alt="Vista previa"
-                            style={{ width: '100%', marginTop: '10px', borderRadius: '8px' }}
-                        />
-                    )}
+                   <Button variant="contained" component="label" fullWidth sx={{ mt: 2 }}>
+        Subir Foto
+        <input
+          type="file"
+          hidden
+          onChange={handleFileChange}
+        />
+      </Button>
+
+      {/* Vista previa de la imagen cargada */}
+      {nuevoEvento.fotoBase64 && (
+        <img
+          src={`data:image/jpeg;base64,${nuevoEvento.fotoBase64}`} // Asumiendo que es JPEG
+          alt="Vista previa"
+          style={{ width: '100%', marginTop: '10px', borderRadius: '8px' }}
+        />
+      )}
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={() => { setShowModal(false); setIsUpdating(false); }} color="secondary">Cerrar</Button>
