@@ -110,7 +110,7 @@ const GestionEstudiantes = () => {
       } else {
         setUltimoEstudianteId(response.estudianteId);
 
-        obtenerEstudiantes().then((data) => setEstudiantes(data.estudiantes));
+       cargarDatos(0);
         cargarFiltros();
         handleClose();
         setSnackbar({ open: true, message: response.mensaje, severity: 'success' });

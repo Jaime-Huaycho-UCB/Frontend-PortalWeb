@@ -96,7 +96,7 @@ const GestionEventos = () => {
                 }
                 return;
             }
-            cargarEventos();
+            cargarEventos(0);
             setShowModal(false);
             setIsUpdating(false);
             setNuevoEvento({ nombre: '', descripcion: '', director: '', fecha: '', lugar: '', fotoBase64: '' });
@@ -117,7 +117,7 @@ const GestionEventos = () => {
                 }
                 return;
             }
-            cargarEventos();
+            cargarEventos(0);
         } catch (error) {
             console.error(error);
         }
