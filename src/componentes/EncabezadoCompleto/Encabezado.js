@@ -100,12 +100,36 @@ const Encabezado = () => {
                 Eventos
               </Button>
               <Button
+                startIcon={<EventIcon />}
+                className="nav-button"
+                component={Link}
+                to="/admin/gestion-eventos"
+              >
+                Eventos
+              </Button>
+              <Button
+                startIcon={<EventIcon />}
+                className="nav-button"
+                component={Link}
+                to="/admin/crear-usuario"
+              >
+                Crear Usuario 
+              </Button>
+              <Button
+                startIcon={<EventIcon />}
+                className="nav-button"
+                component={Link}
+                to="/admin/crear-usuario"
+              >
+                Crear Usuario 
+              </Button>
+              <Button
                 startIcon={<PostAddIcon />}
                 className="nav-button"
                 component={Link}
-                to="/admin/publicacion"
+                to="/admin/gestion-tesis"
               >
-                Chasqui Posta
+                Tesis
               </Button>
               <Button
                 startIcon={<MailIcon />}
