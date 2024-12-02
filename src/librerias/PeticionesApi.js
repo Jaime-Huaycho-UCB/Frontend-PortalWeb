@@ -1,8 +1,8 @@
 // src/librerias/PeticionesApi.js
 import axios from 'axios';
 
- const BASE_URL = 'https://backend-portalweb-production.up.railway.app';  
-// const BASE_URL = 'http://localhost:8000';  
+//  const BASE_URL = 'https://backend-portalweb-production.up.railway.app';  
+const BASE_URL = 'http://localhost:8000';  
 
 const instance = axios.create({
   baseURL: BASE_URL,
@@ -249,7 +249,7 @@ export const eliminarEstudiante = async (idEstudiante, idUsuario, token) => {
 };
 export const obtenerTesis = async () => {
   try {
-    const response = await instance.get('estudiante/tesis/obtener/todo');
+    const response = await instance.get('/estudiante/tesis/obtener/todo');
     return response.data;
   } catch (error) {
     console.error("Error al obtener las tesis:", error);
@@ -258,7 +258,7 @@ export const obtenerTesis = async () => {
 };
 export const eliminarTesis = async (idTesis,idEstudiante,idUsuario,token) => {
   try {
-    const response = await instance.put(`estudiante/tesis/eliminar`,{idTesis,idEstudiante,idUsuario,token});
+    const response = await instance.put(`/estudiante/tesis/eliminar`,{idTesis,idEstudiante,idUsuario,token});
     return response.data;
   } catch (error) {
     console.error("Error al eliminar la tesis:", error);
@@ -281,7 +281,7 @@ export const agregarTesis = async (tesisData, idUsuario, token, idEstudiante) =>
 };
 export const obtenerContenidoTesis = async (idTesis) => {
   try {
-    const response = await instance.get(`estudiante/tesis/obtener/contenido/${idTesis}`);
+    const response = await instance.get(`/estudiante/tesis/obtener/contenido/${idTesis}`);
     return response.data;
   } catch (error) {
     console.error("Error al obtener el contenido de la tesis:", error);
@@ -290,7 +290,7 @@ export const obtenerContenidoTesis = async (idTesis) => {
 };
 export const obtenerPerfil = async (idDocente,idUsuario,token) => {
   try {
-    const response = await instance.post(`docente/obtener/informacion`,{idDocente,idUsuario,token});
+    const response = await instance.post(`/docente/obtener/informacion`,{idDocente,idUsuario,token});
     return response.data;
   } catch (error) {
     console.error("Error al obtener los datos del docente:", error);
@@ -301,7 +301,7 @@ export const obtenerPerfil = async (idDocente,idUsuario,token) => {
 
 export const agregarPaper = async (paperData, idDocente, idUsuario, token) => {
   try {
-    const response = await instance.post('docente/papers/ingresar', {
+    const response = await instance.post('/docente/papers/ingresar', {
       ...paperData,
       idDocente,
       idUsuario,
@@ -316,7 +316,7 @@ export const agregarPaper = async (paperData, idDocente, idUsuario, token) => {
 
 export const obtenerPapers = async (idDocente) => {
   try {
-    const response = await instance.get(`docente/papers/obtener/${idDocente}`);
+    const response = await instance.get(`/docente/papers/obtener/${idDocente}`);
     return response.data;
   } catch (error) {
     console.error("Error al obtener los papers:", error);
@@ -326,7 +326,7 @@ export const obtenerPapers = async (idDocente) => {
 // Obtener contactos
 export const obtenerContactos = async () => {
   try {
-    const response = await instance.get('contacto/obtener');
+    const response = await instance.get('/contacto/obtener');
     return response.data;
   } catch (error) {
     console.error('Error al obtener contactos:', error);
