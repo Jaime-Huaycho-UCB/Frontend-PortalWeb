@@ -149,7 +149,7 @@ const GestionDocentes = () => {
           console.error(response.mensaje)
         }
       }
-      obtenerDocentesTodo().then((data) => setDocentes(data.docentes));
+      cargarDocentes(0);
       handleClose();
     } catch (error) {
       console.error(error);
