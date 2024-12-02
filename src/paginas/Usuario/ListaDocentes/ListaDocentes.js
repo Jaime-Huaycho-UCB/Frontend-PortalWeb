@@ -82,7 +82,7 @@ const ListaDocentes = () => {
         ? Array(6)
             .fill(0)
             .map((_, index) => (
-              <div key={index} className="skeleton-card2"></div>
+              <div key={index} className="skeleton-card"></div>
             ))
         : docentes.map((docente, index) => (
             <article
