@@ -150,12 +150,12 @@ const GestionTesis = () => {
           <Grid item xs={12} key={tesis.id}>
             <StyledCard>
               <CardContent>
-                <Typography variant="h6" sx={{ color: '#002855' }}>{tesis.titulo}</Typography>
+                <Typography variant="h6" sx={{ color: '#002855' }}>{tesis.tesis.titulo}</Typography>
                 <Typography variant="body2" color="textSecondary" gutterBottom>
-                  Fecha de Publicación: {tesis.fechaPublicacion}
+                  Fecha de Publicación: {tesis.tesis.fechaPublicacion}
                 </Typography>
                 <Typography variant="body2" gutterBottom>
-                  Resumen: {tesis.resumen}
+                  Resumen: {tesis.tesis.resumen}
                 </Typography>
                 <Button
                   variant="outlined"
