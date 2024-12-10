@@ -246,37 +246,99 @@ const GestionDocentes = () => {
     setActualizarFoto(false);
     handleShow();
   };
-
   const actualizarDocenteExistente = async () => {
+    // Validar formulario antes de enviar los datos
+    if (!nuevoDocente.nombre || !nuevoDocente.correo || !nuevoDocente.titulo) {
+      Swal.fire({
+        title: 'Campos Vacíos',
+        text: 'Por favor, completa todos los campos obligatorios.',
+        icon: 'warning',
+        confirmButtonText: 'Cerrar',
+      });
+      return;
+    }
+  
+    // Validar que el nombre no contenga caracteres especiales ni números
+    const nombreValido = /^[a-zA-Z\s]+$/.test(nuevoDocente.nombre);
+    if (!nombreValido) {
+      Swal.fire({
+        title: 'Nombre Inválido',
+        text: 'El nombre no debe contener números ni caracteres especiales.',
+        icon: 'error',
+        confirmButtonText: 'Cerrar',
+      });
+      return;
+    }
+  
+    // Validar formato del correo
+    const correoValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(nuevoDocente.correo);
+    if (!correoValido) {
+      Swal.fire({
+        title: 'Correo Inválido',
+        text: 'Por favor, ingresa un correo electrónico válido.',
+        icon: 'error',
+        confirmButtonText: 'Cerrar',
+      });
+      return;
+    }
+  
     const docenteData = {
       nombre: nuevoDocente.nombre,
       correo: nuevoDocente.correo,
       titulo: nuevoDocente.titulo,
       frase: nuevoDocente.frase,
-      fotoBase64: actualizarFoto ? nuevoDocente.fotoBase64 : null 
+      fotoBase64: actualizarFoto ? nuevoDocente.fotoBase64 : null,
     };
-    console.log(docenteData);
-
+  
     try {
-
-      const response=await actualizarDocente(docenteIdActualizar, docenteData,idUsuario,token);
-      
+      const response = await actualizarDocente(docenteIdActualizar, docenteData, idUsuario, token);
+  
       if (!response.salida) {
-        if(response.mensaje==='TKIN'){
-          cerrarSesion(); 
-          navigate('/iniciar-sesion'); 
+        if (response.mensaje === 'TKIN') {
+          Swal.fire({
+            title: 'Sesión Expirada',
+            text: 'Tu sesión ha expirado. Por favor, inicia sesión nuevamente.',
+            icon: 'warning',
+            confirmButtonText: 'Iniciar Sesión',
+            confirmButtonColor: '#d33',
+          }).then(() => {
+            cerrarSesion();
+            navigate('/iniciar-sesion');
+          });
           return;
-        }else{
-          console.error(response.mensaje)
+        } else {
+          Swal.fire({
+            title: 'Error',
+            text: response.mensaje,
+            icon: 'error',
+            confirmButtonText: 'Cerrar',
+          });
+          console.error(response.mensaje);
+          return;
         }
       }
+  
+      Swal.fire({
+        title: 'Docente Actualizado',
+        text: response.mensaje,
+        icon: 'success',
+        confirmButtonText: 'Aceptar',
+        confirmButtonColor: '#3085d6',
+      });
+  
       cargarDocentes(0);
       handleClose();
     } catch (error) {
       console.error(error);
-      console.log()
+      Swal.fire({
+        title: 'Error',
+        text: 'Hubo un problema al actualizar el docente. Por favor, inténtalo más tarde.',
+        icon: 'error',
+        confirmButtonText: 'Cerrar',
+      });
     }
   };
+  
   const [filtroSeleccionado, setFiltroSeleccionado] = useState(0);
   return (
     <div className="gestion-docentes-container">
