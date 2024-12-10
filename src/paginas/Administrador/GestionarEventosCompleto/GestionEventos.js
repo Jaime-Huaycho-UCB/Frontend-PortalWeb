@@ -9,7 +9,7 @@ import { Event, Edit, Delete, Close, Add } from '@mui/icons-material';
 import { agregarEvento, obtenerEventos, actualizarEvento, eliminarEvento,manejarCambioFoto } from '../../../librerias/PeticionesApi';
 import { AuthContext } from '../../../contextos/ContextoAutenticacion';
 import { useNavigate } from 'react-router-dom';
-
+import Swal from 'sweetalert2';
 const GestionEventos = () => {
     const { idUsuario, token, cerrarSesion } = useContext(AuthContext);
     const navigate = useNavigate();
@@ -51,25 +51,147 @@ const GestionEventos = () => {
     }, [cargarEventos]);
 
     const agregarNuevoEvento = useCallback(async () => {
+        // Validaciones
+        if (!nuevoEvento.nombre.trim()) {
+            Swal.fire({
+                title: 'Nombre Requerido',
+                text: 'El nombre del evento no puede estar vacío.',
+                icon: 'error',
+                confirmButtonText: 'Cerrar',
+            });
+            return;
+        }
+    
+        if (!/^[a-zA-Z\s]+$/.test(nuevoEvento.nombre)) {
+            Swal.fire({
+                title: 'Nombre Inválido',
+                text: 'El nombre del evento solo puede contener letras y espacios.',
+                icon: 'warning',
+                confirmButtonText: 'Cerrar',
+            });
+            return;
+        }
+    
+        if (!nuevoEvento.descripcion.trim()) {
+            Swal.fire({
+                title: 'Descripción Requerida',
+                text: 'La descripción del evento no puede estar vacía.',
+                icon: 'error',
+                confirmButtonText: 'Cerrar',
+            });
+            return;
+        }
+    
+        if (!nuevoEvento.director.trim()) {
+            Swal.fire({
+                title: 'Director Requerido',
+                text: 'El nombre del director del evento no puede estar vacío.',
+                icon: 'error',
+                confirmButtonText: 'Cerrar',
+            });
+            return;
+        }
+    
+        if (!/^[a-zA-Z\s]+$/.test(nuevoEvento.director)) {
+            Swal.fire({
+                title: 'Director Inválido',
+                text: 'El nombre del director solo puede contener letras y espacios.',
+                icon: 'warning',
+                confirmButtonText: 'Cerrar',
+            });
+            return;
+        }
+    
+        if (!nuevoEvento.fecha.trim()) {
+            Swal.fire({
+                title: 'Fecha Requerida',
+                text: 'La fecha del evento no puede estar vacía.',
+                icon: 'error',
+                confirmButtonText: 'Cerrar',
+            });
+            return;
+        }
+    
+        const fechaRegex = /^\d{4}-\d{2}-\d{2}$/;
+        if (!fechaRegex.test(nuevoEvento.fecha)) {
+            Swal.fire({
+                title: 'Fecha Inválida',
+                text: 'La fecha debe estar en formato YYYY-MM-DD.',
+                icon: 'warning',
+                confirmButtonText: 'Cerrar',
+            });
+            return;
+        }
+    
+        if (!nuevoEvento.lugar.trim()) {
+            Swal.fire({
+                title: 'Lugar Requerido',
+                text: 'El lugar del evento no puede estar vacío.',
+                icon: 'error',
+                confirmButtonText: 'Cerrar',
+            });
+            return;
+        }
+    
+        if (!nuevoEvento.fotoBase64.trim()) {
+            Swal.fire({
+                title: 'Foto Requerida',
+                text: 'Debes subir una foto para el evento.',
+                icon: 'error',
+                confirmButtonText: 'Cerrar',
+            });
+            return;
+        }
+    
         try {
             const response = await agregarEvento(nuevoEvento, idUsuario, token);
+    
             if (!response.salida) {
                 if (response.mensaje === 'TKIN') {
-                    cerrarSesion();
-                    navigate('/iniciar-sesion');
+                    Swal.fire({
+                        title: 'Sesión Expirada',
+                        text: 'Tu sesión ha expirado. Por favor, inicia sesión nuevamente.',
+                        icon: 'warning',
+                        confirmButtonText: 'Iniciar Sesión',
+                        confirmButtonColor: '#d33',
+                    }).then(() => {
+                        cerrarSesion();
+                        navigate('/iniciar-sesión');
+                    });
+                    return;
                 } else {
-                    console.error(response.mensaje);
+                    Swal.fire({
+                        title: 'Error',
+                        text: response.mensaje,
+                        icon: 'error',
+                        confirmButtonText: 'Cerrar',
+                    });
+                    return;
                 }
-                return;
             }
+    
+            Swal.fire({
+                title: 'Evento Agregado',
+                text: response.mensaje,
+                icon: 'success',
+                confirmButtonText: 'Aceptar',
+                confirmButtonColor: '#3085d6',
+            });
+    
             cargarEventos();
             setShowModal(false);
             setNuevoEvento({ nombre: '', descripcion: '', director: '', fecha: '', lugar: '', fotoBase64: '' });
         } catch (error) {
-            console.error(error);
+            console.error('Error al agregar evento:', error);
+            Swal.fire({
+                title: 'Error',
+                text: 'Hubo un problema al agregar el evento. Por favor, inténtalo más tarde.',
+                icon: 'error',
+                confirmButtonText: 'Cerrar',
+            });
         }
     }, [cargarEventos, cerrarSesion, navigate, nuevoEvento, idUsuario, token]);
-
+    
     const iniciarEdicion = (evento) => {
         setIsUpdating(true);
         setEventoSeleccionado(evento.id);
@@ -84,44 +206,198 @@ const GestionEventos = () => {
         setShowModal(true);
     };
 
+    
     const actualizarEventoExistente = useCallback(async () => {
+        // Validaciones
+        if (!nuevoEvento.nombre.trim()) {
+            Swal.fire({
+                title: 'Nombre Requerido',
+                text: 'El nombre del evento no puede estar vacío.',
+                icon: 'error',
+                confirmButtonText: 'Cerrar',
+            });
+            return;
+        }
+    
+        if (!/^[a-zA-Z\s]+$/.test(nuevoEvento.nombre)) {
+            Swal.fire({
+                title: 'Nombre Inválido',
+                text: 'El nombre del evento solo puede contener letras y espacios.',
+                icon: 'warning',
+                confirmButtonText: 'Cerrar',
+            });
+            return;
+        }
+    
+        if (!nuevoEvento.descripcion.trim()) {
+            Swal.fire({
+                title: 'Descripción Requerida',
+                text: 'La descripción del evento no puede estar vacía.',
+                icon: 'error',
+                confirmButtonText: 'Cerrar',
+            });
+            return;
+        }
+    
+        if (!nuevoEvento.director.trim()) {
+            Swal.fire({
+                title: 'Director Requerido',
+                text: 'El nombre del director del evento no puede estar vacío.',
+                icon: 'error',
+                confirmButtonText: 'Cerrar',
+            });
+            return;
+        }
+    
+        if (!/^[a-zA-Z\s]+$/.test(nuevoEvento.director)) {
+            Swal.fire({
+                title: 'Director Inválido',
+                text: 'El nombre del director solo puede contener letras y espacios.',
+                icon: 'warning',
+                confirmButtonText: 'Cerrar',
+            });
+            return;
+        }
+    
+        if (!nuevoEvento.fecha.trim()) {
+            Swal.fire({
+                title: 'Fecha Requerida',
+                text: 'La fecha del evento no puede estar vacía.',
+                icon: 'error',
+                confirmButtonText: 'Cerrar',
+            });
+            return;
+        }
+    
+        const fechaRegex = /^\d{4}-\d{2}-\d{2}$/;
+        if (!fechaRegex.test(nuevoEvento.fecha)) {
+            Swal.fire({
+                title: 'Fecha Inválida',
+                text: 'La fecha debe estar en formato YYYY-MM-DD.',
+                icon: 'warning',
+                confirmButtonText: 'Cerrar',
+            });
+            return;
+        }
+    
+        if (!nuevoEvento.lugar.trim()) {
+            Swal.fire({
+                title: 'Lugar Requerido',
+                text: 'El lugar del evento no puede estar vacío.',
+                icon: 'error',
+                confirmButtonText: 'Cerrar',
+            });
+            return;
+        }
+    
+        if (!nuevoEvento.fotoBase64.trim()) {
+            Swal.fire({
+                title: 'Foto Requerida',
+                text: 'Debes subir una foto para el evento.',
+                icon: 'error',
+                confirmButtonText: 'Cerrar',
+            });
+            return;
+        }
+    
         try {
             const response = await actualizarEvento(eventoSeleccionado, nuevoEvento, idUsuario, token);
+    
             if (!response.salida) {
                 if (response.mensaje === 'TKIN') {
-                    cerrarSesion();
-                    navigate('/iniciar-sesion');
+                    Swal.fire({
+                        title: 'Sesión Expirada',
+                        text: 'Tu sesión ha expirado. Por favor, inicia sesión nuevamente.',
+                        icon: 'warning',
+                        confirmButtonText: 'Iniciar Sesión',
+                        confirmButtonColor: '#d33',
+                    }).then(() => {
+                        cerrarSesion();
+                        navigate('/iniciar-sesión');
+                    });
+                    return;
                 } else {
-                    console.error(response.mensaje);
+                    Swal.fire({
+                        title: 'Error',
+                        text: response.mensaje,
+                        icon: 'error',
+                        confirmButtonText: 'Cerrar',
+                    });
+                    return;
                 }
-                return;
             }
+    
+            Swal.fire({
+                title: 'Evento Actualizado',
+                text: response.mensaje,
+                icon: 'success',
+                confirmButtonText: 'Aceptar',
+                confirmButtonColor: '#3085d6',
+            });
+    
             cargarEventos(0);
             setShowModal(false);
             setIsUpdating(false);
             setNuevoEvento({ nombre: '', descripcion: '', director: '', fecha: '', lugar: '', fotoBase64: '' });
         } catch (error) {
-            console.error(error);
+            console.error('Error al actualizar evento:', error);
+            Swal.fire({
+                title: 'Error',
+                text: 'Hubo un problema al actualizar el evento. Por favor, inténtalo más tarde.',
+                icon: 'error',
+                confirmButtonText: 'Cerrar',
+            });
         }
     }, [cargarEventos, cerrarSesion, navigate, eventoSeleccionado, nuevoEvento, idUsuario, token]);
-
+    
     const confirmarEliminacion = useCallback(async (id) => {
         try {
             const response = await eliminarEvento(id, idUsuario, token);
+    
             if (!response.salida) {
                 if (response.mensaje === 'TKIN') {
-                    cerrarSesion();
-                    navigate('/iniciar-sesion');
+                    Swal.fire({
+                        title: 'Sesión Expirada',
+                        text: 'Tu sesión ha expirado. Por favor, inicia sesión nuevamente.',
+                        icon: 'warning',
+                        confirmButtonText: 'Iniciar Sesión',
+                        confirmButtonColor: '#d33'
+                    }).then(() => {
+                        cerrarSesion();
+                        navigate('/iniciar-sesión');
+                    });
                 } else {
+                    Swal.fire({
+                        title: 'Error',
+                        text: response.mensaje || 'No se pudo eliminar el evento.',
+                        icon: 'error',
+                        confirmButtonText: 'Cerrar'
+                    });
                     console.error(response.mensaje);
                 }
                 return;
             }
-            cargarEventos(0);
+    
+            Swal.fire({
+                title: 'Evento Eliminado',
+                text: response.mensaje || 'El evento se eliminó correctamente.',
+                icon: 'success',
+                confirmButtonText: 'Aceptar',
+                confirmButtonColor: '#3085d6'
+            });
+    
+            cargarEventos(0); // Recargar eventos después de eliminar
         } catch (error) {
             console.error(error);
+            Swal.fire({
+                title: 'Error',
+                text: 'Hubo un problema al intentar eliminar el evento. Por favor, inténtalo más tarde.',
+                icon: 'error',
+                confirmButtonText: 'Cerrar'
+            });
         }
     }, [cargarEventos, cerrarSesion, navigate, idUsuario, token]);
+    
 
     const handleFileChange = (e) => {
         manejarCambioFoto(e, (fotoBase64) => {
