@@ -3,6 +3,7 @@ import { Button, Modal, Card, Row, Col, Form } from 'react-bootstrap';
 import{MenuItem,Typography,FormControl,InputLabel,Select} from '@mui/material'
 import { manejarCambioFoto, agregarDocente, actualizarDocente, eliminarDocente, obtenerTitulos, obtenerDocentesTodo } from '../../../librerias/PeticionesApi';
 import './GestionDocentes.css';
+import Swal from 'sweetalert2';
 import { AuthContext } from '../../../contextos/ContextoAutenticacion';
 import { useNavigate } from 'react-router-dom';
 import { FilterList } from '@mui/icons-material'; 
@@ -63,32 +64,64 @@ const GestionDocentes = () => {
 
   const handleShow = () => setShow(true);
 
-  const agregarNuevoDocente = async () => {
-    const docenteData = {
-      nombre: nuevoDocente.nombre,
-      correo: nuevoDocente.correo,
-      titulo: nuevoDocente.titulo,
-      frase: nuevoDocente.frase,
-      fotoBase64: nuevoDocente.fotoBase64 
-    };
   
-    try {
-      const response=await agregarDocente(docenteData,idUsuario,token); 
-      if (!response.salida) {
-        if(response.mensaje==='TKIN'){
-          cerrarSesion(); 
-          navigate('/iniciar-sesion'); 
-          return;
-        }else{
-          console.error(response.mensaje)
-        }
-      }
-     cargarDocentes(0);
-      handleClose();
-    } catch (error) {
-      console.error(error);
-    }
+
+const agregarNuevoDocente = async () => {
+  const docenteData = {
+    nombre: nuevoDocente.nombre,
+    correo: nuevoDocente.correo,
+    titulo: nuevoDocente.titulo,
+    frase: nuevoDocente.frase,
+    fotoBase64: nuevoDocente.fotoBase64,
   };
+
+  try {
+    const response = await agregarDocente(docenteData, idUsuario, token);
+    if (!response.salida) {
+      if (response.mensaje === 'TKIN') {
+        Swal.fire({
+          title: 'Sesión Expirada',
+          text: 'Tu sesión ha expirado. Por favor, inicia sesión nuevamente.',
+          icon: 'warning',
+          confirmButtonText: 'Iniciar Sesión',
+          confirmButtonColor: '#d33',
+        }).then(() => {
+          cerrarSesion();
+          navigate('/iniciar-sesion');
+        });
+        return;
+      } else {
+        Swal.fire({
+          title: 'Error',
+          text: response.mensaje,
+          icon: 'error',
+          confirmButtonText: 'Cerrar',
+        });
+        console.error(response.mensaje);
+        return;
+      }
+    }
+
+    Swal.fire({
+      title: 'Docente Agregado',
+      text: response.mensaje,
+      icon: 'success',
+      confirmButtonText: 'Aceptar',
+      confirmButtonColor: '#3085d6',
+    });
+
+    cargarDocentes(0);
+    handleClose();
+  } catch (error) {
+    console.error(error);
+    Swal.fire({
+      title: 'Error',
+      text: 'Hubo un problema al agregar el docente. Por favor, inténtalo más tarde.',
+      icon: 'error',
+      confirmButtonText: 'Cerrar',
+    });
+  }
+};
 
   const iniciarEliminacion = (id) => {
     setDocenteIdEliminar(id);
