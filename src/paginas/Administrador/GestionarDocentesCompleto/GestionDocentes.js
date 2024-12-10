@@ -32,6 +32,16 @@ const GestionDocentes = () => {
   const setFotoBase64 = (base64) => {
     setNuevoDocente((prevDocente) => ({ ...prevDocente, fotoBase64: base64 }));
   };
+  const customSwalStyles = `
+  .swal2-container {
+    z-index: 2000 !important; /* Asegura que esté sobre los diálogos */
+  }
+`;
+
+const styleSheet = document.createElement("style");
+styleSheet.type = "text/css";
+styleSheet.innerText = customSwalStyles;
+document.head.appendChild(styleSheet);
 
     
   const cargarDocentes = async (id) => {
@@ -111,6 +121,9 @@ const GestionDocentes = () => {
         text: 'El nombre solo puede contener letras, espacios y puntos. No se permiten números ni otros caracteres especiales.',
         icon: 'warning',
         confirmButtonText: 'Cerrar',
+        customClass: {
+          container: 'swal2-container', // Usa el estilo con z-index alto
+        },
       });
       return;
     }
