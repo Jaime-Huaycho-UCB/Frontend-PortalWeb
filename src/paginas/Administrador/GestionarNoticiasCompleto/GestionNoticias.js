@@ -19,7 +19,7 @@ const GestionNoticias = () => {
     redactor: '',
     resumen: '',
     fechaPublicacion: '',
-    fotoRelleno: null,
+    fotoRelleno: '',
     fotoNoticia: '',
     noticia: '',
   });
@@ -28,6 +28,9 @@ const GestionNoticias = () => {
   const noticiasPerPage = 5;
   const setFotoNoticia = (base64) => {
     setNewNoticia((prevNoticia) => ({ ...prevNoticia, fotoNoticia: base64 }));
+  };
+  const setFotoRelleno = (base64) => {
+    setNewNoticia((prevNoticia) => ({ ...prevNoticia, fotoRelleno: base64 }));
   };
   const cargarNoticias = useCallback(async () => {
     try {
@@ -67,7 +70,7 @@ const GestionNoticias = () => {
       }
       cargarNoticias();
       setShowModal(false);
-      setNewNoticia({ titulo: '', redactor: '', resumen: '', fechaPublicacion: '', fotoRelleno: null, fotoNoticia: '', noticia: '' });
+      setNewNoticia({ titulo: '', redactor: '', resumen: '', fechaPublicacion: '', fotoRelleno: '', fotoNoticia: '', noticia: '' });
     } catch (error) {
       console.error("Error al agregar noticia:", error);
     }
@@ -258,6 +261,15 @@ const GestionNoticias = () => {
                 onChange={(e) => manejarCambioFoto(e, setFotoNoticia)}
               />
               {newNoticia.fotoNoticia && <img src={newNoticia.fotoNoticia} alt="Vista previa" className="foto-previa mt-3" />}
+            </Form.Group>
+            <Form.Group controlId="formFotoRelleno" className="mt-3">
+              <Form.Label>FotoRelleno</Form.Label>
+              <Form.Control
+                type="file"
+                accept="image/*"
+                onChange={(e) => manejarCambioFoto(e, setFotoRelleno)}
+              />
+              {newNoticia.fotoRelleno && <img src={newNoticia.fotoRelleno} alt="Vista previa" className="foto-previa mt-3" />}
             </Form.Group>
           </Form>
         </Modal.Body>
