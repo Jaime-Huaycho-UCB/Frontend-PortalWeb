@@ -152,17 +152,17 @@ const GestionEstudiantes = () => {
       return;
     }
   
-    if (!estudianteData.anio.trim()) {
+    if (!estudianteData.anio || isNaN(estudianteData.anio) || estudianteData.anio.toString().length !== 4) {
       Swal.fire({
-        title: 'Año Requerido',
-        text: 'Por favor, ingrese el año del estudiante.',
+        title: 'Año Inválido',
+        text: 'El año debe ser un número de cuatro dígitos.',
         icon: 'error',
         confirmButtonText: 'Cerrar',
       });
       handleClose();
       return;
     }
-  
+    
     if (!/^\d{4}$/.test(estudianteData.anio)) {
       Swal.fire({
         title: 'Año Inválido',
