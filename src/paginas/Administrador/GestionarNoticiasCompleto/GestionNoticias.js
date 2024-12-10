@@ -26,6 +26,146 @@ const GestionNoticias = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [activePage, setActivePage] = useState(1);
   const noticiasPerPage = 5;
+
+  const agregarNuevaNoticia = async () => {
+    // Validaciones
+    if (!newNoticia.titulo.trim()) {
+      Swal.fire({
+        title: 'Título Requerido',
+        text: 'El título de la noticia no puede estar vacío.',
+        icon: 'error',
+        confirmButtonText: 'Cerrar',
+      });
+      return;
+    }
+  
+    if (!newNoticia.redactor.trim()) {
+      Swal.fire({
+        title: 'Redactor Requerido',
+        text: 'El nombre del redactor no puede estar vacío.',
+        icon: 'error',
+        confirmButtonText: 'Cerrar',
+      });
+      return;
+    }
+  
+    if (!/^[a-zA-Z.\s]+$/.test(newNoticia.redactor)) {
+      Swal.fire({
+        title: 'Nombre de Redactor Inválido',
+        text: 'El nombre del redactor solo puede contener letras, espacios y puntos.',
+        icon: 'warning',
+        confirmButtonText: 'Cerrar',
+      });
+      return;
+    }
+  
+    if (!newNoticia.resumen.trim()) {
+      Swal.fire({
+        title: 'Resumen Requerido',
+        text: 'El resumen de la noticia no puede estar vacío.',
+        icon: 'error',
+        confirmButtonText: 'Cerrar',
+      });
+      return;
+    }
+  
+    if (!newNoticia.fechaPublicacion.trim()) {
+      Swal.fire({
+        title: 'Fecha Requerida',
+        text: 'La fecha de publicación no puede estar vacía.',
+        icon: 'error',
+        confirmButtonText: 'Cerrar',
+      });
+      return;
+    }
+  
+    const fechaRegex = /^\d{4}-\d{2}-\d{2}$/;
+    if (!fechaRegex.test(newNoticia.fechaPublicacion)) {
+      Swal.fire({
+        title: 'Fecha Inválida',
+        text: 'La fecha debe estar en formato YYYY-MM-DD.',
+        icon: 'warning',
+        confirmButtonText: 'Cerrar',
+      });
+      return;
+    }
+  
+    if (!newNoticia.fotoRelleno) {
+      Swal.fire({
+        title: 'Imagen Requerida',
+        text: 'Debes seleccionar una imagen de relleno para la noticia.',
+        icon: 'error',
+        confirmButtonText: 'Cerrar',
+      });
+      return;
+    }
+  
+    if (!newNoticia.noticia.trim()) {
+      Swal.fire({
+        title: 'Contenido Requerido',
+        text: 'El contenido de la noticia no puede estar vacío.',
+        icon: 'error',
+        confirmButtonText: 'Cerrar',
+      });
+      return;
+    }
+  
+    try {
+      const response = await agregarNoticia(newNoticia, idUsuario, token);
+      if (!response.salida) {
+        if (response.mensaje === 'TKIN') {
+          Swal.fire({
+            title: 'Sesión Expirada',
+            text: 'Tu sesión ha expirado. Por favor, inicia sesión nuevamente.',
+            icon: 'warning',
+            confirmButtonText: 'Iniciar Sesión',
+            confirmButtonColor: '#d33',
+          }).then(() => {
+            cerrarSesion();
+            navigate('/iniciar-sesion');
+          });
+          return;
+        } else {
+          Swal.fire({
+            title: 'Error',
+            text: response.mensaje,
+            icon: 'error',
+            confirmButtonText: 'Cerrar',
+          });
+          return;
+        }
+      }
+  
+      Swal.fire({
+        title: 'Noticia Agregada',
+        text: response.mensaje,
+        icon: 'success',
+        confirmButtonText: 'Aceptar',
+        confirmButtonColor: '#3085d6',
+      });
+  
+      cargarNoticias();
+      setShowModal(false);
+      setNewNoticia({
+        titulo: '',
+        redactor: '',
+        resumen: '',
+        fechaPublicacion: '',
+        fotoRelleno: null,
+        fotoNoticia: '',
+        noticia: '',
+      });
+    } catch (error) {
+      console.error('Error al agregar noticia:', error);
+      Swal.fire({
+        title: 'Error',
+        text: 'Hubo un problema al agregar la noticia. Por favor, inténtalo más tarde.',
+        icon: 'error',
+        confirmButtonText: 'Cerrar',
+      });
+    }
+  };
+  
   const setFotoNoticia = (base64) => {
     setNewNoticia((prevNoticia) => ({ ...prevNoticia, fotoNoticia: base64 }));
   };
@@ -113,26 +253,7 @@ const GestionNoticias = () => {
     setFilteredNoticias(filtered);
   }, [searchTerm, noticias]);
 
-  const agregarNuevaNoticia = async () => {
-    try {
-      const response = await agregarNoticia(newNoticia, idUsuario, token);
-      if (!response.salida) {
-        if(response.mensaje==='TKIN'){
-          cerrarSesion();
-          navigate('/iniciar-sesion');
-          return;
-        }else{
-          console.log(response.mensaje);
-        }
-      }
-      cargarNoticias();
-      setShowModal(false);
-      setNewNoticia({ titulo: '', redactor: '', resumen: '', fechaPublicacion: '', fotoRelleno: null, fotoNoticia: '', noticia: '' });
-    } catch (error) {
-      console.error("Error al agregar noticia:", error);
-    }
-  };
-
+  
   const iniciarEdicion = (noticia) => {
     setIsUpdating(true);
     // Asegúrate de que aquí estás asignando el id correctamente, revisa si es `noticia.id` o `noticia.idNoticia`
@@ -151,23 +272,145 @@ const GestionNoticias = () => {
   
 
   const actualizarNoticiaExistente = async () => {
+    // Validaciones
+    if (!newNoticia.titulo.trim()) {
+      Swal.fire({
+        title: 'Título Requerido',
+        text: 'El título de la noticia no puede estar vacío.',
+        icon: 'error',
+        confirmButtonText: 'Cerrar',
+      });
+      return;
+    }
+  
+    if (!newNoticia.redactor.trim()) {
+      Swal.fire({
+        title: 'Redactor Requerido',
+        text: 'El nombre del redactor no puede estar vacío.',
+        icon: 'error',
+        confirmButtonText: 'Cerrar',
+      });
+      return;
+    }
+  
+    if (!/^[a-zA-Z.\s]+$/.test(newNoticia.redactor)) {
+      Swal.fire({
+        title: 'Nombre de Redactor Inválido',
+        text: 'El nombre del redactor solo puede contener letras, espacios y puntos.',
+        icon: 'warning',
+        confirmButtonText: 'Cerrar',
+      });
+      return;
+    }
+  
+    if (!newNoticia.resumen.trim()) {
+      Swal.fire({
+        title: 'Resumen Requerido',
+        text: 'El resumen de la noticia no puede estar vacío.',
+        icon: 'error',
+        confirmButtonText: 'Cerrar',
+      });
+      return;
+    }
+  
+    if (!newNoticia.fechaPublicacion.trim()) {
+      Swal.fire({
+        title: 'Fecha Requerida',
+        text: 'La fecha de publicación no puede estar vacía.',
+        icon: 'error',
+        confirmButtonText: 'Cerrar',
+      });
+      return;
+    }
+  
+    const fechaRegex = /^\d{4}-\d{2}-\d{2}$/;
+    if (!fechaRegex.test(newNoticia.fechaPublicacion)) {
+      Swal.fire({
+        title: 'Fecha Inválida',
+        text: 'La fecha debe estar en formato YYYY-MM-DD.',
+        icon: 'warning',
+        confirmButtonText: 'Cerrar',
+      });
+      return;
+    }
+  
+    if (!newNoticia.fotoRelleno) {
+      Swal.fire({
+        title: 'Imagen Requerida',
+        text: 'Debes seleccionar una imagen de relleno para la noticia.',
+        icon: 'error',
+        confirmButtonText: 'Cerrar',
+      });
+      return;
+    }
+  
+    if (!newNoticia.noticia.trim()) {
+      Swal.fire({
+        title: 'Contenido Requerido',
+        text: 'El contenido de la noticia no puede estar vacío.',
+        icon: 'error',
+        confirmButtonText: 'Cerrar',
+      });
+      return;
+    }
+  
     try {
       const response = await actualizarNoticia(noticiaSeleccionada, newNoticia, idUsuario, token);
-      if (!response.salida && response.mensaje === 'TKIN') {
-        cerrarSesion();
-        navigate('/iniciar-sesion');
-        return;
+  
+      if (!response.salida) {
+        if (response.mensaje === 'TKIN') {
+          Swal.fire({
+            title: 'Sesión Expirada',
+            text: 'Tu sesión ha expirado. Por favor, inicia sesión nuevamente.',
+            icon: 'warning',
+            confirmButtonText: 'Iniciar Sesión',
+            confirmButtonColor: '#d33',
+          }).then(() => {
+            cerrarSesion();
+            navigate('/iniciar-sesion');
+          });
+          return;
+        } else {
+          Swal.fire({
+            title: 'Error',
+            text: response.mensaje,
+            icon: 'error',
+            confirmButtonText: 'Cerrar',
+          });
+          return;
+        }
       }
+  
+      Swal.fire({
+        title: 'Noticia Actualizada',
+        text: response.mensaje,
+        icon: 'success',
+        confirmButtonText: 'Aceptar',
+        confirmButtonColor: '#3085d6',
+      });
+  
       cargarNoticias();
       setShowModal(false);
       setIsUpdating(false);
-      setNewNoticia({ titulo: '', redactor: '', resumen: '', fechaPublicacion: '', fotoRelleno: '', fotoNoticia: '', noticia: '' });
+      setNewNoticia({
+        titulo: '',
+        redactor: '',
+        resumen: '',
+        fechaPublicacion: '',
+        fotoRelleno: null,
+        fotoNoticia: '',
+        noticia: '',
+      });
     } catch (error) {
-      console.error("Error al actualizar noticia:", error);
+      console.error('Error al actualizar noticia:', error);
+      Swal.fire({
+        title: 'Error',
+        text: 'Hubo un problema al actualizar la noticia. Por favor, inténtalo más tarde.',
+        icon: 'error',
+        confirmButtonText: 'Cerrar',
+      });
     }
   };
-  
-
   
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
