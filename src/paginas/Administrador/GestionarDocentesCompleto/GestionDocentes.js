@@ -102,7 +102,6 @@ const GestionDocentes = () => {
         icon: 'warning',
         confirmButtonText: 'Cerrar',
       });
-      handleClose();
       return;
     }
   
@@ -113,7 +112,6 @@ const GestionDocentes = () => {
         icon: 'warning',
         confirmButtonText: 'Cerrar',
       });
-      handleClose();
       return;
     }
     
@@ -125,7 +123,6 @@ const GestionDocentes = () => {
         icon: 'warning',
         confirmButtonText: 'Cerrar',
       });
-      handleClose();
       return;
     }
   
@@ -136,7 +133,6 @@ const GestionDocentes = () => {
         icon: 'warning',
         confirmButtonText: 'Cerrar',
       });
-      handleClose();
       return;
     }
   
@@ -147,7 +143,6 @@ const GestionDocentes = () => {
         icon: 'warning',
         confirmButtonText: 'Cerrar',
       });
-      handleClose();
       return;
     }
   
@@ -165,7 +160,7 @@ const GestionDocentes = () => {
           }).then(() => {
             cerrarSesion();
             navigate('/iniciar-sesion');
-          }); handleClose();
+          });
           return;
         } else {
           Swal.fire({
@@ -175,7 +170,6 @@ const GestionDocentes = () => {
             confirmButtonText: 'Cerrar',
           });
           console.error(response.mensaje);
-          handleClose();
           return;
         }
       }
@@ -198,7 +192,6 @@ const GestionDocentes = () => {
         icon: 'error',
         confirmButtonText: 'Cerrar',
       });
-      handleClose();
     }
   };
   

@@ -115,6 +115,7 @@ const GestionEstudiantes = () => {
         icon: 'error',
         confirmButtonText: 'Cerrar',
       });
+      handleClose();
       return;
     }
   
@@ -125,6 +126,7 @@ const GestionEstudiantes = () => {
         icon: 'warning',
         confirmButtonText: 'Cerrar',
       });
+      handleClose();
       return;
     }
   
@@ -135,6 +137,7 @@ const GestionEstudiantes = () => {
         icon: 'error',
         confirmButtonText: 'Cerrar',
       });
+      handleClose();
       return;
     }
   
@@ -145,16 +148,7 @@ const GestionEstudiantes = () => {
         icon: 'warning',
         confirmButtonText: 'Cerrar',
       });
-      return;
-    }
-  
-    if (!estudianteData.nivelAcademico.trim()) {
-      Swal.fire({
-        title: 'Nivel Académico Requerido',
-        text: 'Por favor, seleccione el nivel académico del estudiante.',
-        icon: 'error',
-        confirmButtonText: 'Cerrar',
-      });
+      handleClose();
       return;
     }
   
@@ -165,6 +159,7 @@ const GestionEstudiantes = () => {
         icon: 'error',
         confirmButtonText: 'Cerrar',
       });
+      handleClose();
       return;
     }
   
@@ -175,6 +170,7 @@ const GestionEstudiantes = () => {
         icon: 'warning',
         confirmButtonText: 'Cerrar',
       });
+      handleClose();
       return;
     }
   
@@ -206,6 +202,7 @@ const GestionEstudiantes = () => {
             cerrarSesion();
             navigate('/iniciar-sesion');
           });
+          handleClose();
           return;
         } else {
           Swal.fire({
@@ -213,7 +210,7 @@ const GestionEstudiantes = () => {
             text: response.mensaje,
             icon: 'error',
             confirmButtonText: 'Cerrar',
-          });
+          });  handleClose();
           return;
         }
       }
@@ -237,6 +234,7 @@ const GestionEstudiantes = () => {
         icon: 'error',
         confirmButtonText: 'Cerrar',
       });
+      handleClose();
     }
   };
   
