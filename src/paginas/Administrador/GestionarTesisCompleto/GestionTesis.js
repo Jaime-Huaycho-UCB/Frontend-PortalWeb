@@ -147,37 +147,42 @@ const GestionTesis = () => {
       </StyledButton>
 
       <Grid container spacing={3}>
-        {tesisList.map((tesis) => (
-          <Grid item xs={12} key={tesis.id}>
-            <StyledCard>
-              <CardContent>
-                <Typography variant="h6" sx={{ color: '#002855' }}>{tesis.tesis.titulo}</Typography>
-                <Typography variant="body2" color="textSecondary" gutterBottom>
-                  Fecha de Publicación: {tesis.tesis.fechaPublicacion}
-                  autor: {tesis.estudiante.nombre || 'N/A'}
-                </Typography>
-                <Typography variant="body2" gutterBottom>
-                  Resumen: {tesis.tesis.resumen}
-                </Typography>
-                <Button
-                  variant="outlined"
-                  sx={{ borderColor: '#002855', color: '#002855', mt: 2 }}
-                  onClick={() => openPdfModal(tesis.tesis.id)}
-                >
-                  Ver Contenido PDF
-                </Button>
-                <Button
-                  startIcon={<DeleteIcon />}
-                  sx={{ mt: 2, color: '#BA0C2F' }}
-                  onClick={() => handleDelete(tesis.id)}
-                >
-                  Eliminar
-                </Button>
-              </CardContent>
-            </StyledCard>
-          </Grid>
-        ))}
-      </Grid>
+  {tesisList.map((tesis) => (
+    <Grid item xs={12} key={tesis.id}>
+      <StyledCard>
+        <CardContent>
+          <Typography variant="h6" sx={{ color: '#002855' }}>{tesis.tesis.titulo}</Typography>
+          <Typography variant="body2" color="textSecondary" gutterBottom>
+            Fecha de Publicación: {tesis.tesis.fechaPublicacion}
+            <br />
+            {tesis.estudiante ? (
+              <>Autor: {tesis.estudiante.nombre}</>
+            ) : (
+              <>Autor: No especificado</>
+            )}
+          </Typography>
+          <Typography variant="body2" gutterBottom>
+            Resumen: {tesis.tesis.resumen}
+          </Typography>
+          <Button
+            variant="outlined"
+            sx={{ borderColor: '#002855', color: '#002855', mt: 2 }}
+            onClick={() => openPdfModal(tesis.tesis.id)}
+          >
+            Ver Contenido PDF
+          </Button>
+          <Button
+            startIcon={<DeleteIcon />}
+            sx={{ mt: 2, color: '#BA0C2F' }}
+            onClick={() => handleDelete(tesis.id)}
+          >
+            Eliminar
+          </Button>
+        </CardContent>
+      </StyledCard>
+    </Grid>
+  ))}
+</Grid>
 
       {/* PDF Viewer Dialog */}
       <Dialog open={openPdfViewer} onClose={() => setOpenPdfViewer(false)} maxWidth="md" fullWidth>
