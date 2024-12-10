@@ -325,15 +325,6 @@ const GestionNoticias = () => {
       return;
     }
   
-    if (!newNoticia.fotoRelleno) {
-      Swal.fire({
-        title: 'Imagen Requerida',
-        text: 'Debes seleccionar una imagen de relleno para la noticia.',
-        icon: 'error',
-        confirmButtonText: 'Cerrar',
-      });
-      return;
-    }
   
     if (!newNoticia.noticia.trim()) {
       Swal.fire({
