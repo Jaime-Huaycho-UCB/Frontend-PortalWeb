@@ -40,8 +40,19 @@ const GestionDocentes = () => {
       const data = await obtenerDocentesTodo(id);
       if (data.salida) {
         setDocentes(data.docentes);
-      }else{
+      } else {
         setDocentes([]);
+        // Mostrar alerta cuando no hay docentes
+        Swal.fire({
+          title: 'Sin Resultados',
+          text: data.mensaje || 'No se encontraron docentes disponibles para el criterio seleccionado.',
+          icon: 'info',
+          confirmButtonText: 'Aceptar',
+          confirmButtonColor: '#3085d6', // Color del botón de confirmación
+          customClass: {
+            title: 'swal-title-fixed', // Clase personalizada para el título
+          },
+        });
       }
   
       // Obtener títulos
@@ -49,6 +60,14 @@ const GestionDocentes = () => {
       setTitulos(titulos || []);
     } catch (error) {
       console.error("Error al cargar docentes o títulos:", error);
+      // Mostrar alerta en caso de error
+      Swal.fire({
+        title: 'Error',
+        text: 'Hubo un problema al cargar los docentes o los títulos. Por favor, intenta nuevamente más tarde.',
+        icon: 'error',
+        confirmButtonText: 'Cerrar',
+        confirmButtonColor: '#d33', // Botón de error en rojo
+      });
     }
   };
   
@@ -86,15 +105,16 @@ const GestionDocentes = () => {
       return;
     }
   
-    if (!/^[a-zA-Z\s]+$/.test(docenteData.nombre)) {
+    if (!/^[a-zA-Z\s.]+$/.test(docenteData.nombre)) {
       Swal.fire({
         title: 'Nombre Inválido',
-        text: 'El nombre solo puede contener letras y espacios. No se permiten números ni caracteres especiales.',
+        text: 'El nombre solo puede contener letras, espacios y puntos. No se permiten números ni otros caracteres especiales.',
         icon: 'warning',
         confirmButtonText: 'Cerrar',
       });
       return;
     }
+    
   
     if (!docenteData.correo.trim()) {
       Swal.fire({
@@ -259,16 +279,17 @@ const GestionDocentes = () => {
     }
   
     // Validar que el nombre no contenga caracteres especiales ni números
-    const nombreValido = /^[a-zA-Z\s]+$/.test(nuevoDocente.nombre);
+    const nombreValido = /^[a-zA-Z\s.]+$/.test(nuevoDocente.nombre);
     if (!nombreValido) {
       Swal.fire({
         title: 'Nombre Inválido',
-        text: 'El nombre no debe contener números ni caracteres especiales.',
+        text: 'El nombre solo puede contener letras, espacios y puntos. No se permiten números ni otros caracteres especiales.',
         icon: 'error',
         confirmButtonText: 'Cerrar',
       });
       return;
     }
+    
   
     // Validar formato del correo
     const correoValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(nuevoDocente.correo);
