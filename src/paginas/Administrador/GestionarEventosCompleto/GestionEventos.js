@@ -213,7 +213,7 @@ const GestionEventos = () => {
             director: evento.director,
             fecha: evento.fecha,
             lugar: evento.lugar,
-            fotoBase64: evento.fotoBase64 || '',
+            fotoBase64:null,
         });
         setShowModal(true);
     };
