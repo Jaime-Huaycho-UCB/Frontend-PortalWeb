@@ -396,6 +396,7 @@ const GestionDocentes = () => {
         </Select>
       </FormControl>
     </div>
+    <div className='cartasDocentes'>
       <Row>
         {docentes.map((docente) => (
           <Col md={4} key={docente.id}>
@@ -420,7 +421,7 @@ const GestionDocentes = () => {
           </Col>
         ))}
       </Row>
-
+</div>
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton className="modal-header">
           <Modal.Title>{isUpdating ? 'Actualizar Docente' : 'Agregar Docente'}</Modal.Title>
