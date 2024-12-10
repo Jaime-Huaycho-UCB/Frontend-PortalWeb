@@ -108,20 +108,7 @@ const GestionTesis = () => {
         setSelectedPdf(null);
         setOpenPdfViewer(false);
     };
-    const fadeIn = keyframes`
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-`;
-
-const StyledCard = styled(Card)`
-  animation: ${fadeIn} 0.5s ease-out;
-  transition: box-shadow 0.3s ease, transform 0.3s ease;
-  &:hover {
-    box-shadow: 0px 8px 16px rgba(0, 40, 85, 0.2);
-    transform: scale(1.02);
-  }
-`;
-
+ 
 const StyledButton = styled(Button)(({ theme }) => ({
     backgroundColor: '#BA0C2F',
     color: '#FFFFFF',
