@@ -4,7 +4,7 @@ import { agregarNoticia, obtenerNoticias, actualizarNoticia, eliminarNoticia ,ma
 import { AuthContext } from '../../../contextos/ContextoAutenticacion';
 import { useNavigate } from 'react-router-dom';
 import './GestionNoticias.css';
-
+import Swal from 'sweetalert2';
 const GestionNoticias = () => {
   const { idUsuario, token, cerrarSesion } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -19,7 +19,7 @@ const GestionNoticias = () => {
     redactor: '',
     resumen: '',
     fechaPublicacion: '',
-    fotoRelleno: '',
+    fotoRelleno: null,
     fotoNoticia: '',
     noticia: '',
   });
@@ -70,7 +70,7 @@ const GestionNoticias = () => {
       }
       cargarNoticias();
       setShowModal(false);
-      setNewNoticia({ titulo: '', redactor: '', resumen: '', fechaPublicacion: '', fotoRelleno: '', fotoNoticia: '', noticia: '' });
+      setNewNoticia({ titulo: '', redactor: '', resumen: '', fechaPublicacion: '', fotoRelleno: null, fotoNoticia: '', noticia: '' });
     } catch (error) {
       console.error("Error al agregar noticia:", error);
     }
@@ -85,7 +85,7 @@ const GestionNoticias = () => {
       redactor: noticia.redactor,
       resumen: noticia.resumen,
       fechaPublicacion: noticia.fechaPublicacion,
-      fotoRelleno: '',
+      fotoRelleno: null,
       fotoNoticia: '',
       noticia: noticia.noticia,
     });
@@ -110,25 +110,48 @@ const GestionNoticias = () => {
     }
   };
   
-
   const confirmarEliminacion = async (id) => {
     try {
       const response = await eliminarNoticia(id, idUsuario, token);
       if (!response.salida) {
-        if(response.mensaje === 'TKIN') {
-          cerrarSesion();
-          navigate('/iniciar-sesion');
+        if (response.mensaje === 'TKIN') {
+          Swal.fire({
+            title: 'Sesión Expirada',
+            text: 'Tu sesión ha expirado. Por favor, inicia sesión nuevamente.',
+            icon: 'warning',
+            confirmButtonText: 'Iniciar Sesión',
+          }).then(() => {
+            cerrarSesion();
+            navigate('/iniciar-sesion');
+          });
           return;
         } else {
-          console.log(response.mensaje);
+          Swal.fire({
+            title: 'Error',
+            text: response.mensaje || 'No se pudo eliminar la noticia.',
+            icon: 'error',
+            confirmButtonText: 'Cerrar',
+          });
+          return;
         }
-      } else {
-        // Actualizar el estado de noticias manualmente
-        setNoticias(prevNoticias => prevNoticias.filter(noticia => noticia.id !== id));
-        cargarNoticias(); // Cargar las noticias actualizadas
       }
+  
+      Swal.fire({
+        title: 'Eliminada',
+        text: response.mensaje || 'La noticia ha sido eliminada exitosamente.',
+        icon: 'success',
+        confirmButtonText: 'Aceptar',
+      });
+  
+      await cargarNoticias(); // Recargar noticias después de eliminar
     } catch (error) {
       console.error("Error al eliminar noticia:", error);
+      Swal.fire({
+        title: 'Error',
+        text: 'Hubo un problema al intentar eliminar la noticia. Por favor, inténtalo más tarde.',
+        icon: 'error',
+        confirmButtonText: 'Cerrar',
+      });
     }
   };
   
@@ -262,15 +285,7 @@ const GestionNoticias = () => {
               />
               {newNoticia.fotoNoticia && <img src={newNoticia.fotoNoticia} alt="Vista previa" className="foto-previa mt-3" />}
             </Form.Group>
-            <Form.Group controlId="formFotoRelleno" className="mt-3">
-              <Form.Label>FotoRelleno</Form.Label>
-              <Form.Control
-                type="file"
-                accept="image/*"
-                onChange={(e) => manejarCambioFoto(e, setFotoRelleno)}
-              />
-              {newNoticia.fotoRelleno && <img src={newNoticia.fotoRelleno} alt="Vista previa" className="foto-previa mt-3" />}
-            </Form.Group>
+          
           </Form>
         </Modal.Body>
         <Modal.Footer>
