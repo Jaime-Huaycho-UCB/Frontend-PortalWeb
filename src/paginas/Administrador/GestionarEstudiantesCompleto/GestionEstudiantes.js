@@ -8,7 +8,7 @@ import {
 import { AuthContext } from '../../../contextos/ContextoAutenticacion';
 import { useNavigate } from 'react-router-dom';
 import './GestionEstudiantes.css';
-
+import Swal from 'sweetalert2';
 const GestionEstudiantes = () => {
   const { idUsuario, token } = useContext(AuthContext);
   const [estudiantes, setEstudiantes] = useState([]);
@@ -45,13 +45,21 @@ const GestionEstudiantes = () => {
       setLoading(true);
   
       // Obtener estudiantes
-      const estudiantesResponse = id === 0 
+      const estudiantesResponse = id === 0
         ? await obtenerEstudiantes(0) // Trae todos los estudiantes
         : await obtenerEstudiantes(id); // Filtra por el ID
+  
       if (estudiantesResponse.salida) {
         setEstudiantes(estudiantesResponse.estudiantes || []);
-      }else{
+      } else {
         setEstudiantes([]);
+        Swal.fire({
+          title: 'Sin Resultados',
+          text: estudiantesResponse.mensaje || 'No se encontraron estudiantes para el filtro seleccionado.',
+          icon: 'info',
+          confirmButtonText: 'Aceptar',
+          confirmButtonColor: '#3085d6',
+        });
       }
   
       // Obtener niveles académicos
@@ -61,7 +69,13 @@ const GestionEstudiantes = () => {
       }
     } catch (error) {
       console.error(error);
-      setSnackbar({ open: true, message: 'Error al cargar datos', severity: 'error' });
+      Swal.fire({
+        title: 'Error',
+        text: 'Hubo un problema al cargar los datos. Por favor, inténtalo más tarde.',
+        icon: 'error',
+        confirmButtonText: 'Cerrar',
+        confirmButtonColor: '#d33',
+      });
     } finally {
       setLoading(false);
     }
@@ -88,40 +102,144 @@ const GestionEstudiantes = () => {
   };
 
   const handleShow = () => setShow(true);
-
   const agregarNuevoEstudiante = async () => {
-    setLoading(true);
     const estudianteData = {
       ...nuevoEstudiante,
     };
-
+  
+    // Validaciones
+    if (!estudianteData.nombre.trim()) {
+      Swal.fire({
+        title: 'Nombre Requerido',
+        text: 'El nombre del estudiante no puede estar vacío.',
+        icon: 'error',
+        confirmButtonText: 'Cerrar',
+      });
+      return;
+    }
+  
+    if (!/^[a-zA-Z.\s]+$/.test(estudianteData.nombre)) {
+      Swal.fire({
+        title: 'Nombre Inválido',
+        text: 'El nombre solo puede contener letras, puntos y espacios. No se permiten números ni caracteres especiales.',
+        icon: 'warning',
+        confirmButtonText: 'Cerrar',
+      });
+      return;
+    }
+  
+    if (!estudianteData.correo.trim()) {
+      Swal.fire({
+        title: 'Correo Requerido',
+        text: 'El correo del estudiante no puede estar vacío.',
+        icon: 'error',
+        confirmButtonText: 'Cerrar',
+      });
+      return;
+    }
+  
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(estudianteData.correo)) {
+      Swal.fire({
+        title: 'Correo Inválido',
+        text: 'Por favor, ingrese un correo electrónico válido.',
+        icon: 'warning',
+        confirmButtonText: 'Cerrar',
+      });
+      return;
+    }
+  
+    if (!estudianteData.nivelAcademico.trim()) {
+      Swal.fire({
+        title: 'Nivel Académico Requerido',
+        text: 'Por favor, seleccione el nivel académico del estudiante.',
+        icon: 'error',
+        confirmButtonText: 'Cerrar',
+      });
+      return;
+    }
+  
+    if (!estudianteData.anio.trim()) {
+      Swal.fire({
+        title: 'Año Requerido',
+        text: 'Por favor, ingrese el año del estudiante.',
+        icon: 'error',
+        confirmButtonText: 'Cerrar',
+      });
+      return;
+    }
+  
+    if (!/^\d{4}$/.test(estudianteData.anio)) {
+      Swal.fire({
+        title: 'Año Inválido',
+        text: 'El año debe ser un número de cuatro dígitos.',
+        icon: 'warning',
+        confirmButtonText: 'Cerrar',
+      });
+      return;
+    }
+  
+    if (!estudianteData.semestre.trim()) {
+      Swal.fire({
+        title: 'Semestre Requerido',
+        text: 'Por favor, ingrese el semestre del estudiante.',
+        icon: 'error',
+        confirmButtonText: 'Cerrar',
+      });
+      return;
+    }
+  
+    setLoading(true);
+  
     try {
       const response = await agregarEstudiante(estudianteData, idUsuario, token);
       setLoading(false);
+  
       if (!response.salida) {
         if (response.mensaje === 'TKIN') {
-          cerrarSesion();
-          navigate('/iniciar-sesion');
+          Swal.fire({
+            title: 'Sesión Expirada',
+            text: 'Tu sesión ha expirado. Por favor, inicia sesión nuevamente.',
+            icon: 'warning',
+            confirmButtonText: 'Iniciar Sesión',
+            confirmButtonColor: '#d33',
+          }).then(() => {
+            cerrarSesion();
+            navigate('/iniciar-sesion');
+          });
           return;
         } else {
-          console.error(response.mensaje);
-          setSnackbar({ open: true, message: response.mensaje, severity: 'error' });
+          Swal.fire({
+            title: 'Error',
+            text: response.mensaje,
+            icon: 'error',
+            confirmButtonText: 'Cerrar',
+          });
+          return;
         }
-      } else {
-        setUltimoEstudianteId(response.estudianteId);
-
-       cargarDatos(0);
-        cargarFiltros();
-        handleClose();
-        setSnackbar({ open: true, message: response.mensaje, severity: 'success' });
       }
+  
+      Swal.fire({
+        title: 'Estudiante Agregado',
+        text: response.mensaje,
+        icon: 'success',
+        confirmButtonText: 'Aceptar',
+        confirmButtonColor: '#3085d6',
+      });
+  
+      cargarDatos(0);
+      handleClose();
     } catch (error) {
       console.error(error);
       setLoading(false);
-      setSnackbar({ open: true, message: 'Error al agregar estudiante', severity: 'error' });
+      Swal.fire({
+        title: 'Error',
+        text: 'Hubo un problema al agregar el estudiante. Por favor, inténtalo más tarde.',
+        icon: 'error',
+        confirmButtonText: 'Cerrar',
+      });
     }
   };
-
+  
   const iniciarEliminacion = (id) => {
     setEstudianteIdEliminar(id);
     setShowEliminarDialog(true);
@@ -132,28 +250,55 @@ const GestionEstudiantes = () => {
     try {
       const response = await eliminarEstudiante(estudianteIdEliminar, idUsuario, token);
       setLoading(false);
+  
       if (!response.salida) {
         if (response.mensaje === 'TKIN') {
-          cerrarSesion();
-          navigate('/iniciar-sesion');
+          Swal.fire({
+            title: 'Sesión Expirada',
+            text: 'Tu sesión ha expirado. Por favor, inicia sesión nuevamente.',
+            icon: 'warning',
+            confirmButtonText: 'Iniciar Sesión',
+            confirmButtonColor: '#d33',
+          }).then(() => {
+            cerrarSesion();
+            navigate('/iniciar-sesion');
+          });
           return;
         } else {
+          Swal.fire({
+            title: 'Error',
+            text: response.mensaje,
+            icon: 'error',
+            confirmButtonText: 'Cerrar',
+          });
           console.error(response.mensaje);
-          setSnackbar({ open: true, message: response.mensaje, severity: 'error' });
+          return;
         }
-      } else {
-        cargarDatos(0);
-        setShowEliminarDialog(false);
-        setEstudianteIdEliminar(null);
-        setSnackbar({ open: true, message: 'Estudiante eliminado con éxito', severity: 'success' });
       }
+  
+      Swal.fire({
+        title: 'Estudiante Eliminado',
+        text: response.mensaje,
+        icon: 'success',
+        confirmButtonText: 'Aceptar',
+        confirmButtonColor: '#3085d6',
+      });
+  
+      cargarDatos(0);
+      setShowEliminarDialog(false);
+      setEstudianteIdEliminar(null);
     } catch (error) {
       console.error(error);
       setLoading(false);
-      setSnackbar({ open: true, message: 'Error al eliminar estudiante', severity: 'error' });
+      Swal.fire({
+        title: 'Error',
+        text: 'Hubo un problema al eliminar el estudiante. Por favor, inténtalo más tarde.',
+        icon: 'error',
+        confirmButtonText: 'Cerrar',
+      });
     }
   };
-
+  
   const iniciarActualizacion = (estudiante) => {
     console.log(estudiante);
     setIsUpdating(true); // Cambiar el estado para indicar que estamos actualizando
@@ -174,36 +319,108 @@ const GestionEstudiantes = () => {
   };
   
   const actualizarEstudianteExistente = async () => {
-    setLoading(true);
     const estudianteData = {
       ...nuevoEstudiante,
       foto: actualizarFoto ? nuevoEstudiante.foto : null,
+      nivelAcademico: nuevoEstudiante.nivelAcademico.trim() || null, // Enviar null si está vacío
+      anio: nuevoEstudiante.anio.trim() || null, // Enviar null si está vacío
+      semestre: nuevoEstudiante.semestre.trim() || null, // Enviar null si está vacío
     };
-
+  
+    // Validaciones
+    if (!estudianteData.nombre.trim()) {
+      Swal.fire({
+        title: 'Nombre Requerido',
+        text: 'El nombre del estudiante no puede estar vacío.',
+        icon: 'error',
+        confirmButtonText: 'Cerrar',
+      });
+      return;
+    }
+  
+    if (!/^[a-zA-Z.\s]+$/.test(estudianteData.nombre)) {
+      Swal.fire({
+        title: 'Nombre Inválido',
+        text: 'El nombre solo puede contener letras, puntos y espacios. No se permiten números ni caracteres especiales.',
+        icon: 'warning',
+        confirmButtonText: 'Cerrar',
+      });
+      return;
+    }
+  
+    if (!estudianteData.correo.trim()) {
+      Swal.fire({
+        title: 'Correo Requerido',
+        text: 'El correo del estudiante no puede estar vacío.',
+        icon: 'error',
+        confirmButtonText: 'Cerrar',
+      });
+      return;
+    }
+  
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(estudianteData.correo)) {
+      Swal.fire({
+        title: 'Correo Inválido',
+        text: 'Por favor, ingrese un correo electrónico válido.',
+        icon: 'warning',
+        confirmButtonText: 'Cerrar',
+      });
+      return;
+    }
+  
+    setLoading(true);
+  
     try {
       const response = await actualizarEstudiante(estudianteIdActualizar, estudianteData, idUsuario, token);
       setLoading(false);
+  
       if (!response.salida) {
         if (response.mensaje === 'TKIN') {
-          cerrarSesion();
-          navigate('/iniciar-sesion');
+          Swal.fire({
+            title: 'Sesión Expirada',
+            text: 'Tu sesión ha expirado. Por favor, inicia sesión nuevamente.',
+            icon: 'warning',
+            confirmButtonText: 'Iniciar Sesión',
+            confirmButtonColor: '#d33',
+          }).then(() => {
+            cerrarSesion();
+            navigate('/iniciar-sesion');
+          });
           return;
         } else {
-          console.error(response.mensaje);
-          setSnackbar({ open: true, message: response.mensaje, severity: 'error' });
+          Swal.fire({
+            title: 'Error',
+            text: response.mensaje,
+            icon: 'error',
+            confirmButtonText: 'Cerrar',
+          });
+          return;
         }
-      } else {
-        cargarDatos(0);
-        cargarFiltros();
-        handleClose();
-        setSnackbar({ open: true, message: 'Estudiante actualizado con éxito', severity: 'success' });
       }
+  
+      Swal.fire({
+        title: 'Estudiante Actualizado',
+        text: response.mensaje,
+        icon: 'success',
+        confirmButtonText: 'Aceptar',
+        confirmButtonColor: '#3085d6',
+      });
+  
+      cargarDatos(0);
+      cargarFiltros();
+      handleClose();
     } catch (error) {
       console.error(error);
       setLoading(false);
-      setSnackbar({ open: true, message: 'Error al actualizar estudiante', severity: 'error' });
+      Swal.fire({
+        title: 'Error',
+        text: 'Hubo un problema al actualizar el estudiante. Por favor, inténtalo más tarde.',
+        icon: 'error',
+        confirmButtonText: 'Cerrar',
+      });
     }
   };
+  
 
   const agregarTesis = (idEstudiante) => {
     navigate('/admin/gestion-tesis', { state: { openModal: true, idEstudiante } });
