@@ -320,9 +320,13 @@ const GestionEventos = () => {
             setShowModal(false);
             return;
         }
+        const eventoActualizado = { 
+            ...nuevoEvento, 
+            fotoBase64: nuevoEvento.fotoBase64 ? nuevoEvento.fotoBase64 : null 
+        };
     
         try {
-            const response = await actualizarEvento(eventoSeleccionado, nuevoEvento, idUsuario, token);
+            const response = await actualizarEvento(eventoSeleccionado, eventoActualizado, idUsuario, token);
     
             if (!response.salida) {
                 if (response.mensaje === 'TKIN') {
