@@ -137,9 +137,12 @@ const GestionDocentes = () => {
       frase: nuevoDocente.frase,
       fotoBase64: actualizarFoto ? nuevoDocente.fotoBase64 : null 
     };
+    console.log(docenteData);
 
     try {
+
       const response=await actualizarDocente(docenteIdActualizar, docenteData,idUsuario,token);
+      
       if (!response.salida) {
         if(response.mensaje==='TKIN'){
           cerrarSesion(); 
@@ -196,7 +199,13 @@ const GestionDocentes = () => {
         {docentes.map((docente) => (
           <Col md={4} key={docente.id}>
             <Card className="docente-card mb-4">
-              <Card.Img variant="top" src={docente.foto || 'https://cdn-icons-png.freepik.com/256/2307/2307607.png?ga=GA1.1.646280353.1730388091&semt=ais_hybrid'} alt="Foto del Docente" className="docente-foto" />
+            <Card.Img
+  variant="top"
+  src={docente.foto || process.env.PUBLIC_URL + '/sin.webp'}
+  alt="Foto del Docente"
+  className="docente-foto"
+/>
+
               <Card.Body>
                 <Card.Title>{docente.nombre}</Card.Title>
                 <Card.Text>Email: {docente.correo || 'N/A'}</Card.Text>
