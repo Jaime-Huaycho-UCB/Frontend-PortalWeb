@@ -58,6 +58,7 @@ const GestionTesis = () => {
         const response = await obtenerTesis();
         if (response.salida) {
           setTesisList(response.tesises);
+          console.log(response.tesises);
         }
       } catch (error) {
         console.error('Error al obtener tesis:', error);
