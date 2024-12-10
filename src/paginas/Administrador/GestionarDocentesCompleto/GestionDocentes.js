@@ -183,23 +183,55 @@ const GestionDocentes = () => {
 
   const confirmarEliminacion = async () => {
     try {
-      const response=await eliminarDocente(docenteIdEliminar, idUsuario,token);
+      const response = await eliminarDocente(docenteIdEliminar, idUsuario, token);
+  
       if (!response.salida) {
-        if(response.mensaje==='TKIN'){
-          cerrarSesion(); 
-          navigate('/iniciar-sesion'); 
+        if (response.mensaje === 'TKIN') {
+          Swal.fire({
+            title: 'Sesión Expirada',
+            text: 'Tu sesión ha expirado. Por favor, inicia sesión nuevamente.',
+            icon: 'warning',
+            confirmButtonText: 'Iniciar Sesión',
+            confirmButtonColor: '#d33',
+          }).then(() => {
+            cerrarSesion();
+            navigate('/iniciar-sesion');
+          });
           return;
-        }else{
-          console.error(response.mensaje)
+        } else {
+          Swal.fire({
+            title: 'Error',
+            text: response.mensaje,
+            icon: 'error',
+            confirmButtonText: 'Cerrar',
+          });
+          console.error(response.mensaje);
+          return;
         }
       }
+  
+      Swal.fire({
+        title: 'Docente Eliminado',
+        text: response.mensaje,
+        icon: 'success',
+        confirmButtonText: 'Aceptar',
+        confirmButtonColor: '#3085d6',
+      });
+  
       cargarDocentes(0);
       setShowEliminarModal(false);
       setDocenteIdEliminar(null);
     } catch (error) {
       console.error(error);
+      Swal.fire({
+        title: 'Error',
+        text: 'Hubo un problema al intentar eliminar el docente. Por favor, inténtalo más tarde.',
+        icon: 'error',
+        confirmButtonText: 'Cerrar',
+      });
     }
   };
+  
 
   const iniciarActualizacion = (docente) => {
     setIsUpdating(true);
