@@ -7,7 +7,7 @@ import { AuthContext } from '../../../contextos/ContextoAutenticacion';
 import { Worker, Viewer } from '@react-pdf-viewer/core';
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import styled, { keyframes } from 'styled-components';
-
+import Swal from 'sweetalert2';
 // Animations and Styled Components
 const fadeIn = keyframes`
   from { opacity: 0; transform: translateY(20px); }
@@ -58,15 +58,138 @@ const GestionTesis = () => {
       if (response.salida) {
         setTesisList(response.tesises);
         console.log(response.tesises);
+      } else {
+        Swal.fire({
+          title: 'Error al cargar las tesis',
+          text: response.mensaje,
+          icon: 'error',
+          confirmButtonText: 'Aceptar'
+        });
       }
     } catch (error) {
       console.error('Error al obtener tesis:', error);
+      Swal.fire({
+        title: 'Error',
+        text: 'Error al cargar las tesis. Por favor, inténtalo más tarde.',
+        icon: 'error',
+        confirmButtonText: 'Aceptar'
+      });
+    }
+  };
+  
+  const handleSubmit = async () => {
+    // Validaciones
+    if (!nuevoTesis.titulo.trim()) {
+      Swal.fire({
+        title: 'Campo Obligatorio',
+        text: 'El título de la tesis es obligatorio.',
+        icon: 'warning',
+        confirmButtonText: 'Aceptar'
+      });
+      return;
+    }
+    if (!nuevoTesis.fechaPublicacion.trim()) {
+      Swal.fire({
+        title: 'Campo Obligatorio',
+        text: 'La fecha de publicación es obligatoria.',
+        icon: 'warning',
+        confirmButtonText: 'Aceptar'
+      });
+      return;
+    }
+    if (!/\d{4}-\d{2}-\d{2}/.test(nuevoTesis.fechaPublicacion)) {
+      Swal.fire({
+        title: 'Formato Inválido',
+        text: 'La fecha de publicación debe estar en formato YYYY-MM-DD.',
+        icon: 'warning',
+        confirmButtonText: 'Aceptar'
+      });
+      return;
+    }
+    if (!nuevoTesis.resumen.trim()) {
+      Swal.fire({
+        title: 'Campo Obligatorio',
+        text: 'El resumen de la tesis es obligatorio.',
+        icon: 'warning',
+        confirmButtonText: 'Aceptar'
+      });
+      return;
+    }
+    if (!nuevoTesis.tesis.trim()) {
+      Swal.fire({
+        title: 'Archivo Requerido',
+        text: 'Debe subir un archivo PDF para la tesis.',
+        icon: 'warning',
+        confirmButtonText: 'Aceptar'
+      });
+      return;
+    }
+  
+    try {
+      const response = await agregarTesis(nuevoTesis, idUsuario, token, idEstudiante);
+      if (response.salida) {
+        Swal.fire({
+          title: 'Éxito',
+          text: 'Tesis agregada exitosamente.',
+          icon: 'success',
+          confirmButtonText: 'Aceptar'
+        });
+        cargarTesis(setTesisList); // Recargar las tesis después de agregar una nueva
+      } else {
+        Swal.fire({
+          title: 'Error',
+          text: response.mensaje,
+          icon: 'error',
+          confirmButtonText: 'Aceptar'
+        });
+      }
+    } catch (error) {
+      console.error('Error al agregar tesis:', error);
+      Swal.fire({
+        title: 'Error',
+        text: 'Error al agregar la tesis. Por favor, inténtalo más tarde.',
+        icon: 'error',
+        confirmButtonText: 'Aceptar'
+      });
+    }
+    setOpenDialog(false);
+  };
+  
+  // Delete Tesis
+  const handleDelete = async (idTesis) => {
+    try {
+      const response = await eliminarTesis(idTesis, idEstudiante, idUsuario, token);
+      if (response.salida) {
+        Swal.fire({
+          title: 'Éxito',
+          text: 'Tesis eliminada exitosamente.',
+          icon: 'success',
+          confirmButtonText: 'Aceptar'
+        });
+        cargarTesis(setTesisList);
+      } else {
+        Swal.fire({
+          title: 'Error',
+          text: response.mensaje,
+          icon: 'error',
+          confirmButtonText: 'Aceptar'
+        });
+      }
+    } catch (error) {
+      console.error('Error al eliminar tesis:', error);
+      Swal.fire({
+        title: 'Error',
+        text: 'Error al eliminar la tesis. Por favor, inténtalo más tarde.',
+        icon: 'error',
+        confirmButtonText: 'Aceptar'
+      });
     }
   };
   
   useEffect(() => {
     cargarTesis(setTesisList);
   }, []);
+  
   
   // Handle Input Changes
   const updateField = (field, value) => {
@@ -83,36 +206,6 @@ const GestionTesis = () => {
         updateField('tesis', base64);
       };
       reader.readAsDataURL(file);
-    }
-  };
-
-  // Submit New Tesis
-  const handleSubmit = async () => {
-    try {
-      const response = await agregarTesis(nuevoTesis, idUsuario, token, idEstudiante);
-      if (response.salida) {
-        alert('Tesis agregada exitosamente');
-        cargarTesis(setTesisList); // Recargar las tesis después de agregar una nueva
-      } else {
-        alert(`Error al agregar la tesis: ${response.mensaje}`);
-      }
-    } catch (error) {
-      console.error('Error al agregar tesis:', error);
-    }
-    setOpenDialog(false);
-  };
-  // Delete Tesis
-  const handleDelete = async (idTesis) => {
-    try {
-      const response = await eliminarTesis(idTesis, idEstudiante, idUsuario, token);
-      if (response.salida) {
-        alert('Tesis eliminada exitosamente');
-        setTesisList((prev) => prev.filter((tesis) => tesis.id !== idTesis));
-      } else {
-        alert(`Error al eliminar la tesis: ${response.mensaje}`);
-      }
-    } catch (error) {
-      console.error('Error al eliminar tesis:', error);
     }
   };
 
