@@ -174,16 +174,16 @@ const GestionEstudiantes = () => {
       return;
     }
   
-    if (!estudianteData.semestre.trim()) {
+    if (!estudianteData.semestre || isNaN(estudianteData.semestre)) {
       Swal.fire({
         title: 'Semestre Requerido',
-        text: 'Por favor, ingrese el semestre del estudiante.',
+        text: 'Por favor, ingrese un semestre válido.',
         icon: 'error',
         confirmButtonText: 'Cerrar',
       });
       return;
     }
-  
+    
     setLoading(true);
   
     try {
