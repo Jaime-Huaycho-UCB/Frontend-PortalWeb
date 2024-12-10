@@ -1,175 +1,213 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
-  Modal,
-  Container,
   Grid,
   Typography,
   Card,
   CardMedia,
   CardContent,
-  CardActions,
-  Button,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Modal,
   Box,
-  Fade,FormControl,InputLabel,Select,MenuItem
-} from "@mui/material";
-import { Email, School, Info } from "@mui/icons-material";
-import { obtenerEstudiantes, obtenerNivelesAcademicos,obtenerFiltros } from "../../../librerias/PeticionesApi";
-import "./ListaEgresados.css";
-import "aos/dist/aos.css"; // Animaciones de AOS
-import AOS from "aos";
+  Button,
+} from '@mui/material';
+import { Email, School, Event } from '@mui/icons-material';
 
+import { obtenerEstudiantes, obtenerFiltros } from '../../../librerias/PeticionesApi';
+import './ListaEgresados.css';
+import Swal from 'sweetalert2';
 const ListaEgresados = () => {
-  const [egresados, setEgresados] = useState([]);
-  const [showModal, setShowModal] = useState(false);
-  const [selectedEgresado, setSelectedEgresado] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    setLoading(true);
-    Promise.all([obtenerEstudiantes(), obtenerNivelesAcademicos()])
-      .then(([dataEstudiantes]) => {
-        if (dataEstudiantes.salida) {
-          setEgresados(dataEstudiantes.estudiantes);
-        }
-      })
-      .catch((error) => console.error("Error al cargar datos:", error))
-      .finally(() => setLoading(false));
-  }, []);
-
-  useEffect(() => {
-    AOS.init({ duration: 800, once: true });
-  }, []);
-
-  const handleShowModal = (egresado) => {
-    setSelectedEgresado(egresado);
-    setShowModal(true);
-  };
+  const [estudiantes, setEstudiantes] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [filtros, setFiltros] = useState([]);
-  const handleCloseModal = () => {
-    setShowModal(false);
-    setSelectedEgresado(null);
+  const [filtroSeleccionado, setFiltroSeleccionado] = useState(0);
+  const [selectedEstudiante, setSelectedEstudiante] = useState(null);
+  const [openModal, setOpenModal] = useState(false);
+  const handleOpenModal = (estudiante) => {
+    setSelectedEstudiante(estudiante);
+    setOpenModal(true);
   };
-  useEffect(() => {
-    const cargarFiltros = async () => {
-      try {
-        const data = await obtenerFiltros();
-        setFiltros(data.semestres.cadena); // Suponemos que la API devuelve un objeto con la clave "filtros"
-      } catch (error) {
-        console.error("Error al cargar los filtros:", error);
-      }
-    };
 
-    cargarFiltros();
+  const handleCloseModal = () => {
+    setSelectedEstudiante(null);
+    setOpenModal(false);
+  };
+
+  const cargarDatos = async (id) => {
+    try {
+      setLoading(true);
+      const estudiantesResponse = id === 0 
+        ? await obtenerEstudiantes(0) // Trae todos los estudiantes
+        : await obtenerEstudiantes(id); // Filtra por el ID
+      if (estudiantesResponse.salida) {
+        setEstudiantes(estudiantesResponse.estudiantes || []);
+      } else {
+        setEstudiantes([]);
+        Swal.fire({
+          title: '<strong>¡Sin Resultados Encontrados!</strong>',
+          html: `
+            <p style="font-size: 1.2rem; color: #666;">
+              Lamentablemente, no hay egresesados disponibles con el ano y semestre seleccionado. 
+              Por favor, prueba con otro filtro o vuelve a intentarlo más tarde.
+            </p>
+          `,
+          icon: 'info',
+          iconColor: '#ffd700', // Icono personalizado en color dorado
+          confirmButtonText: '<i class="fa fa-thumbs-up"></i> Entendido',
+          confirmButtonColor: '#1b2951', // Botón azul oscuro
+          background: '#f8f9fa', // Fondo claro
+          color: '#343a40', // Texto principal en gris oscuro
+          backdrop: `
+            rgba(0,0,123,0.4)
+            url("/ruta/a/tu-imagen.gif")
+            left top
+            no-repeat
+          `, // Fondo dinámico con un GIF o imagen
+          showClass: {
+            popup: 'animate__animated animate__fadeInDown', // Animación de entrada
+          },
+          hideClass: {
+            popup: 'animate__animated animate__fadeOutUp', // Animación de salida
+          },
+        });
+      }
+    } catch (error) {
+      console.error('Error al cargar estudiantes:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const cargarFiltros = async () => {
+    try {
+      const data = await obtenerFiltros();
+      if (data.salida) {
+        setFiltros(data.semestres || []);
+      }
+    } catch (error) {
+      console.error('Error al cargar filtros:', error);
+    }
+  };
+
+  useEffect(() => {
+    cargarDatos(0); // Cargar todos los estudiantes por defecto
+    cargarFiltros(); // Cargar los filtros disponibles
   }, []);
 
   return (
-    <Container maxWidth="lg" className="egresados-container3">
-      {/* Encabezado */}
-      <Fade in timeout={1000}>
-        <Typography variant="h3" className="titulo-principal3">
-          Nuestros Egresados
-        </Typography>
-      </Fade>
-      <Fade in timeout={1200}>
-        <Typography variant="body1" className="descripcion-principal3">
-          Conoce a nuestros estudiantes destacados, transformando aprendizaje en impacto global.
-        </Typography>
-      </Fade>
+    <div className="gestion-estudiantes-container5">
+     <div
+  className="titulo-container3"
+  style={{
+    backgroundImage: `url('/Mision2.jpg')`, // Ruta relativa desde la carpeta public
+  }}
+>
+  <h2 className="titulo-principal3">Nuestros Egresados</h2>
+</div>
+
+
+      
+      {/* Filtro */}
       <Typography variant="h4" align="center" gutterBottom>
         Filtrar Egresados
       </Typography>
-      {/* Combo Box Estático */}
-      <FormControl fullWidth sx={{ my: 3 }}>
-        <InputLabel id="filter-label">Filtrar por</InputLabel>
-        <Select labelId="filter-label" defaultValue="">
-          <MenuItem value="">Sin Filtrar</MenuItem>
-          <MenuItem value="nombre">Nombre</MenuItem>
-          <MenuItem value="nivelAcademico">Nivel Académico</MenuItem>
-          <MenuItem value="correo">Correo</MenuItem>
+      <FormControl fullWidth margin="dense" className="select-field1">
+        <InputLabel>Filtrar</InputLabel>
+        <Select
+          value={filtroSeleccionado}
+          onChange={(e) => {
+            const filtroId = e.target.value;
+            setFiltroSeleccionado(filtroId);
+            cargarDatos(filtroId);
+          }}
+        >
+          <MenuItem value={0}>Obtener Todo</MenuItem>
+          {filtros.map((filtro) => (
+            <MenuItem key={filtro.id} value={filtro.id}>
+              {filtro.cadena}
+            </MenuItem>
+          ))}
         </Select>
       </FormControl>
 
-      {/* Grid de Egresados */}
-      <Grid container spacing={4} className="grid-egresados3">
-        {loading ? (
-          Array(6)
-            .fill(0)
-            .map((_, index) => (
-              <Grid item xs={12} sm={6} md={4} key={index} className="skeleton-card3">
-                <div className="skeleton3"></div>
+      {/* Grid de estudiantes */}
+      <Grid container spacing={5} className="grid-estudiantes5" justifyContent="center">
+        {loading
+          ? Array(estudiantes.length || 6) // Mostrar placeholders equivalentes al número de estudiantes o 6 por defecto
+              .fill(0)
+              .map((_, index) => (
+                <Grid item xs={12} sm={6} md={4} key={`skeleton-${index}`}>
+                  <div className="skeleton-card9"></div> {/* Skeleton por tarjeta */}
+                </Grid>
+              ))
+          : estudiantes.map((estudiante) => (
+              <Grid item xs={12} sm={6} md={4} key={estudiante.id}>
+                <Card className="card5" onClick={() => handleOpenModal(estudiante)}>
+                  <CardMedia
+                    component="img"
+                    className="card-media5"
+                    height="200"
+                    image={estudiante.foto || 'https://cdn-icons-png.freepik.com/256/2307/2307607.png'}
+                    alt="Foto del Estudiante"
+                    style={{ objectFit: 'cover' }}
+                  />
+                 <CardContent className="card-content5">
+  <h3>{estudiante.nombre}</h3>
+  <p><Email fontSize="small" /> Correo :{estudiante.correo || 'N/A'}</p>
+  <p><School fontSize="small" /> Titulo : {estudiante.nivelAcademico || 'N/A'}</p>
+  <p><Event fontSize="small" /> Semestre :{estudiante.semestre || 'N/A'}</p>
+</CardContent>
+                </Card>
               </Grid>
-            ))
-        ) : (
-          egresados.map((egresado) => (
-            <Grid item xs={12} sm={6} md={4} key={egresado.id} data-aos="fade-up">
-              <Card className="egresado-card3">
-                <CardMedia
-                  component="img"
-                  height="180"
-                  image={egresado.foto || "https://cdn-icons-png.freepik.com/256/2307/2307607.png"}
-                  alt={egresado.nombre}
-                  className="egresado-image3"
-                  loading="lazy"
-                />
-                <CardContent className="egresado-content3">
-                  <Typography variant="h5" className="egresado-nombre3">
-                    {egresado.nombre}
-                  </Typography>
-                  <Typography variant="body3" className="egresado-titulo3">
-                    <School fontSize="small" /> {egresado.nivelAcademico}
-                  </Typography>
-                  <Typography variant="body3" className="egresado-email3">
-                    <Email fontSize="small" /> {egresado.correo}
-                  </Typography>
-                </CardContent>
-                <CardActions>
-                  <Button
-                    size="small"
-                    variant="outlined"
-                    className="btn-ver-mas3"
-                    startIcon={<Info />}
-                    onClick={() => handleShowModal(egresado)}
-                  >
-                    Ver más
-                  </Button>
-                </CardActions>
-              </Card>
-            </Grid>
-          ))
-        )}
+            ))}
       </Grid>
 
-      {/* Modal Detallado */}
-      {selectedEgresado && (
-        <Modal open={showModal} onClose={handleCloseModal}>
-          <Fade in>
-            <Box className="modal-box3">
-              <Typography variant="h4" className="modal-titulo3">
-                {selectedEgresado.nombre}
-              </Typography>
-              <img
-                src={selectedEgresado.foto || "https://cdn-icons-png.freepik.com/256/2307/2307607.png"}
-                alt={selectedEgresado.nombre}
-                className="modal-image3"
-                loading="lazy"
+      <Modal open={openModal} onClose={handleCloseModal}>
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            bgcolor: 'background.paper',
+            boxShadow: 24,
+            p: 4,
+            borderRadius: 2,
+            maxWidth: 400,
+            textAlign: 'center',
+          }}
+        >
+          {selectedEstudiante && (
+            <>
+              <CardMedia
+                component="img"
+                height="200"
+                image={selectedEstudiante.foto || 'https://cdn-icons-png.freepik.com/256/2307/2307607.png'}
+                alt={selectedEstudiante.nombre}
+                style={{
+                  objectFit: 'cover',
+                  borderRadius: '50%',
+                  margin: '0 auto 20px',
+                  width: '150px',
+                  height: '150px',
+                }}
               />
-              <Typography variant="body1" className="modal-texto3">
-                <strong>Email:</strong> {selectedEgresado.correo}
+              <Typography variant="h5" gutterBottom>
+                {selectedEstudiante.nombre}
               </Typography>
-              <Typography variant="body1" className="modal-texto3">
-                <strong>Nivel Académico:</strong> {selectedEgresado.nivelAcademico}
-              </Typography>
-              <Typography variant="body1" className="modal-texto3">
-                <strong>Biografía:</strong> {selectedEgresado.tesis || "Sin información adicional."}
-              </Typography>
-              <Button variant="contained" className="btn-cerrar3" onClick={handleCloseModal}>
+              <Typography>Email: {selectedEstudiante.correo || 'N/A'}</Typography>
+              <Typography>Nivel Académico: {selectedEstudiante.nivelAcademico || 'N/A'}</Typography>
+              <Typography>Semestre: {selectedEstudiante.semestre || 'N/A'}</Typography>
+              <Button onClick={handleCloseModal} sx={{ mt: 2 }} variant="contained" color="primary">
                 Cerrar
               </Button>
-            </Box>
-          </Fade>
-        </Modal>
-      )}
-    </Container>
+            </>
+          )}
+        </Box>
+      </Modal>
+    </div>
   );
 };
 

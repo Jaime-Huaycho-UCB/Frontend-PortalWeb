@@ -10,9 +10,9 @@ export const AuthProvider = ({ children }) => {
     token: null,
   });
 
-  const [tema, setTema] = useState(localStorage.getItem('tema') || 'light'); // Estado para el tema
+  const [tema, setTema] = useState(localStorage.getItem('tema') || 'light');
 
-  const iniciarSesion = (nuevoPermiso, nuevoIdUsuario, nuevoIdDocente, nuevoToken) => {
+  const iniciarSesion = (nuevoPermiso, nuevoIdUsuario, nuevoIdDocente, nuevoToken, navigate) => {
     const newAuth = {
       permiso: nuevoPermiso,
       idUsuario: nuevoIdUsuario,
@@ -21,6 +21,10 @@ export const AuthProvider = ({ children }) => {
     };
     setAuth(newAuth);
     localStorage.setItem('auth', JSON.stringify(newAuth));
+
+    if (navigate) {
+      navigate('/'); // Redirige a la página principal
+    }
     console.log("Iniciando sesión con los siguientes datos:");
     console.log("Permiso:", nuevoPermiso);
     console.log("idUsuario:", nuevoIdUsuario);
@@ -28,7 +32,7 @@ export const AuthProvider = ({ children }) => {
     console.log("Token:", nuevoToken);
   };
 
-  const cerrarSesion = () => {
+  const cerrarSesion = (navigate) => {
     setAuth({
       permiso: null,
       idUsuario: null,
@@ -36,22 +40,22 @@ export const AuthProvider = ({ children }) => {
       token: null,
     });
     localStorage.clear();
+
+    if (navigate) {
+      navigate('/iniciar-sesion'); // Redirige al inicio de sesión
+    }
   };
 
   const toggleTema = () => {
     const nuevoTema = tema === 'light' ? 'dark' : 'light';
     setTema(nuevoTema);
-    localStorage.setItem('tema', nuevoTema); // Persistencia del tema en el almacenamiento local
+    localStorage.setItem('tema', nuevoTema);
     document.documentElement.setAttribute('data-theme', nuevoTema);
   };
 
   useEffect(() => {
-    // Aplica el tema al cargar la aplicación
     document.documentElement.setAttribute('data-theme', tema);
-
-    // Limpia datos de autenticación al cargar por seguridad
-    localStorage.removeItem('auth');
-    console.log("Se ha limpiado cualquier información de autenticación previa.");
+    localStorage.removeItem('auth'); // Limpieza inicial de datos
   }, [tema]);
 
   return (

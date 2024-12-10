@@ -48,12 +48,12 @@
 
 /* Tarjetas */
 .gestion-estudiantes-container1 .card1 {
-  background: var(--background-color-card) !important;
+  background: var(--text-color-septimo) !important;
   border-radius: 20px !important;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
   transition: all 0.3s ease !important;
   overflow: hidden !important;
-  height: 420px !important;
+  height: 500px !important;
   position: relative !important;
 }
 
@@ -67,7 +67,7 @@
 .gestion-estudiantes-container1 .card-content1 {
   padding: 20px !important;
   text-align: center !important;
-  color: var(--text-color-septimo) !important;
+  color: #fff !important;
 }
 
 /* Botones dentro de las tarjetas */
@@ -109,7 +109,17 @@
   object-fit: cover !important;
   border-radius: 8px !important;
 }
-
+.card-media1 {
+  width: 170px !important; /* Ancho fijo para asegurar el círculo */
+  height: 170px !important; /* Alto fijo para asegurar el círculo */
+  border-radius: 50%; /* Crea el círculo perfecto */
+  object-fit: cover; /* Ajusta la imagen sin deformarla */
+  margin: 0 auto; /* Centra la imagen horizontalmente */
+  border: 5px solid orange; /* Borde opcional */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Sombra opcional */
+  margin-top: 40px; /* Ajusta hacia abajo */
+  margin-bottom: 10px; /* Ajusta hacia arriba */
+}
 /* Botón flotante para agregar tesis */
 .gestion-estudiantes-container1 .agregar-tesis-btn1 {
   position: absolute !important;

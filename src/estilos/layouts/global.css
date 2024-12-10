@@ -26,6 +26,8 @@
     --backgraund-color-2: rgba(0, 0, 0, 0.2);
     --backgraund-color-tercero: #ff6a00;
     --background-color-card:linear-gradient(to top, #ffffff, #f3f4f6) ;
+    --backgraund-color-cuarto: rgba(255, 106, 0, 0.7); /* Naranja semitransparente */
+
 
   }
   
@@ -46,6 +48,7 @@
     --backgraund-color-tercero: #ff8c42;
     --text-color-sexto: #d8a87a;
     --text-color-septimo: #ffffff;
+    --backgraund-color-cuarto: rgba(47, 54, 64, 0.6);
   }
   
   
@@ -106,11 +109,11 @@
   
 /* Estilo para que la estructura ocupe todo el viewport */
 html, body {
-  height: 100%  !important; /* Asegura que el HTML y BODY ocupen el 100% del viewport */
+  height: 100% !important;
   margin: 0 !important;
-  display: flex !important;
-  flex-direction: column !important;
+  padding: 0 !important;
 }
+
 
 /* El envoltorio principal debe ocupar todo el espacio restante */
 .wrapper {

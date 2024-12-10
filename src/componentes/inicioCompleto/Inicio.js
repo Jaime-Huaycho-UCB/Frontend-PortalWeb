@@ -1,12 +1,17 @@
-import React, { useState, useEffect ,useRef} from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Container,
   Typography,
   Button,
   Box,
-  IconButton,Tab,Tabs,
-  Grid,Paper,
-  Accordion,AccordionDetails,AccordionSummary
+  IconButton,
+  Tab,
+  Tabs,
+  Grid,
+  Paper,
+  Accordion,
+  AccordionDetails,
+  AccordionSummary
 } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -16,8 +21,12 @@ import './inicio.css';
 import { Bar } from 'react-chartjs-2'; // Para gráficos
 import 'chart.js/auto';
 import 'bootstrap/dist/css/bootstrap.min.css';
-
-
+import 'swiper/css'; // Estilo base de Swiper
+import 'swiper/css/navigation'; // Si usas navegación
+import 'swiper/css/pagination'; // Si usas paginación
+import 'swiper/css/effect-fade'; // Si usas el efecto fade
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Pagination, Autoplay, EffectFade } from 'swiper/modules';
 
 const Inicio = () => {
   // Carrusel: Manejo de imágenes
@@ -112,231 +121,72 @@ const Inicio = () => {
       elements.forEach((el) => observer.unobserve(el));
     };
   }, []);
+
+  
   return (
     <div className='wrapper'>
-    <Container className="container">
+    <Container className="container4">
     {/* Pantalla de Bienvenida */}
-    <div id='welcome-section1' className="welcome-section">
-  <video className="background-video" autoPlay loop muted>
-    <source src="/UCB3.mp4" type="video/mp4" />
-    Tu navegador no soporta videos.
-  </video>
+    <div id="welcome-section1" className="welcome-section">
+    
+      <Swiper
+        modules={[Autoplay, EffectFade, Navigation, Pagination]}
+        autoplay={{ delay: 3000, disableOnInteraction: false }} // Configuración de autoplay
+        effect="fade" // Transición con fade
+        navigation={true} // Botones de navegación
+        pagination={{ clickable: true }} // Paginación en puntos
+        loop={true} // Habilita el looping infinito
+        className="swiper-container"
+      >
+        {/* Diapositivas del carrusel */}
+        <SwiperSlide>
+          <img src="/Mision.jpg" alt="Imagen 1" className="swiper-slide-image" />
+        </SwiperSlide>
+        <SwiperSlide>
+          <img src="/Mision2.jpg" alt="Imagen 2" className="swiper-slide-image" />
+        </SwiperSlide>
+        <SwiperSlide>
+          <img src="/Proposito.jpg" alt="Imagen 3" className="swiper-slide-image" />
+        </SwiperSlide>
+      </Swiper>
 
-  <div className="welcome-content">
-    <div className="text-content">
-      <Typography variant="h6" className="subtitle">
-        A tu alcance
-      </Typography>
-      <Typography variant="h2" className="title">
-        Ciencias Políticas y <br /> Relaciones Internacionales
-      </Typography>
-      <Typography variant="body1" className="description">
-        "Formando líderes con visión global y compromiso social."
-      </Typography>
-      <Button className="btn-explore">Explorar Más</Button>
-    </div>
+      <div className="welcome-content0">
+    <div className="text-content0">
+      <h2 className="title0">Ciencias Políticas y Relaciones Internacionales</h2>
+      <p className="description0">"Formando líderes con visión global y compromiso social."</p>
+      <button
+  className="btn-explore0"
+  onClick={() => document.getElementById('ciencista').scrollIntoView({ behavior: 'smooth' })}
+>
+  Explorar Más
+</button>
 
-    <div className="image-content">
-      <img
-        src="/CPO - V.png"
-        alt="CPO UCB"
-        className="welcome-image"
-      />
     </div>
   </div>
-</div>
-<div id="purpose-section" className="purpose-section">
-      {/* Encabezado */}
-      <div className="purpose-header">
-        <h4 id="purpose-title" className="purpose-title">
-          Nuestra Esencia
-        </h4>
-        <p className="purpose-subtitle">
-          Descubre los valores que definen nuestra carrera
-        </p>
-      </div>
-
-      {/* Tarjetas */}
-      <div className="purpose-cards">
-        {/* Carta 1 */}
-        <div className="purpose-card animate-item">
-          <div className="carousel-container">
-            <Carrusel images={images1} />
-          </div>
-          <div className="card-content">
-            <div className="icon-circle">🎯</div>
-            <h5 className="card-title">Propósito</h5>
-            <p className="card-description">
-              La Carrera tiene como propósito formar profesionales con
-              liderazgo, innovación, sensibilidad social y compromiso ético.
-            </p>
-          </div>
-        </div>
-
-        {/* Carta 2 */}
-        <div className="purpose-card animate-item">
-          <div className="carousel-container">
-            <Carrusel images={images2} />
-          </div>
-          <div className="card-content">
-            <div className="icon-circle">🎓</div>
-            <h5 className="card-title">Misión</h5>
-            <p className="card-description">
-              Formar profesionales competitivos en Ciencias Políticas y
-              Relaciones Internacionales con una visión integral y ética.
-            </p>
-          </div>
-        </div>
-
-        {/* Carta 3 */}
-        <div className="purpose-card animate-item">
-          <div className="carousel-container">
-            <Carrusel images={images3} />
-          </div>
-          <div className="card-content">
-            <div className="icon-circle">🌎</div>
-            <h5 className="card-title">Visión</h5>
-            <p className="card-description">
-              Inspirar a los profesionales en Ciencias Políticas y Relaciones
-              Internacionales para liderar el cambio global.
-            </p>
-          </div>
-        </div>
-      </div>
     </div>
 
-<div className="section-container">
-  {/* Título de la sección */}
-  <div className="section-header">
-    <h4 className="section-title">¿Qué te ofrecemos?</h4>
+    <div  id='ciencista'  class="layoutCiencista">
+  <div class="videoCiencista">
+  <iframe 
+      width="100%" 
+      height="100%" 
+      src="https://www.youtube.com/embed/IkAJicIjGx8" 
+      title="YouTube video player" 
+      frameborder="0" 
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+      allowfullscreen>
+    </iframe>
   </div>
 
-  {/* Contenedor de tarjetas */}
-  <div className="cards-container">
-    {/* Carta 1 */}
-    <div className="card animate-item">
-      <div
-        className="card-background"
-        style={{ backgroundImage: "url(/Vision2.jpg)" }}
-      ></div>
-      <img src="/Calen.gif" alt="Icono Carta 1" className="card-icon" />
-      <div className="card-content">
-        <h6 className="card-title">Duración y Créditos</h6>
-        <ul className="card-list">
-          <li>
-            <CheckCircleIcon className="check-icon" />
-            Duración: 9 semestres
-          </li>
-          <li>
-            <CheckCircleIcon className="check-icon" />
-            Créditos totales: 284 créditos
-          </li>
-          <li>
-            <CheckCircleIcon className="check-icon" />
-            Horas académicas: 4,500 horas
-          </li>
-        </ul>
-      </div>
-    </div>
-
-    {/* Carta 2 */}
-    <div className="card animate-item">
-      <div
-        className="card-background"
-        style={{ backgroundImage: "url(/cop.jpg)" }}
-      ></div>
-      <img src="/alumno.gif" alt="Icono Carta 2" className="card-icon" />
-      <div className="card-content">
-        <h6 className="card-title">Modalidad de Graduación</h6>
-        <ul className="card-list">
-          <li>
-            <CheckCircleIcon className="check-icon" />
-            Tesis de Grado
-          </li>
-          <li>
-            <CheckCircleIcon className="check-icon" />
-            Graduación por Excelencia
-          </li>
-        </ul>
-      </div>
-    </div>
-
-    {/* Carta 3 */}
-    <div className="card animate-item">
-      <div
-        className="card-background"
-        style={{ backgroundImage: "url(/Proposito.jpg)" }}
-      ></div>
-      <img src="/libro.gif" alt="Icono Carta 3" className="card-icon" />
-      <div className="card-content">
-        <h6 className="card-title">Áreas de Estudio</h6>
-        <ul className="card-list">
-          <li>
-            <CheckCircleIcon className="check-icon" />
-            Historia Política
-          </li>
-          <li>
-            <CheckCircleIcon className="check-icon" />
-            Teoría y Análisis Políticos
-          </li>
-          <li>
-            <CheckCircleIcon className="check-icon" />
-            Relaciones Internacionales
-          </li>
-        </ul>
-      </div>
-    </div>
+  <div class="textCiencista">
+    <h2 class="titleCiencista">¿Qué significa ser un cientista político?</h2>
+    <p class="descriptionCiencista">
+      Ser un cientista político significa formar parte de una disciplina apasionante que analiza cómo se organiza el poder y se ejerce el gobierno en las sociedades, abarcando tanto el ámbito local como el internacional. Un cientista político es un líder con una sólida vocación pública, preparado para estudiar y comprender los complejos procesos políticos, sociales y económicos que afectan a las comunidades. Estos profesionales destacan por su capacidad para tomar decisiones estratégicas, diseñar políticas públicas innovadoras y aportar soluciones prácticas a los desafíos que enfrentan las sociedades contemporáneas. Si tu meta es influir en el futuro de tu país, comprender las dinámicas globales y contribuir al cambio social desde una perspectiva analítica y propositiva, la Ciencia Política es el camino ideal para convertirte en un cientista político comprometido con el progreso.
+    </p>
   </div>
 </div>
 
-<div className="layout-container">
-  {/* Contenedor Principal */}
-  <div className="layout-content">
-    {/* Contenedor del Título, Subtítulo y Video */}
-    <div className="video-section">
-      {/* Cabecera */}
-      <div className="header">
-        <Typography variant="h3" className="title1">
-          Descubre tu Futuro en Ciencias Políticas
-        </Typography>
-        <Typography variant="subtitle" className="subtitle1">
-          "Forma parte de una comunidad que inspira el cambio, lidera el progreso y conecta con el mundo."
-        </Typography>
-      </div>
 
-      {/* Video */}
-      <div className="video-container">
-        <Typography className="video-text">
-          "Inspirando a futuros líderes políticos."
-        </Typography>
-        <video className="video" autoPlay loop muted>
-          <source src="/UCB3.mp4" type="video/mp4" />
-          Tu navegador no soporta videos.
-        </video>
-      </div>
-    </div>
-
-    {/* Contenedor del Mosaico */}
-    <div className="mosaic-section">
-      <div className="mosaic-grid">
-        {mosaics.map((mosaic, index) => (
-          <div className="mosaic-item" key={index}>
-            <div
-              className="mosaic-background"
-              style={{ backgroundImage: `url(${mosaic.image})` }}
-            ></div>
-            <Typography className="mosaic-title">{mosaic.title}</Typography>
-            <div className="mosaic-hover">
-              <Typography className="mosaic-description">
-                {mosaic.description}
-              </Typography>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  </div>
-</div>
 <div className="history-container">
   {/* Texto Izquierdo */}
   <div className="history-text">
@@ -367,6 +217,189 @@ const Inicio = () => {
     ))}
   </div>
 </div>
+
+<div id="purpose-section" className="purpose-section">
+      {/* Encabezado */}
+      <div className="purpose-header">
+        <h4 id="purpose-title" className="purpose-title">
+          Nuestra Esencia
+        </h4>
+        <p className="purpose-subtitle">
+          Descubre los valores que definen nuestra carrera
+        </p>
+      </div>
+
+      {/* Tarjetas */}
+      <div className="purpose-cards">
+        {/* Carta 1 */}
+        <div className="purpose-card animate-item">
+          <div className="carousel-container">
+            <Carrusel images={images1} />
+          </div>
+          <div className="card-content000">
+            <div className="icon-circle000">🎯</div>
+            <h5 className="card-title000">Propósito</h5>
+            <p className="card-description000">
+              La Carrera tiene como propósito formar profesionales con
+              liderazgo, innovación, sensibilidad social y compromiso ético.
+            </p>
+          </div>
+        </div>
+
+        {/* Carta 2 */}
+        <div className="purpose-card animate-item">
+          <div className="carousel-container">
+            <Carrusel images={images2} />
+          </div>
+          <div className="card-content000">
+            <div className="icon-circle000">🎓</div>
+            <h5 className="card-title000">Misión</h5>
+            <p className="card-description000">
+              Formar profesionales competitivos en Ciencias Políticas y
+              Relaciones Internacionales con una visión integral y ética.
+            </p>
+          </div>
+        </div>
+
+        {/* Carta 3 */}
+        <div className="purpose-card animate-item">
+          <div className="carousel-container">
+            <Carrusel images={images3} />
+          </div>
+          <div className="card-content000">
+            <div className="icon-circle000">🌎</div>
+            <h5 className="card-title000">Visión</h5>
+            <p className="card-description000">
+              Inspirar a los profesionales en Ciencias Políticas y Relaciones
+              Internacionales para liderar el cambio global.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div className="section-container111">
+  {/* Título de la sección */}
+  <div className="section-header111">
+    <h4 className="section-title111">¿Qué te ofrecemos?</h4>
+  </div>
+
+  {/* Contenedor de tarjetas */}
+  <div className="cards-container111">
+    {/* Carta 1 */}
+    <div className="card111 flip-card111">
+      <div className="flip-card-inner111">
+        <div className="flip-card-front111">
+          <img src="/Calen.gif" alt="Icono Carta 1" className="card-icon-front111" />
+          <h6 className="card-title-front111">Duración y Créditos</h6>
+        </div>
+        <div className="flip-card-back111">
+          <div className="card-background111" style={{ backgroundImage: "url(/Vision2.jpg)" }}></div>
+          <div className="card-back-content111">
+            <img src="/Calen.gif" alt="Logo" className="card-icon-back111" />
+            <h6 className="card-title-back111">Duración y Créditos</h6>
+            <ul className="card-list111">
+              <li>Duración: 9 semestres</li>
+              <li>Créditos totales: 284 créditos</li>
+              <li>Horas académicas: 4,500 horas</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {/* Carta 2 */}
+    <div className="card111 flip-card111">
+      <div className="flip-card-inner111">
+        <div className="flip-card-front111">
+          <img src="/alumno.gif" alt="Icono Carta 2" className="card-icon-front111" />
+          <h6 className="card-title-front111">Modalidad de Graduación</h6>
+        </div>
+        <div className="flip-card-back111">
+          <div className="card-background111" style={{ backgroundImage: "url(/cop.jpg)" }}></div>
+          <div className="card-back-content111">
+            <img src="/alumno.gif" alt="Logo" className="card-icon-back111" />
+            <h6 className="card-title-back111">Modalidad de Graduación</h6>
+            <ul className="card-list111">
+              <li>Tesis de Grado</li>
+              <li>Graduación por Excelencia</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {/* Carta 3 */}
+    <div className="card111 flip-card111">
+      <div className="flip-card-inner111">
+        <div className="flip-card-front111">
+          <img src="/libro.gif" alt="Icono Carta 3" className="card-icon-front111" />
+          <h6 className="card-title-front111">Áreas de Estudio</h6>
+        </div>
+        <div className="flip-card-back111">
+          <div className="card-background111" style={{ backgroundImage: "url(/Proposito.jpg)" }}></div>
+          <div className="card-back-content111">
+            <img src="/libro.gif" alt="Logo" className="card-icon-back111" />
+            <h6 className="card-title-back111">Áreas de Estudio</h6>
+            <ul className="card-list111">
+              <li>Historia Política</li>
+              <li>Teoría y Análisis Políticos</li>
+              <li>Relaciones Internacionales</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div className="layout-container33">
+  {/* Sección Principal */}
+  <div className="layout-content33">
+    {/* Título, Subtítulo y Video */}
+    <div className="video-section33">
+      <div className="header33">
+        <Typography variant="h3" className="title33">
+          Descubre tu Futuro en Ciencias Políticas
+        </Typography>
+        <Typography variant="subtitle1" className="subtitle33">
+          "Forma parte de una comunidad que inspira el cambio, lidera el progreso y conecta con el mundo."
+        </Typography>
+      </div>
+      <div className="video-container33">
+        <video className="video33" autoPlay loop muted>
+          <source src="/UCB3.mp4" type="video/mp4" />
+          Tu navegador no soporta videos.
+        </video>
+        <button className="btn-explore33">Explorar Más</button>
+      </div>
+    </div>
+
+    {/* Tarjetas Interactivas */}
+    <div className="interactive-cards-section33">
+      <Typography variant="h4" className="section-title33">
+        Nuestras Áreas de Impacto
+      </Typography>
+      <div className="interactive-cards-container33">
+        {mosaics.map((mosaic, index) => (
+          <div className="interactive-card33" key={index}>
+            <div
+              className="interactive-card-background33"
+              style={{ backgroundImage: `url(${mosaic.image})` }}
+            ></div>
+            <div className="interactive-card-content33">
+              <div className="icon-wrapper33">
+                <img src={mosaic.icon} alt="Icon" className="card-icon33" />
+              </div>
+              <Typography className="interactive-card-title33">{mosaic.title}</Typography>
+              <Typography className="interactive-card-description33">{mosaic.description}</Typography>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</div>
+
+
 
 
     </Container>

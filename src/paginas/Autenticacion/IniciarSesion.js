@@ -17,8 +17,8 @@ const IniciarSesion = () => {
     e.preventDefault();
 
     try {
-      // const response = await axios.post('https://backend-portalweb-production.up.railway.app/usuario/inicioSesion', {
-        const response = await axios.post('http://localhost:8000/usuario/inicioSesion', {
+      const response = await axios.post('https://backend-portalweb-production.up.railway.app/usuario/inicioSesion', {
+        // const response = await axios.post('http://localhost:8000/usuario/inicioSesion', {
         correo: email,
         contrasena: password,
       });
@@ -27,7 +27,7 @@ const IniciarSesion = () => {
 
       if (salida) {
         iniciarSesion(parseInt(permiso, 10), idUsuario, idDocente, token);
-        navigate('/admin');
+        navigate('/');
       } else {
         setError(mensaje || 'Credenciales incorrectas');
       }

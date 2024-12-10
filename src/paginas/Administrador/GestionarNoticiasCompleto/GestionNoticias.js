@@ -19,7 +19,7 @@ const GestionNoticias = () => {
     redactor: '',
     resumen: '',
     fechaPublicacion: '',
-    fotoRelleno: '',
+    fotoRelleno: null,
     fotoNoticia: '',
     noticia: '',
   });
@@ -261,15 +261,6 @@ const GestionNoticias = () => {
                 onChange={(e) => manejarCambioFoto(e, setFotoNoticia)}
               />
               {newNoticia.fotoNoticia && <img src={newNoticia.fotoNoticia} alt="Vista previa" className="foto-previa mt-3" />}
-            </Form.Group>
-            <Form.Group controlId="formFotoRelleno" className="mt-3">
-              <Form.Label>FotoRelleno</Form.Label>
-              <Form.Control
-                type="file"
-                accept="image/*"
-                onChange={(e) => manejarCambioFoto(e, setFotoRelleno)}
-              />
-              {newNoticia.fotoRelleno && <img src={newNoticia.fotoRelleno} alt="Vista previa" className="foto-previa mt-3" />}
             </Form.Group>
           </Form>
         </Modal.Body>

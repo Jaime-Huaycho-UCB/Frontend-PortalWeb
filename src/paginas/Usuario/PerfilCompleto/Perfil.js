@@ -1,29 +1,14 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Container, Row, Col, Card, Button, Modal, Form } from 'react-bootstrap';
 import { AuthContext } from '../../../contextos/ContextoAutenticacion';
-import { obtenerPerfil, obtenerPapers, agregarPaper } from '../../../librerias/PeticionesApi';
+import { obtenerPerfil, agregarPaper } from '../../../librerias/PeticionesApi';
 
 const Perfil = () => {
   const { idDocente, idUsuario, token, cerrarSesion } = useContext(AuthContext);
   const [docente, setDocente] = useState(null);
-  const [papers, setPapers] = useState([]);
   const [showModal, setShowModal] = useState(false);
-  const [newPaper, setNewPaper] = useState({
-    titulo: '',
-    link: '',
-  });
-
-  // Función para cargar papers
-  const cargarPapers = async () => {
-    try {
-      const papersData = await obtenerPapers(idDocente);
-      if (papersData.salida && papersData.papers) {
-        setPapers(papersData.papers.filter(paper => paper && paper.titulo && paper.link));
-      }
-    } catch (error) {
-      console.error("Error al obtener los papers:", error);
-    }
-  };
+  const [papersList, setPapersList] = useState([]); // Lista de papers
+  const [newPaper, setNewPaper] = useState({ titulo: '', link: '' }); // Estado para un nuevo paper
 
   useEffect(() => {
     const cargarDocente = async () => {
@@ -36,39 +21,31 @@ const Perfil = () => {
     };
 
     cargarDocente();
-    cargarPapers(); // Carga inicial de papers
-  }, [idDocente, idUsuario, token,cargarPapers]);
-
-  const handleAddPaper = async () => {
-    const paperData = {
-      titulo: newPaper.titulo,
-      link: newPaper.link,
-    };
-
-    try {
-      const response = await agregarPaper(paperData, idDocente, idUsuario, token);
-      if (response.salida) {
-        setNewPaper({ titulo: '', link: '' });
-        setShowModal(false);
-        alert("Paper añadido exitosamente");
-        
-        // Vuelve a cargar la lista de papers desde el backend
-        cargarPapers();
-      } else {
-        if (response.mensaje === 'TKIN') {
-          cerrarSesion();
-        } else {
-          console.error(response.mensaje);
-        }
-      }
-    } catch (error) {
-      console.error("Error al agregar el paper:", error);
-    }
-  };
+  }, [idDocente, idUsuario, token]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewPaper({ ...newPaper, [name]: value });
+  };
+
+  const handleAddPaper = async () => {
+    if (newPaper.titulo.trim() === '' || newPaper.link.trim() === '') {
+      alert("Por favor, complete todos los campos.");
+      return;
+    }
+
+    try {
+      const response = await agregarPaper(newPaper, idUsuario, token);
+      if (response.salida) {
+        setPapersList((prev) => [...prev, newPaper]); // Añadir nuevo paper a la lista
+        setShowModal(false); // Cerrar el modal
+        setNewPaper({ titulo: '', link: '' }); // Resetear el formulario
+      } else {
+        alert("Error al añadir el paper.");
+      }
+    } catch (error) {
+      console.error("Error al añadir el paper:", error);
+    }
   };
 
   return (
@@ -108,18 +85,16 @@ const Perfil = () => {
       <Row className="justify-content-center mt-4">
         <Col md={8}>
           <h5>Papers</h5>
-          {papers.length === 0 ? (
+          {papersList.length === 0 ? (
             <p>No hay papers agregados.</p>
           ) : (
-            papers.map((paper, index) => (
-              paper && paper.titulo && paper.link && (
-                <Card key={index} className="mb-3">
-                  <Card.Body>
-                    <Card.Title>{paper.titulo}</Card.Title>
-                    <a href={paper.link} target="_blank" rel="noopener noreferrer">Ver Paper</a>
-                  </Card.Body>
-                </Card>
-              )
+            papersList.map((paper, index) => (
+              <Card key={index} className="mb-3">
+                <Card.Body>
+                  <Card.Title>{paper.titulo}</Card.Title>
+                  <a href={paper.link} target="_blank" rel="noopener noreferrer">Ver Paper</a>
+                </Card.Body>
+              </Card>
             ))
           )}
           <Button variant="primary" onClick={() => setShowModal(true)} className="mt-3">Añadir Paper</Button>

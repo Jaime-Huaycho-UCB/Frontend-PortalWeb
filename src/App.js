@@ -58,13 +58,30 @@ function App() {
     <AuthProvider>
       <Router>
         <Routes>
-          {/* Rutas de autenticación SIN encabezado ni pie de página */}
+          {/* Ruta de inicio con wrapper */}
+          <Route
+            path="/"
+            element={
+              <div className="wrapper">
+                <Encabezado />
+                <div className="main-content">
+                  <Inicio />
+                </div>
+                {mostrarIconos && <EnviarSolicitud />}
+                {mostrarIconos && <IconosFlotantes />}
+                <PieDePagina />
+              </div>
+            }
+          />
+          
+          {/* Ruta de inicio de sesión SIN wrapper */}
           <Route path="/iniciar-sesion" element={<IniciarSesion />} />
-          {/* Rutas generales del portal */}
+
+          {/* Rutas generales SIN wrapper */}
           <Route
             path="*"
             element={
-              <div className="wrapper">
+              <div>
                 <Encabezado />
                 <div className="main-content">
                   <Routes>
@@ -73,9 +90,7 @@ function App() {
                     <Route path="/eventos" element={<ListaEventos />} />
                     <Route path="/noticias" element={<ListaNoticias />} />
                     <Route path="/chasqui" element={<Chasqui />} />
-                    <Route path='/Tesis'  element={<Tesis />} />
-                    <Route path="/" element={<Inicio />} />
-                    
+                    <Route path="/Tesis" element={<Tesis />} />
 
                     {/* Rutas protegidas */}
                     <Route path="/admin/gestion-docentes" element={
@@ -84,11 +99,11 @@ function App() {
                       </RutaProtegida>
                     } />
                     <Route path="/admin/publicacion" element={
-                      <RutaProtegida rolesPermitidos={[1,0]}>
+                      <RutaProtegida rolesPermitidos={[1, 0]}>
                         <Publicaciones />
                       </RutaProtegida>
                     } />
-                      <Route path="/admin/mensajes" element={
+                    <Route path="/admin/mensajes" element={
                       <RutaProtegida rolesPermitidos={[1]}>
                         <Mensajes />
                       </RutaProtegida>
@@ -118,17 +133,14 @@ function App() {
                         <Perfil />
                       </RutaProtegida>
                     } />
-                     <Route path="/admin/gestion-tesis" element={
+                    <Route path="/admin/gestion-tesis" element={
                       <RutaProtegida rolesPermitidos={[1, 0]}>
                         <GestionTesis />
                       </RutaProtegida>
                     } />
                   </Routes>
                 </div>
-                {mostrarIconos && <EnviarSolicitud />}
-                {mostrarIconos && <IconosFlotantes />}
                 <PieDePagina />
-                
               </div>
             }
           />

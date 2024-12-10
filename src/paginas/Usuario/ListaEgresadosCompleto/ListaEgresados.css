@@ -1,61 +1,89 @@
-/* Contenedor Principal */
-.egresados-container3 {
-  padding: 40px 20px !important;
+.gestion-estudiantes-container5 {
+  inline-size: 100% !important;
+  padding: 20px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
   background-color: var(--background-color) !important;
-  color: var(--text-color) !important;
-  margin-top: 6% !important;
+  color: var(--text-color-septimor) !important;
+  transition: background-color 0.3s ease, color 0.3s ease !important;
+  margin-bottom: 15%;
+  
 }
 
-/* Títulos */
+.titulo-container3 {
+  background-size: cover; /* Asegura que la imagen cubra todo el contenedor */
+  background-position: center; /* Centra la imagen */
+  background-repeat: no-repeat; /* Evita que la imagen se repita */
+  padding: 40px 20px; /* Espaciado interno para el texto */
+  text-align: center; /* Centra el texto */
+  height: 300px; /* Altura fija para el contenedor */
+  display: flex; /* Para alinear el texto */
+  align-items: center; /* Centra verticalmente el texto */
+  justify-content: center; /* Centra horizontalmente el texto */
+  width: 100%;
+}
+
 .titulo-principal3 {
-  font-size: 2.5rem !important;
-  font-weight: bold !important;
-  color: var(--primary-color) !important;
-  text-align: center !important;
-  margin-bottom: 20px !important;
+  font-size: 2.5rem !important; /* Tamaño del texto */
+  color: white !important; /* Color del texto */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7) !important; /* Sombra al texto */
+  margin: 0 !important; /* Quita márgenes */
 }
 
-.descripcion-principal3 {
-  font-size: 1.2rem !important;
-  color: var(--secondary-color) !important;
-  text-align: center !important;
-  margin-bottom: 30px !important;
+
+.gestion-estudiantes-container5 .grid-estudiantes5 {
+  inline-size: 100% !important;
+  max-inline-size: 1200px !important;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  justify-content: center !important;
+  margin-top: 0.4%;
 }
 
-/* Grid de Egresados */
-.grid-egresados3 {
-  display: grid !important;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)) !important;
-  gap: 20px !important;
-}
-
-/* Tarjetas */
-.egresado-card3 {
-  border-radius: 10px !important;
+.gestion-estudiantes-container5 .card5 {
+  background: var(--text-color-septimo) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
+  transition: all 0.3s ease !important;
   overflow: hidden !important;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1) !important;
-  transition: transform 0.3s ease !important;
-  background-color: var(--gray-light) !important;
+  height: 420px !important;
+  position: relative !important;
 }
 
-.egresado-card3:hover {
-  transform: translateY(-5px) !important;
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2) !important;
-}
+.gestion-estudiantes-container5 .card5:hover {
+  transform: translateY(-9px) !important;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3) !important;
 
-.egresado-image3 {
+}
+.gestion-estudiantes-container5 .card-content5 {
+  padding: 20px !important;
+  text-align: center !important;
+  color: var(--background-color) !important;
+}
+.gestion-estudiantes-container5 .card-media5 img {
+  inline-size: 100% !important;
+  block-size: 100% !important;
   object-fit: cover !important;
+  border-radius: 30px !important;
 }
-
-.egresado-content3 {
-  padding: 15px !important;
+.card-media5 {
+  width: 170px !important; /* Ancho fijo para asegurar el círculo */
+  height: 170px !important; /* Alto fijo para asegurar el círculo */
+  border-radius: 50%; /* Crea el círculo perfecto */
+  object-fit: cover; /* Ajusta la imagen sin deformarla */
+  margin: 0 auto; /* Centra la imagen horizontalmente */
+  border: 5px solid orange; /* Borde opcional */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Sombra opcional */
+  margin-top: 40px; /* Ajusta hacia abajo */
+  margin-bottom: 10px; /* Ajusta hacia arriba */
 }
 
 .egresado-nombre3 {
   font-size: 1.5rem !important;
   font-weight: bold !important;
   margin-bottom: 10px !important;
-  color: var(--primary-color) !important;
+  color: var(--backgraund-color-cuarto) !important;
 }
 
 .egresado-titulo3,
@@ -110,4 +138,21 @@
 
 .btn-cerrar3:hover {
   background-color: var(--primary-color) !important;
+}
+.skeleton-card9 {
+  width: 100%;
+  height: 300px;
+  background: linear-gradient(90deg, #e0e0e0 25%, #f5f5f5 50%, #e0e0e0 75%) ;
+  background-size: 200% 100%;
+  border-radius: 10px;
+  animation: skeleton-loading 1.5s infinite ;
+}
+
+@keyframes skeleton-loading {
+  from {
+    background-position: 200% 0 ;
+  }
+  to {
+    background-position: -200% 0 ;
+  }
 }

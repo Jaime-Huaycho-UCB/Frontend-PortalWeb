@@ -213,7 +213,7 @@ const actualizarContactoExistente = async () => {
             <a
               href="/iniciar-sesion"
               className="footer-admin-link2 text-white"
-              target="_blank"
+
               rel="noopener noreferrer"
             >
               Iniciar Sesión

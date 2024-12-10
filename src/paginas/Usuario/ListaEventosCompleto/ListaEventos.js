@@ -1,36 +1,62 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { VerticalTimeline, VerticalTimelineElement } from 'react-vertical-timeline-component';
 import 'react-vertical-timeline-component/style.min.css';
-import { Box, Typography, Dialog, DialogContent, DialogTitle, Button, DialogActions } from '@mui/material';
+import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
+import 'react-big-calendar/lib/css/react-big-calendar.css';
+import { format, parse, startOfWeek, getDay } from 'date-fns';
+import es from 'date-fns/locale/es'; // Soporte para español
+import {
+  Box,
+  Typography,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Button,
+  DialogActions,
+  List,
+  ListItem,
+} from '@mui/material';
 import { Event, Close } from '@mui/icons-material';
-import './ListaEventos.css'; // Incluye el CSS con el estilo skeleton-card
-import { obtenerEventos } from '../../../librerias/PeticionesApi'; // Ajusta la ruta según tu archivo de API
-import { useNavigate } from 'react-router-dom';
+import './ListaEventos.css';
+import { obtenerEventos } from '../../../librerias/PeticionesApi';
+
+const locales = { es };
+
+const localizer = dateFnsLocalizer({
+  format,
+  parse,
+  startOfWeek,
+  getDay,
+  locales,
+});
 
 const ListaEventos = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [eventoSeleccionado, setEventoSeleccionado] = useState(null);
+  const [eventosDia, setEventosDia] = useState([]);
   const [eventos, setEventos] = useState([]);
-  const [loading, setLoading] = useState(true); // Estado de carga
-  const navigate = useNavigate();
-
-  const cerrarSesion = () => {
-    // Lógica para cerrar sesión (debes implementarla según tu proyecto)
-  };
+  const [loading, setLoading] = useState(true);
 
   const cargarEventos = useCallback(async () => {
-    setLoading(true); // Activa el estado de carga
+    setLoading(true);
     try {
       const data = await obtenerEventos();
       if (data.salida) {
-        setEventos(data.eventos);
+        setEventos(
+          data.eventos.map((evento) => ({
+            id: evento.id,
+            title: evento.nombre,
+            start: new Date(evento.fecha),
+            end: new Date(evento.fecha), // Fecha única para cada evento
+            resource: evento, // Incluye todos los datos del evento
+          }))
+        );
       } else {
         throw new Error('Error al cargar los eventos.');
       }
     } catch (error) {
       console.error(error);
     } finally {
-      setLoading(false); // Asegura que el estado de carga se desactive
+      setLoading(false);
     }
   }, []);
 
@@ -38,22 +64,60 @@ const ListaEventos = () => {
     cargarEventos();
   }, [cargarEventos]);
 
-  const handleOpenDialog = (evento) => {
-    setEventoSeleccionado(evento);
+  const handleSelectDay = (events) => {
+    setEventosDia(events.map((e) => e.resource)); // Extraemos los datos del evento
     setDialogOpen(true);
   };
 
   const handleCloseDialog = () => {
-    setEventoSeleccionado(null);
+    setEventosDia([]);
     setDialogOpen(false);
   };
 
   return (
     <Box className="eventos-container" sx={{ mt: 4, px: { xs: 2, sm: 4, md: 6 } }}>
       <Typography variant="h4" align="center" gutterBottom>
-        Próximos Eventos
+        Calendario de Eventos
       </Typography>
 
+      {/* Calendario Interactivo */}
+      <Box sx={{ height: 500, marginBottom: 4 }}>
+        <Calendar
+          localizer={localizer}
+          events={eventos}
+          startAccessor="start"
+          endAccessor="end"
+          style={{ height: '100%', borderRadius: '8px', boxShadow: '0 3px 10px rgba(0, 0, 0, 0.2)' }}
+          popup
+          messages={{
+            next: 'Siguiente',
+            previous: 'Anterior',
+            today: 'Hoy',
+            month: 'Mes',
+            week: 'Semana',
+            day: 'Día',
+            agenda: 'Agenda',
+            noEventsInRange: 'No hay eventos en este rango.',
+          }}
+          onSelectEvent={(event) => handleSelectDay([event])}
+          onSelectSlot={(slotInfo) => {
+            const eventsForDay = eventos.filter(
+              (event) =>
+                event.start.toDateString() === new Date(slotInfo.start).toDateString()
+            );
+            if (eventsForDay.length > 0) {
+              handleSelectDay(eventsForDay);
+            }
+          }}
+          selectable
+        />
+      </Box>
+
+      <Typography variant="h5" align="center" gutterBottom>
+        Línea de Tiempo de Eventos
+      </Typography>
+
+      {/* Línea de Tiempo */}
       {loading ? (
         <VerticalTimeline>
           {Array.from({ length: 4 }).map((_, index) => (
@@ -84,64 +148,27 @@ const ListaEventos = () => {
                 color: '#fff',
                 borderRadius: '8px',
                 boxShadow: '0 3px 10px rgba(0, 0, 0, 0.3)',
-                display: 'flex',
-                cursor: 'pointer',
               }}
               contentArrowStyle={{ borderRight: '7px solid #1b2951' }}
-              date={evento.fecha}
+              date={evento.start.toLocaleDateString()}
               iconStyle={{
                 background: '#f39c12',
                 color: '#fff',
                 boxShadow: '0 3px 10px rgba(0, 0, 0, 0.2)',
               }}
               icon={<Event />}
-              onTimelineElementClick={() => handleOpenDialog(evento)} // Se usa para abrir el diálogo
             >
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Box sx={{ flex: 1, paddingRight: '16px' }}>
-                  <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-                    {evento.nombre}
-                  </Typography>
-                  <Typography variant="subtitle1" sx={{ color: '#f39c12' }}>
-                    {evento.director}
-                  </Typography>
-                  <Typography variant="subtitle1" sx={{ color: '#f39c12' }}>
-                    {evento.lugar}
-                  </Typography>
-                  <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-                    {evento.fecha}
-                  </Typography>
-                  <Typography variant="body2" sx={{ mt: 1 }}>
-                    {evento.descripcion.slice(0, 100)}...
-                  </Typography>
-                </Box>
-                <Box
-                  sx={{
-                    flex: 1,
-                    textAlign: 'center',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}
-                >
-                  <img
-                    src={evento.fotoBase64}
-                    alt={evento.nombre}
-                    style={{
-                      width: '200px',
-                      height: '200px',
-                      borderRadius: '10px',
-                      boxShadow: '0 4px 10px rgba(0, 0, 0, 0.2)',
-                    }}
-                  />
-                </Box>
-              </Box>
+              <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+                {evento.title}
+              </Typography>
+              <Typography variant="body2">{evento.resource.descripcion}</Typography>
             </VerticalTimelineElement>
           ))}
         </VerticalTimeline>
       )}
 
-      {eventoSeleccionado && (
+      {/* Modal de Eventos */}
+      {dialogOpen && (
         <Dialog
           open={dialogOpen}
           onClose={handleCloseDialog}
@@ -152,7 +179,7 @@ const ListaEventos = () => {
           }}
         >
           <DialogTitle>
-            {eventoSeleccionado.nombre}
+            Eventos del Día
             <Button
               aria-label="close"
               onClick={handleCloseDialog}
@@ -167,23 +194,27 @@ const ListaEventos = () => {
             </Button>
           </DialogTitle>
           <DialogContent dividers>
-            <Box sx={{ textAlign: 'center', mb: 2 }}>
-              <img
-                src={eventoSeleccionado.fotoBase64}
-                alt={eventoSeleccionado.nombre}
-                style={{ width: '100%', maxHeight: '250px', borderRadius: '8px' }}
-              />
-            </Box>
-            <Typography variant="body1" gutterBottom>
-              <strong>Director:</strong> {eventoSeleccionado.director}
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-              <strong>Fecha:</strong> {eventoSeleccionado.fecha}
-            </Typography>
-            <Typography variant="body1" gutterBottom>
-              <strong>Ubicación:</strong> {eventoSeleccionado.lugar}
-            </Typography>
-            <Typography variant="body2">{eventoSeleccionado.descripcion}</Typography>
+            <List>
+              {eventosDia.map((evento) => (
+                <ListItem key={evento.id} sx={{ mb: 2 }}>
+                  <Box sx={{ width: '100%' }}>
+                    <Typography variant="h6">{evento.nombre}</Typography>
+                    <Typography variant="body1" gutterBottom>
+                      <strong>Descripción:</strong> {evento.descripcion}
+                    </Typography>
+                    <Typography variant="body1" gutterBottom>
+                      <strong>Director:</strong> {evento.director}
+                    </Typography>
+                    <Typography variant="body1" gutterBottom>
+                      <strong>Fecha:</strong> {evento.fecha}
+                    </Typography>
+                    <Typography variant="body1" gutterBottom>
+                      <strong>Lugar:</strong> {evento.lugar}
+                    </Typography>
+                  </Box>
+                </ListItem>
+              ))}
+            </List>
           </DialogContent>
           <DialogActions>
             <Button onClick={handleCloseDialog} color="primary">
