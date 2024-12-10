@@ -59,6 +59,7 @@ const GestionEventos = () => {
                 icon: 'error',
                 confirmButtonText: 'Cerrar',
             });
+            setShowModal(false);
             return;
         }
     
@@ -69,6 +70,7 @@ const GestionEventos = () => {
                 icon: 'warning',
                 confirmButtonText: 'Cerrar',
             });
+            setShowModal(false);
             return;
         }
     
@@ -79,6 +81,7 @@ const GestionEventos = () => {
                 icon: 'error',
                 confirmButtonText: 'Cerrar',
             });
+            setShowModal(false);
             return;
         }
     
@@ -89,6 +92,7 @@ const GestionEventos = () => {
                 icon: 'error',
                 confirmButtonText: 'Cerrar',
             });
+            setShowModal(false);
             return;
         }
     
@@ -99,6 +103,7 @@ const GestionEventos = () => {
                 icon: 'warning',
                 confirmButtonText: 'Cerrar',
             });
+            setShowModal(false);
             return;
         }
     
@@ -109,6 +114,7 @@ const GestionEventos = () => {
                 icon: 'error',
                 confirmButtonText: 'Cerrar',
             });
+            setShowModal(false);
             return;
         }
     
@@ -120,6 +126,7 @@ const GestionEventos = () => {
                 icon: 'warning',
                 confirmButtonText: 'Cerrar',
             });
+            setShowModal(false);
             return;
         }
     
@@ -130,6 +137,7 @@ const GestionEventos = () => {
                 icon: 'error',
                 confirmButtonText: 'Cerrar',
             });
+            setShowModal(false);
             return;
         }
     
@@ -140,6 +148,7 @@ const GestionEventos = () => {
                 icon: 'error',
                 confirmButtonText: 'Cerrar',
             });
+            setShowModal(false);
             return;
         }
     
@@ -158,6 +167,7 @@ const GestionEventos = () => {
                         cerrarSesion();
                         navigate('/iniciar-sesión');
                     });
+                    setShowModal(false);
                     return;
                 } else {
                     Swal.fire({
@@ -166,6 +176,7 @@ const GestionEventos = () => {
                         icon: 'error',
                         confirmButtonText: 'Cerrar',
                     });
+                    setShowModal(false);
                     return;
                 }
             }
@@ -189,6 +200,7 @@ const GestionEventos = () => {
                 icon: 'error',
                 confirmButtonText: 'Cerrar',
             });
+            setShowModal(false);
         }
     }, [cargarEventos, cerrarSesion, navigate, nuevoEvento, idUsuario, token]);
     
@@ -216,6 +228,7 @@ const GestionEventos = () => {
                 icon: 'error',
                 confirmButtonText: 'Cerrar',
             });
+            setShowModal(false);
             return;
         }
     
@@ -226,6 +239,7 @@ const GestionEventos = () => {
                 icon: 'warning',
                 confirmButtonText: 'Cerrar',
             });
+            setShowModal(false);
             return;
         }
     
@@ -236,6 +250,7 @@ const GestionEventos = () => {
                 icon: 'error',
                 confirmButtonText: 'Cerrar',
             });
+            setShowModal(false);
             return;
         }
     
@@ -246,6 +261,7 @@ const GestionEventos = () => {
                 icon: 'error',
                 confirmButtonText: 'Cerrar',
             });
+            setShowModal(false);
             return;
         }
     
@@ -256,6 +272,7 @@ const GestionEventos = () => {
                 icon: 'warning',
                 confirmButtonText: 'Cerrar',
             });
+            setShowModal(false);
             return;
         }
     
@@ -266,6 +283,7 @@ const GestionEventos = () => {
                 icon: 'error',
                 confirmButtonText: 'Cerrar',
             });
+            setShowModal(false);
             return;
         }
     
@@ -277,6 +295,7 @@ const GestionEventos = () => {
                 icon: 'warning',
                 confirmButtonText: 'Cerrar',
             });
+            setShowModal(false);
             return;
         }
     
@@ -287,6 +306,7 @@ const GestionEventos = () => {
                 icon: 'error',
                 confirmButtonText: 'Cerrar',
             });
+            setShowModal(false);
             return;
         }
     
@@ -297,6 +317,7 @@ const GestionEventos = () => {
                 icon: 'error',
                 confirmButtonText: 'Cerrar',
             });
+            setShowModal(false);
             return;
         }
     
@@ -315,6 +336,7 @@ const GestionEventos = () => {
                         cerrarSesion();
                         navigate('/iniciar-sesión');
                     });
+                    setShowModal(false);
                     return;
                 } else {
                     Swal.fire({
@@ -323,6 +345,7 @@ const GestionEventos = () => {
                         icon: 'error',
                         confirmButtonText: 'Cerrar',
                     });
+                    setShowModal(false);
                     return;
                 }
             }
@@ -347,6 +370,7 @@ const GestionEventos = () => {
                 icon: 'error',
                 confirmButtonText: 'Cerrar',
             });
+            setShowModal(false);
         }
     }, [cargarEventos, cerrarSesion, navigate, eventoSeleccionado, nuevoEvento, idUsuario, token]);
     
@@ -366,6 +390,7 @@ const GestionEventos = () => {
                         cerrarSesion();
                         navigate('/iniciar-sesión');
                     });
+                    setShowModal(false);
                 } else {
                     Swal.fire({
                         title: 'Error',
@@ -375,6 +400,7 @@ const GestionEventos = () => {
                     });
                     console.error(response.mensaje);
                 }
+                setShowModal(false);
                 return;
             }
     
