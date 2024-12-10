@@ -179,7 +179,7 @@ const GestionTesis = () => {
             <Button
               startIcon={<DeleteIcon />}
               sx={{ mt: 2, color: '#BA0C2F' }}
-              onClick={() => handleDelete(tesis.id)}
+              onClick={() => handleDelete(tesis.tesis.id)}
             >
               Eliminar
             </Button>
