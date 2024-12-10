@@ -90,15 +90,6 @@ const GestionNoticias = () => {
       return;
     }
   
-    if (!newNoticia.fotoRelleno) {
-      Swal.fire({
-        title: 'Imagen Requerida',
-        text: 'Debes seleccionar una imagen de relleno para la noticia.',
-        icon: 'error',
-        confirmButtonText: 'Cerrar',
-      });
-      return;
-    }
   
     if (!newNoticia.noticia.trim()) {
       Swal.fire({
@@ -444,30 +435,52 @@ const GestionNoticias = () => {
 
       {/* Lista de noticias */}
       <Table striped bordered hover responsive>
-        <thead>
-          <tr>
-            <th>Título</th>
-            <th>Redactor</th>
-            <th>Resumen</th>
-            <th>Fecha de Publicación</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {currentNoticias.map((noticia) => (
-            <tr key={noticia.idNoticia}>
-              <td>{noticia.titulo}</td>
-              <td>{noticia.redactor}</td>
-              <td>{noticia.resumen}</td>
-              <td>{noticia.fechaPublicacion}</td>
-              <td>
-                <Button variant="warning" onClick={() => iniciarEdicion(noticia)}>Actualizar</Button>
-                <Button variant="danger" onClick={() => confirmarEliminacion(noticia.idNoticia)}>Eliminar</Button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
+  <thead>
+    <tr>
+      <th>Imagen</th>
+      <th>Título</th>
+      <th>Redactor</th>
+      <th>Resumen</th>
+      <th>Fecha de Publicación</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    {currentNoticias.map((noticia) => (
+      <tr key={noticia.idNoticia}>
+        <td>
+          {noticia.fotoNoticia ? (
+            <img
+              src={noticia.fotoNoticia}
+              alt="Noticia"
+              style={{
+                width: '100px',
+                height: '100px',
+                objectFit: 'cover',
+                borderRadius: '8px',
+              }}
+            />
+          ) : (
+            'Sin Imagen'
+          )}
+        </td>
+        <td>{noticia.titulo}</td>
+        <td>{noticia.redactor}</td>
+        <td>{noticia.resumen}</td>
+        <td>{noticia.fechaPublicacion}</td>
+        <td>
+          <Button variant="warning" onClick={() => iniciarEdicion(noticia)}>
+            Actualizar
+          </Button>
+          <Button variant="danger" onClick={() => confirmarEliminacion(noticia.idNoticia)}>
+            Eliminar
+          </Button>
+        </td>
+      </tr>
+    ))}
+  </tbody>
+</Table>
+
 
       {/* Paginación */}
       <Pagination>
