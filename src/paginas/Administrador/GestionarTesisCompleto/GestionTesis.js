@@ -135,6 +135,8 @@ const GestionTesis = () => {
           confirmButtonText: 'Aceptar'
         });
         cargarTesis(setTesisList); // Recargar las tesis después de agregar una nueva
+        setNuevoTesis({ titulo: '', fechaPublicacion: '', tesis: '', resumen: '' }); // Reiniciar el formulario
+        setIdEstudiante(null); // Reiniciar el estudiante
       } else {
         Swal.fire({
           title: 'Error',
