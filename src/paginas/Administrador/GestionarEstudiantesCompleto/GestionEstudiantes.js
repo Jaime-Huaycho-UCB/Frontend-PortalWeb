@@ -322,11 +322,11 @@ const GestionEstudiantes = () => {
     const estudianteData = {
       ...nuevoEstudiante,
       foto: actualizarFoto ? nuevoEstudiante.foto : null,
-      nivelAcademico:  null, // Enviar null si está vacío
-      anio:  null, // Enviar null si está vacío
-      semestre: null, // Enviar null si está vacío
+      nivelAcademico: nuevoEstudiante.nivelAcademico?.trim() ? nuevoEstudiante.nivelAcademico : null, // Verifica si fue cambiado y no está vacío
+      anio: nuevoEstudiante.anio?.trim() ? nuevoEstudiante.anio : null, // Verifica si fue cambiado y no está vacío
+      semestre: nuevoEstudiante.semestre?.trim() ? nuevoEstudiante.semestre : null, // Verifica si fue cambiado y no está vacío
     };
-  
+    
     // Validaciones
     if (!estudianteData.nombre.trim()) {
       Swal.fire({
