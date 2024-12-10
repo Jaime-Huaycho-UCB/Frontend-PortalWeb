@@ -32,16 +32,6 @@ const GestionDocentes = () => {
   const setFotoBase64 = (base64) => {
     setNuevoDocente((prevDocente) => ({ ...prevDocente, fotoBase64: base64 }));
   };
-  const customSwalStyles = `
-  .swal2-container {
-    z-index: 2000 !important; /* Asegura que esté sobre los diálogos */
-  }
-`;
-
-const styleSheet = document.createElement("style");
-styleSheet.type = "text/css";
-styleSheet.innerText = customSwalStyles;
-document.head.appendChild(styleSheet);
 
     
   const cargarDocentes = async (id) => {
@@ -112,6 +102,7 @@ document.head.appendChild(styleSheet);
         icon: 'warning',
         confirmButtonText: 'Cerrar',
       });
+      handleClose();
       return;
     }
   
@@ -121,10 +112,8 @@ document.head.appendChild(styleSheet);
         text: 'El nombre solo puede contener letras, espacios y puntos. No se permiten números ni otros caracteres especiales.',
         icon: 'warning',
         confirmButtonText: 'Cerrar',
-        customClass: {
-          container: 'swal2-container', // Usa el estilo con z-index alto
-        },
       });
+      handleClose();
       return;
     }
     
@@ -136,6 +125,7 @@ document.head.appendChild(styleSheet);
         icon: 'warning',
         confirmButtonText: 'Cerrar',
       });
+      handleClose();
       return;
     }
   
@@ -146,6 +136,7 @@ document.head.appendChild(styleSheet);
         icon: 'warning',
         confirmButtonText: 'Cerrar',
       });
+      handleClose();
       return;
     }
   
@@ -156,6 +147,7 @@ document.head.appendChild(styleSheet);
         icon: 'warning',
         confirmButtonText: 'Cerrar',
       });
+      handleClose();
       return;
     }
   
@@ -173,7 +165,7 @@ document.head.appendChild(styleSheet);
           }).then(() => {
             cerrarSesion();
             navigate('/iniciar-sesion');
-          });
+          }); handleClose();
           return;
         } else {
           Swal.fire({
@@ -183,6 +175,7 @@ document.head.appendChild(styleSheet);
             confirmButtonText: 'Cerrar',
           });
           console.error(response.mensaje);
+          handleClose();
           return;
         }
       }
@@ -205,6 +198,7 @@ document.head.appendChild(styleSheet);
         icon: 'error',
         confirmButtonText: 'Cerrar',
       });
+      handleClose();
     }
   };
   
