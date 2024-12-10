@@ -29,9 +29,6 @@ const GestionNoticias = () => {
   const setFotoNoticia = (base64) => {
     setNewNoticia((prevNoticia) => ({ ...prevNoticia, fotoNoticia: base64 }));
   };
-  const setFotoRelleno = (base64) => {
-    setNewNoticia((prevNoticia) => ({ ...prevNoticia, fotoRelleno: base64 }));
-  };
   const cargarNoticias = useCallback(async () => {
     try {
       const data = await obtenerNoticias();
@@ -70,7 +67,7 @@ const GestionNoticias = () => {
       }
       cargarNoticias();
       setShowModal(false);
-      setNewNoticia({ titulo: '', redactor: '', resumen: '', fechaPublicacion: '', fotoRelleno: '', fotoNoticia: '', noticia: '' });
+      setNewNoticia({ titulo: '', redactor: '', resumen: '', fechaPublicacion: '', fotoRelleno: null, fotoNoticia: '', noticia: '' });
     } catch (error) {
       console.error("Error al agregar noticia:", error);
     }
