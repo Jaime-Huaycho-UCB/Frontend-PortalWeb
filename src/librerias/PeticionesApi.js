@@ -1,6 +1,6 @@
 // src/librerias/PeticionesApi.js
 import axios from 'axios';
-
+import Swal from 'sweetalert2';
 //  const BASE_URL = 'https://backend-portalweb-production.up.railway.app';  
  const BASE_URL = 'http://localhost:8000';  
 
@@ -100,18 +100,31 @@ export const crearUsuario = async (idDocente, password,idUsuario,token) => {
 
   
 
-export const manejarCambioFoto = (e, setFotoBase64) => {
-  const file = e.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setFotoBase64(reader.result.split(',')[1]);
-    };
-    reader.readAsDataURL(file);
-  } else {
-    setFotoBase64('');
-  }
-};
+  export const manejarCambioFoto = (e, setFotoBase64) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Verificar si el archivo es PNG
+      if (file.type === 'image/png') {
+        Swal.fire({
+          title: 'Formato no permitido',
+          text: 'No se permiten imágenes en formato PNG. Por favor, selecciona otro formato (JPEG, WEBP, etc.).',
+          icon: 'error',
+          confirmButtonText: 'Cerrar',
+        });
+        return; // Detener el procesamiento si es PNG
+      }
+  
+      // Procesar el archivo si no es PNG
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFotoBase64(reader.result.split(',')[1]); // Convertir a base64 si es necesario
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setFotoBase64(''); // Reiniciar si no hay archivo seleccionado
+    }
+  };
+  
 export const agregarEvento = async (eventoData, idUsuario, token) => {
   try {
     const response = await instance.post('/evento/agregar', { ...eventoData, idUsuario, token });

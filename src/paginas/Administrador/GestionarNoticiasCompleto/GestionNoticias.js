@@ -265,11 +265,10 @@ const GestionNoticias = () => {
             <Form.Group controlId="formFotoRelleno" className="mt-3">
               <Form.Label>FotoRelleno</Form.Label>
               <Form.Control
-  type="file"
-  accept=".jpg,.jpeg,.png"
-  onChange={(e) => manejarCambioFoto(e, setFotoRelleno)}
-/>
-
+                type="file"
+                accept="image/*"
+                onChange={(e) => manejarCambioFoto(e, setFotoRelleno)}
+              />
               {newNoticia.fotoRelleno && <img src={newNoticia.fotoRelleno} alt="Vista previa" className="foto-previa mt-3" />}
             </Form.Group>
           </Form>
