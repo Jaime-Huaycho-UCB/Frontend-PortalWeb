@@ -322,9 +322,9 @@ const GestionEstudiantes = () => {
     const estudianteData = {
       ...nuevoEstudiante,
       foto: actualizarFoto ? nuevoEstudiante.foto : null,
-      nivelAcademico: nuevoEstudiante.nivelAcademico.trim() || null, // Enviar null si está vacío
-      anio: nuevoEstudiante.anio.trim() || null, // Enviar null si está vacío
-      semestre: nuevoEstudiante.semestre.trim() || null, // Enviar null si está vacío
+      nivelAcademico:  null, // Enviar null si está vacío
+      anio:  null, // Enviar null si está vacío
+      semestre: null, // Enviar null si está vacío
     };
   
     // Validaciones
