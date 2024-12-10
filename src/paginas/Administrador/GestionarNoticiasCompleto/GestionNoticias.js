@@ -32,21 +32,78 @@ const GestionNoticias = () => {
   const setFotoRelleno = (base64) => {
     setNewNoticia((prevNoticia) => ({ ...prevNoticia, fotoRelleno: base64 }));
   };
-  const cargarNoticias = useCallback(async () => {
+  const cargarNoticias = async () => {
     try {
       const data = await obtenerNoticias();
       if (data.salida) {
         setNoticias(data.noticias);
-        // setFilteredNoticias(data.noticias);
-      } 
+      } else {
+        setNoticias([]);
+      }
     } catch (error) {
       console.error("Error al cargar noticias:", error);
     }
-  }, []);
-  
+  };
+
+  // Ejecutar cargarNoticias al montar el componente
   useEffect(() => {
     cargarNoticias();
-  }, [cargarNoticias]);
+  }, []);
+
+  // Filtrar noticias al cambiar el término de búsqueda
+  useEffect(() => {
+    const filtered = noticias.filter((noticia) =>
+      noticia.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      noticia.redactor.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredNoticias(filtered);
+  }, [searchTerm, noticias]);
+
+  // Función para eliminar una noticia
+  const confirmarEliminacion = async (id) => {
+    try {
+      const response = await eliminarNoticia(id, idUsuario, token);
+      if (!response.salida) {
+        if (response.mensaje === 'TKIN') {
+          Swal.fire({
+            title: 'Sesión Expirada',
+            text: 'Tu sesión ha expirado. Por favor, inicia sesión nuevamente.',
+            icon: 'warning',
+            confirmButtonText: 'Iniciar Sesión',
+          }).then(() => {
+            cerrarSesion();
+            navigate('/iniciar-sesion');
+          });
+          return;
+        } else {
+          Swal.fire({
+            title: 'Error',
+            text: response.mensaje || 'No se pudo eliminar la noticia.',
+            icon: 'error',
+            confirmButtonText: 'Cerrar',
+          });
+          return;
+        }
+      }
+
+      Swal.fire({
+        title: 'Eliminada',
+        text: response.mensaje || 'La noticia ha sido eliminada exitosamente.',
+        icon: 'success',
+        confirmButtonText: 'Aceptar',
+      });
+
+      cargarNoticias(); // Llama directamente a cargarNoticias después de eliminar
+    } catch (error) {
+      console.error("Error al eliminar noticia:", error);
+      Swal.fire({
+        title: 'Error',
+        text: 'Hubo un problema al intentar eliminar la noticia. Por favor, inténtalo más tarde.',
+        icon: 'error',
+        confirmButtonText: 'Cerrar',
+      });
+    }
+  };
 
   useEffect(() => {
     const filtered = noticias.filter(noticia =>
@@ -107,51 +164,6 @@ const GestionNoticias = () => {
       setNewNoticia({ titulo: '', redactor: '', resumen: '', fechaPublicacion: '', fotoRelleno: '', fotoNoticia: '', noticia: '' });
     } catch (error) {
       console.error("Error al actualizar noticia:", error);
-    }
-  };
-  
-  const confirmarEliminacion = async (id) => {
-    try {
-      const response = await eliminarNoticia(id, idUsuario, token);
-      if (!response.salida) {
-        if (response.mensaje === 'TKIN') {
-          Swal.fire({
-            title: 'Sesión Expirada',
-            text: 'Tu sesión ha expirado. Por favor, inicia sesión nuevamente.',
-            icon: 'warning',
-            confirmButtonText: 'Iniciar Sesión',
-          }).then(() => {
-            cerrarSesion();
-            navigate('/iniciar-sesion');
-          });
-          return;
-        } else {
-          Swal.fire({
-            title: 'Error',
-            text: response.mensaje || 'No se pudo eliminar la noticia.',
-            icon: 'error',
-            confirmButtonText: 'Cerrar',
-          });
-          return;
-        }
-      }
-  
-      Swal.fire({
-        title: 'Eliminada',
-        text: response.mensaje || 'La noticia ha sido eliminada exitosamente.',
-        icon: 'success',
-        confirmButtonText: 'Aceptar',
-      });
-  
-      await cargarNoticias(); // Recargar noticias después de eliminar
-    } catch (error) {
-      console.error("Error al eliminar noticia:", error);
-      Swal.fire({
-        title: 'Error',
-        text: 'Hubo un problema al intentar eliminar la noticia. Por favor, inténtalo más tarde.',
-        icon: 'error',
-        confirmButtonText: 'Cerrar',
-      });
     }
   };
   
