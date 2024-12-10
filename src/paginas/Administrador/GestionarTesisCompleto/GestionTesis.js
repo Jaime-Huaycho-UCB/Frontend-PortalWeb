@@ -52,21 +52,22 @@ const GestionTesis = () => {
   const [tesisList, setTesisList] = useState([]);
 
   // Fetch Tesis on Load
-  useEffect(() => {
-    const cargarTesis = async () => {
-      try {
-        const response = await obtenerTesis();
-        if (response.salida) {
-          setTesisList(response.tesises);
-          console.log(response.tesises);
-        }
-      } catch (error) {
-        console.error('Error al obtener tesis:', error);
+  const cargarTesis = async (setTesisList) => {
+    try {
+      const response = await obtenerTesis();
+      if (response.salida) {
+        setTesisList(response.tesises);
+        console.log(response.tesises);
       }
-    };
-    cargarTesis();
+    } catch (error) {
+      console.error('Error al obtener tesis:', error);
+    }
+  };
+  
+  useEffect(() => {
+    cargarTesis(setTesisList);
   }, []);
-
+  
   // Handle Input Changes
   const updateField = (field, value) => {
     setNuevoTesis((prev) => ({ ...prev, [field]: value }));
@@ -91,7 +92,7 @@ const GestionTesis = () => {
       const response = await agregarTesis(nuevoTesis, idUsuario, token, idEstudiante);
       if (response.salida) {
         alert('Tesis agregada exitosamente');
-        setTesisList((prev) => [...prev, response.tesis]);
+        cargarTesis(setTesisList); // Recargar las tesis después de agregar una nueva
       } else {
         alert(`Error al agregar la tesis: ${response.mensaje}`);
       }
@@ -100,7 +101,6 @@ const GestionTesis = () => {
     }
     setOpenDialog(false);
   };
-
   // Delete Tesis
   const handleDelete = async (idTesis) => {
     try {
