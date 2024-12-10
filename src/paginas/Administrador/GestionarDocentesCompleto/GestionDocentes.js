@@ -66,62 +66,115 @@ const GestionDocentes = () => {
 
   
 
-const agregarNuevoDocente = async () => {
-  const docenteData = {
-    nombre: nuevoDocente.nombre,
-    correo: nuevoDocente.correo,
-    titulo: nuevoDocente.titulo,
-    frase: nuevoDocente.frase,
-    fotoBase64: nuevoDocente.fotoBase64,
-  };
-
-  try {
-    const response = await agregarDocente(docenteData, idUsuario, token);
-    if (!response.salida) {
-      if (response.mensaje === 'TKIN') {
-        Swal.fire({
-          title: 'Sesión Expirada',
-          text: 'Tu sesión ha expirado. Por favor, inicia sesión nuevamente.',
-          icon: 'warning',
-          confirmButtonText: 'Iniciar Sesión',
-          confirmButtonColor: '#d33',
-        }).then(() => {
-          cerrarSesion();
-          navigate('/iniciar-sesion');
-        });
-        return;
-      } else {
-        Swal.fire({
-          title: 'Error',
-          text: response.mensaje,
-          icon: 'error',
-          confirmButtonText: 'Cerrar',
-        });
-        console.error(response.mensaje);
-        return;
-      }
+  const agregarNuevoDocente = async () => {
+    const docenteData = {
+      nombre: nuevoDocente.nombre,
+      correo: nuevoDocente.correo,
+      titulo: nuevoDocente.titulo,
+      frase: nuevoDocente.frase,
+      fotoBase64: nuevoDocente.fotoBase64,
+    };
+  
+    // Validaciones
+    if (!docenteData.nombre.trim()) {
+      Swal.fire({
+        title: 'Campo Obligatorio',
+        text: 'El nombre no puede estar vacío.',
+        icon: 'warning',
+        confirmButtonText: 'Cerrar',
+      });
+      return;
     }
-
-    Swal.fire({
-      title: 'Docente Agregado',
-      text: response.mensaje,
-      icon: 'success',
-      confirmButtonText: 'Aceptar',
-      confirmButtonColor: '#3085d6',
-    });
-
-    cargarDocentes(0);
-    handleClose();
-  } catch (error) {
-    console.error(error);
-    Swal.fire({
-      title: 'Error',
-      text: 'Hubo un problema al agregar el docente. Por favor, inténtalo más tarde.',
-      icon: 'error',
-      confirmButtonText: 'Cerrar',
-    });
-  }
-};
+  
+    if (!/^[a-zA-Z\s]+$/.test(docenteData.nombre)) {
+      Swal.fire({
+        title: 'Nombre Inválido',
+        text: 'El nombre solo puede contener letras y espacios. No se permiten números ni caracteres especiales.',
+        icon: 'warning',
+        confirmButtonText: 'Cerrar',
+      });
+      return;
+    }
+  
+    if (!docenteData.correo.trim()) {
+      Swal.fire({
+        title: 'Campo Obligatorio',
+        text: 'El correo no puede estar vacío.',
+        icon: 'warning',
+        confirmButtonText: 'Cerrar',
+      });
+      return;
+    }
+  
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(docenteData.correo)) {
+      Swal.fire({
+        title: 'Correo Inválido',
+        text: 'El correo debe tener un formato válido (ejemplo: usuario@dominio.com).',
+        icon: 'warning',
+        confirmButtonText: 'Cerrar',
+      });
+      return;
+    }
+  
+    if (!docenteData.titulo.trim()) {
+      Swal.fire({
+        title: 'Campo Obligatorio',
+        text: 'El título no puede estar vacío.',
+        icon: 'warning',
+        confirmButtonText: 'Cerrar',
+      });
+      return;
+    }
+  
+    // Intentar agregar al docente si las validaciones pasan
+    try {
+      const response = await agregarDocente(docenteData, idUsuario, token);
+      if (!response.salida) {
+        if (response.mensaje === 'TKIN') {
+          Swal.fire({
+            title: 'Sesión Expirada',
+            text: 'Tu sesión ha expirado. Por favor, inicia sesión nuevamente.',
+            icon: 'warning',
+            confirmButtonText: 'Iniciar Sesión',
+            confirmButtonColor: '#d33',
+          }).then(() => {
+            cerrarSesion();
+            navigate('/iniciar-sesion');
+          });
+          return;
+        } else {
+          Swal.fire({
+            title: 'Error',
+            text: response.mensaje,
+            icon: 'error',
+            confirmButtonText: 'Cerrar',
+          });
+          console.error(response.mensaje);
+          return;
+        }
+      }
+  
+      Swal.fire({
+        title: 'Docente Agregado',
+        text: response.mensaje,
+        icon: 'success',
+        confirmButtonText: 'Aceptar',
+        confirmButtonColor: '#3085d6',
+      });
+  
+      cargarDocentes(0);
+      handleClose();
+    } catch (error) {
+      console.error(error);
+      Swal.fire({
+        title: 'Error',
+        text: 'Hubo un problema al agregar el docente. Por favor, inténtalo más tarde.',
+        icon: 'error',
+        confirmButtonText: 'Cerrar',
+      });
+    }
+  };
+  
 
   const iniciarEliminacion = (id) => {
     setDocenteIdEliminar(id);
