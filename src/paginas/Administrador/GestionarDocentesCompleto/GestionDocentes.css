@@ -185,12 +185,8 @@ h2 {
   background-color: var(--accent-color);
 }
 .cartasDocentes {
-  display: flex; /* Activa el modelo flexbox */
+  display: flex;
   justify-content: center; /* Centra horizontalmente */
   align-items: center; /* Centra verticalmente */
   flex-wrap: wrap; /* Permite que las tarjetas se ajusten a nuevas líneas si es necesario */
-  padding: 20px; /* Espaciado interno para el contenedor */
-  gap: 500px; /* Espaciado entre las tarjetas */
-  min-height: 100vh; /* Asegura que ocupe toda la altura de la ventana */
-  background-color: #f8f9fa; /* Color de fondo opcional */
 }
