@@ -269,7 +269,7 @@ const GestionEventos = () => {
       {/* Vista previa de la imagen cargada */}
       {nuevoEvento.fotoBase64 && (
         <img
-          src={`data:image/jpeg;base64,${nuevoEvento.fotoBase64}`} // Asumiendo que es JPEG
+          src={`${nuevoEvento.fotoBase64}`} // Asumiendo que es JPEG
           alt="Vista previa"
           style={{ width: '100%', marginTop: '10px', borderRadius: '8px' }}
         />
