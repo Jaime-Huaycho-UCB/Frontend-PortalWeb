@@ -310,16 +310,7 @@ const GestionEventos = () => {
             return;
         }
     
-        if (!nuevoEvento.fotoBase64.trim()) {
-            Swal.fire({
-                title: 'Foto Requerida',
-                text: 'Debes subir una foto para el evento.',
-                icon: 'error',
-                confirmButtonText: 'Cerrar',
-            });
-            setShowModal(false);
-            return;
-        }
+      
         const eventoActualizado = { 
             ...nuevoEvento, 
             fotoBase64: nuevoEvento.fotoBase64 ? nuevoEvento.fotoBase64 : null 
