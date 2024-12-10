@@ -160,7 +160,7 @@ const GestionTesis = () => {
                 <Button
                   variant="outlined"
                   sx={{ borderColor: '#002855', color: '#002855', mt: 2 }}
-                  onClick={() => openPdfModal(tesis.id)}
+                  onClick={() => openPdfModal(tesis.tesis.id)}
                 >
                   Ver Contenido PDF
                 </Button>
