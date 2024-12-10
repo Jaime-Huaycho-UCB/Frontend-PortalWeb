@@ -154,6 +154,7 @@ const GestionTesis = () => {
                 <Typography variant="h6" sx={{ color: '#002855' }}>{tesis.tesis.titulo}</Typography>
                 <Typography variant="body2" color="textSecondary" gutterBottom>
                   Fecha de Publicación: {tesis.tesis.fechaPublicacion}
+                  autor: {tesis.estudiante.nombre}
                 </Typography>
                 <Typography variant="body2" gutterBottom>
                   Resumen: {tesis.tesis.resumen}
