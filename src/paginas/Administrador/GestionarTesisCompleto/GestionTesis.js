@@ -108,7 +108,20 @@ const GestionTesis = () => {
         setSelectedPdf(null);
         setOpenPdfViewer(false);
     };
- 
+    const fadeIn = keyframes`
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+`;
+
+const StyledCard = styled(Card)`
+  animation: ${fadeIn} 0.5s ease-out;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+  &:hover {
+    box-shadow: 0px 8px 16px rgba(0, 40, 85, 0.2);
+    transform: scale(1.02);
+  }
+`;
+
 const StyledButton = styled(Button)(({ theme }) => ({
     backgroundColor: '#BA0C2F',
     color: '#FFFFFF',
@@ -207,74 +220,62 @@ const PageContainer = styled(Box)`
                 ))}
               </Grid>
         
-              {/* Modal para visualizar el PDF */}
-              <Dialog open={openPdfViewer} onClose={closePdfModal} maxWidth="md" fullWidth>
-                <DialogContent>
-                  <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-                    <Typography variant="h6">Visualizar Tesis</Typography>
-                    <IconButton onClick={closePdfModal}>
-                      <CloseIcon />
-                    </IconButton>
-                  </Box>
-                  {selectedPdf && (
-                    <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.0.279/build/pdf.worker.min.js">
-                      <Viewer fileUrl={`${selectedPdf}`} />
-                    </Worker>
-                  )}
-                </DialogContent>
-              </Dialog>
-        
-              {/* Dialogo para agregar nueva tesis */}
               <Dialog open={openDialog} onClose={closeDialog} fullWidth maxWidth="md">
-                <DialogContent>
-                  <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-                    <Typography variant="h6">Agregar Nueva Tesis</Typography>
-                    <IconButton onClick={closeDialog}>
-                      <CloseIcon />
-                    </IconButton>
-                  </Box>
-                  <TextField
-                    label="Título"
-                    name="titulo"
-                    fullWidth
-                    margin="normal"
-                    value={nuevoTesis.titulo}
-                    onChange={handleInputChange}
-                  />
-                  <TextField
-                    label="Fecha de Publicación"
-                    name="fechaPublicacion"
-                    fullWidth
-                    type="date"
-                    InputLabelProps={{ shrink: true }}
-                    margin="normal"
-                    value={nuevoTesis.fechaPublicacion}
-                    onChange={handleInputChange}
-                  />
-                  <TextField
-                    label="Resumen"
-                    name="resumen"
-                    fullWidth
-                    multiline
-                    rows={4}
-                    margin="normal"
-                    value={nuevoTesis.resumen}
-                    onChange={handleInputChange}
-                  />
-                  <Button variant="outlined" component="label" sx={{ mt: 2, color: '#FFD700' }}>
-                    Subir PDF
-                    <input type="file" hidden accept="application/pdf" onChange={handlePdfUpload} />
-                  </Button>
-                </DialogContent>
-                <DialogActions>
-                  <Button onClick={closeDialog} sx={{ color: '#BA0C2F' }}>
-                    Cancelar
-                  </Button>
-                  <Button onClick={handleSubmit} sx={{ backgroundColor: '#002855', color: '#FFFFFF' }} variant="contained">
-                    Guardar
-                  </Button>
-                </DialogActions>
-              </Dialog>
+    <DialogContent>
+        <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+            <Typography variant="h6">Agregar Nueva Tesis</Typography>
+            <IconButton onClick={closeDialog}>
+                <CloseIcon />
+            </IconButton>
+        </Box>
+        <TextField
+            label="Título"
+            name="titulo"
+            fullWidth
+            margin="normal"
+            value={nuevoTesis.titulo}
+            onChange={(e) => setNuevoTesis((prev) => ({ ...prev, titulo: e.target.value }))}
+        />
+        <TextField
+            label="Fecha de Publicación"
+            name="fechaPublicacion"
+            fullWidth
+            type="date"
+            InputLabelProps={{ shrink: true }}
+            margin="normal"
+            value={nuevoTesis.fechaPublicacion}
+            onChange={(e) => setNuevoTesis((prev) => ({ ...prev, fechaPublicacion: e.target.value }))}
+        />
+        <TextField
+            label="Resumen"
+            name="resumen"
+            fullWidth
+            multiline
+            rows={4}
+            margin="normal"
+            value={nuevoTesis.resumen}
+            onChange={(e) => setNuevoTesis((prev) => ({ ...prev, resumen: e.target.value }))}
+        />
+        <Button variant="outlined" component="label" sx={{ mt: 2, color: '#FFD700' }}>
+            Subir PDF
+            <input
+                type="file"
+                hidden
+                accept="application/pdf"
+                onChange={handlePdfUpload}
+            />
+        </Button>
+    </DialogContent>
+    <DialogActions>
+        <Button onClick={closeDialog} sx={{ color: '#BA0C2F' }}>
+            Cancelar
+        </Button>
+        <Button onClick={handleSubmit} sx={{ backgroundColor: '#002855', color: '#FFFFFF' }} variant="contained">
+            Guardar
+        </Button>
+    </DialogActions>
+</Dialog>
+
             </PageContainer>
           );
         
