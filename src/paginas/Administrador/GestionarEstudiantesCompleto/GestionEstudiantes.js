@@ -322,9 +322,15 @@ const GestionEstudiantes = () => {
     const estudianteData = {
       ...nuevoEstudiante,
       foto: actualizarFoto ? nuevoEstudiante.foto : null,
-      nivelAcademico: nuevoEstudiante.nivelAcademico?.trim() ? nuevoEstudiante.nivelAcademico : null, // Verifica si fue cambiado y no está vacío
-      anio: nuevoEstudiante.anio?.trim() ? nuevoEstudiante.anio : null, // Verifica si fue cambiado y no está vacío
-      semestre: nuevoEstudiante.semestre?.trim() ? nuevoEstudiante.semestre : null, // Verifica si fue cambiado y no está vacío
+      nivelAcademico: typeof nuevoEstudiante.nivelAcademico === 'string' && nuevoEstudiante.nivelAcademico.trim() !== '' 
+        ? nuevoEstudiante.nivelAcademico 
+        : null,
+      anio: typeof nuevoEstudiante.anio === 'string' && nuevoEstudiante.anio.trim() !== '' 
+        ? nuevoEstudiante.anio 
+        : null,
+      semestre: typeof nuevoEstudiante.semestre === 'string' && nuevoEstudiante.semestre.trim() !== '' 
+        ? nuevoEstudiante.semestre 
+        : null,
     };
     
     // Validaciones
