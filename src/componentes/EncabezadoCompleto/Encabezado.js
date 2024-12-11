@@ -103,7 +103,7 @@ const Encabezado = () => {
                 startIcon={<EventIcon />}
                 className="nav-button"
                 component={Link}
-                to="/admin/gestion-eventos"
+                to="/admin/publicacion"
               >
                 Eventos
               </Button>
