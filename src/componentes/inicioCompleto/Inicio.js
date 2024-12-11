@@ -188,7 +188,7 @@ const Inicio = () => {
 
 
 <div className="history-container">
-  {/* Texto Izquierdo */}
+  
   <div className="history-text">
     <div className="history-header">
       <span className="overline">Historia de la Carrera</span>

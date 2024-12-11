@@ -19,7 +19,7 @@ const IniciarSesion = () => {
     try {
       // const response = await axios.post('https://backend-portalweb-production.up.railway.app/usuario/inicioSesion', {
         
-      const response = await axios.post('http://localhost:8000/usuario/inicioSesion', {
+      const response = await axios.post('http://192.168.1.132:8000/usuario/inicioSesion', {
         correo: email,
         contrasena: password,
       });

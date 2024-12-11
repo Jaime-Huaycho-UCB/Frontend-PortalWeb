@@ -2,7 +2,7 @@
 import axios from 'axios';
 import Swal from 'sweetalert2';
 //  const BASE_URL = 'https://backend-portalweb-production.up.railway.app';  
- const BASE_URL = 'http://localhost:8000';  
+ const BASE_URL = 'http://192.168.1.132:8000';  
 
 const instance = axios.create({
   baseURL: BASE_URL,

@@ -178,6 +178,7 @@
   height: auto;
   width: 100%; /* Asegura que se ajuste al contenedor */
   overflow: hidden;
+  margin-left: 8%;
 }
 
 /* Contenedor del texto */
@@ -800,6 +801,8 @@
   /* Ancho máximo */
 }
 
+
+
 /* Columna izquierda: Texto */
 .history-text {
   flex: 1; /* Ocupa el espacio disponible */
@@ -813,6 +816,7 @@
 
   transition: background-color 0.3s ease, color 0.3s ease; /* Transición suave entre modos */
   margin-right: 20%;
+  margin-left: 7%;
 }
 
 /* Encabezado del texto */
