@@ -105,7 +105,7 @@ const Encabezado = () => {
                 component={Link}
                 to="/admin/publicacion"
               >
-                Eventos
+                ChaskiPosta
               </Button>
               <Button
                 startIcon={<EventIcon />}
