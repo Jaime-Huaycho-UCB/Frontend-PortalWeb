@@ -81,37 +81,38 @@ const ListaEventos = () => {
       </Typography>
 
       {/* Calendario Interactivo */}
-      <Box sx={{ height: 500, marginBottom: 4 }}>
-        <Calendar
-          localizer={localizer}
-          events={eventos}
-          startAccessor="start"
-          endAccessor="end"
-          style={{ height: '100%', borderRadius: '8px', boxShadow: '0 3px 10px rgba(0, 0, 0, 0.2)' }}
-          popup
-          messages={{
-            next: 'Siguiente',
-            previous: 'Anterior',
-            today: 'Hoy',
-            month: 'Mes',
-            week: 'Semana',
-            day: 'Día',
-            agenda: 'Agenda',
-            noEventsInRange: 'No hay eventos en este rango.',
-          }}
-          onSelectEvent={(event) => handleSelectDay([event])}
-          onSelectSlot={(slotInfo) => {
-            const eventsForDay = eventos.filter(
-              (event) =>
-                event.start.toDateString() === new Date(slotInfo.start).toDateString()
-            );
-            if (eventsForDay.length > 0) {
-              handleSelectDay(eventsForDay);
-            }
-          }}
-          selectable
-        />
-      </Box>
+      <div className="calendar-container">
+      <Calendar
+        localizer={localizer}
+        events={eventos}
+        startAccessor="start"
+        endAccessor="end"
+        style={{ height: '100%' }}
+        popup
+        messages={{
+          next: 'Siguiente',
+          previous: 'Anterior',
+          today: 'Hoy',
+          month: 'Mes',
+          week: 'Semana',
+          day: 'Día',
+          agenda: 'Agenda',
+          noEventsInRange: 'No hay eventos en este rango.',
+        }}
+        onSelectEvent={(event) => handleSelectDay([event])}
+        onSelectSlot={(slotInfo) => {
+          const eventsForDay = eventos.filter(
+            (event) =>
+              event.start.toDateString() ===
+              new Date(slotInfo.start).toDateString()
+          );
+          if (eventsForDay.length > 0) {
+            handleSelectDay(eventsForDay);
+          }
+        }}
+        selectable
+      />
+    </div>
 
       <Typography variant="h5" align="center" gutterBottom>
         Línea de Tiempo de Eventos
@@ -119,110 +120,156 @@ const ListaEventos = () => {
 
       {/* Línea de Tiempo */}
       {loading ? (
-        <VerticalTimeline>
-          {Array.from({ length: 4 }).map((_, index) => (
-            <VerticalTimelineElement
-              key={index}
-              contentStyle={{
-                background: '#f3f3f3',
-                borderRadius: '8px',
-                boxShadow: '0 3px 10px rgba(0, 0, 0, 0.1)',
-              }}
-              iconStyle={{
-                background: '#ccc',
-                boxShadow: 'none',
-              }}
-              icon={<div className="skeleton-card2" style={{ borderRadius: '50%', width: '40px', height: '40px' }} />}
-            >
-              <Box className="skeleton-card2" style={{ height: '150px', borderRadius: '10px' }} />
-            </VerticalTimelineElement>
-          ))}
-        </VerticalTimeline>
-      ) : (
-        <VerticalTimeline>
-          {eventos.map((evento) => (
-            <VerticalTimelineElement
-              key={evento.id}
-              contentStyle={{
-                background: '#1b2951',
-                color: '#fff',
-                borderRadius: '8px',
-                boxShadow: '0 3px 10px rgba(0, 0, 0, 0.3)',
-              }}
-              contentArrowStyle={{ borderRight: '7px solid #1b2951' }}
-              date={evento.start.toLocaleDateString()}
-              iconStyle={{
-                background: '#f39c12',
-                color: '#fff',
-                boxShadow: '0 3px 10px rgba(0, 0, 0, 0.2)',
-              }}
-              icon={<Event />}
-            >
-              <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-                {evento.title}
-              </Typography>
-              <Typography variant="body2">{evento.resource.descripcion}</Typography>
-            </VerticalTimelineElement>
-          ))}
-        </VerticalTimeline>
-      )}
+  <VerticalTimeline>
+    {Array.from({ length: 4 }).map((_, index) => (
+      <VerticalTimelineElement
+        key={index}
+        contentStyle={{
+          background: '#f3f3f3',
+          borderRadius: '8px',
+          boxShadow: '0 3px 10px rgba(0, 0, 0, 0.1)',
+        }}
+        iconStyle={{
+          background: '#ccc',
+          boxShadow: 'none',
+        }}
+        icon={<div className="skeleton-card2" style={{ borderRadius: '50%', width: '40px', height: '40px' }} />}
+      >
+        <Box className="skeleton-card2" style={{ height: '150px', borderRadius: '10px' }} />
+      </VerticalTimelineElement>
+    ))}
+  </VerticalTimeline>
+) : (
+  <VerticalTimeline>
+    {eventos.map((evento) => (
+      <VerticalTimelineElement
+        key={evento.id}
+        contentStyle={{
+          background: '#1b2951',
+          color: '#fff',
+          borderRadius: '8px',
+          boxShadow: '0 3px 10px rgba(0, 0, 0, 0.3)',
+        }}
+        contentArrowStyle={{ borderRight: '7px solid #1b2951' }}
+        date={evento.start.toLocaleDateString()}
+        iconStyle={{
+          background: '#f39c12',
+          color: '#fff',
+          boxShadow: '0 3px 10px rgba(0, 0, 0, 0.2)',
+        }}
+        icon={<Event />}
+      >
+        <Typography variant="h6" sx={{ fontWeight: 'bold', marginBottom: 1 }}>
+          {evento.title}
+        </Typography>
+        {evento.fotoBase64 && (
+          <Box sx={{ textAlign: 'center', marginBottom: 2 }}>
+            <img
+  src={evento.fotoBase64}
+  alt="Evento"
+  style={{
+    maxWidth: '100%',
+    height: '150px',
+    objectFit: 'cover',
+    borderRadius: '10px',
+  }}
+/>
+
+          </Box>
+        )}
+        <Typography variant="body2" sx={{ marginBottom: 1 }}>
+          <strong>Descripción:</strong> {evento.resource.descripcion}
+        </Typography>
+        <Typography variant="body2" sx={{ marginBottom: 1 }}>
+          <strong>Director:</strong> {evento.resource.director || 'No especificado'}
+        </Typography>
+        <Typography variant="body2" sx={{ marginBottom: 1 }}>
+          <strong>Fecha:</strong> {evento.start.toLocaleDateString()}
+        </Typography>
+        <Typography variant="body2" sx={{ marginBottom: 1 }}>
+          <strong>Lugar:</strong> {evento.resource.lugar || 'No especificado'}
+        </Typography>
+      </VerticalTimelineElement>
+    ))}
+  </VerticalTimeline>
+)}
+
+
 
       {/* Modal de Eventos */}
       {dialogOpen && (
-        <Dialog
-          open={dialogOpen}
-          onClose={handleCloseDialog}
-          fullWidth
-          maxWidth="sm"
-          PaperProps={{
-            sx: { borderRadius: 2, boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)' },
-          }}
-        >
-          <DialogTitle>
-            Eventos del Día
-            <Button
-              aria-label="close"
-              onClick={handleCloseDialog}
-              sx={{
-                position: 'absolute',
-                right: 8,
-                top: 8,
-                color: (theme) => theme.palette.grey[500],
-              }}
-            >
-              <Close />
-            </Button>
-          </DialogTitle>
-          <DialogContent dividers>
-            <List>
-              {eventosDia.map((evento) => (
-                <ListItem key={evento.id} sx={{ mb: 2 }}>
-                  <Box sx={{ width: '100%' }}>
-                    <Typography variant="h6">{evento.nombre}</Typography>
-                    <Typography variant="body1" gutterBottom>
-                      <strong>Descripción:</strong> {evento.descripcion}
-                    </Typography>
-                    <Typography variant="body1" gutterBottom>
-                      <strong>Director:</strong> {evento.director}
-                    </Typography>
-                    <Typography variant="body1" gutterBottom>
-                      <strong>Fecha:</strong> {evento.fecha}
-                    </Typography>
-                    <Typography variant="body1" gutterBottom>
-                      <strong>Lugar:</strong> {evento.lugar}
-                    </Typography>
-                  </Box>
-                </ListItem>
-              ))}
-            </List>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleCloseDialog} color="primary">
-              Cerrar
-            </Button>
-          </DialogActions>
-        </Dialog>
-      )}
+  <Dialog
+    open={dialogOpen}
+    onClose={handleCloseDialog}
+    fullWidth
+    maxWidth="sm"
+    PaperProps={{
+      sx: { borderRadius: 2, boxShadow: '0 4px 20px rgba(0, 0, 0, 0.3)' },
+    }}
+  >
+    <DialogTitle>
+      Eventos del Día
+      <Button
+        aria-label="close"
+        onClick={handleCloseDialog}
+        sx={{
+          position: 'absolute',
+          right: 8,
+          top: 8,
+          color: (theme) => theme.palette.grey[500],
+        }}
+      >
+        <Close />
+      </Button>
+    </DialogTitle>
+    <DialogContent dividers>
+      <List>
+        {eventosDia.map((evento) => (
+          <ListItem key={evento.id} sx={{ mb: 2 }}>
+            <Box sx={{ width: '100%' }}>
+            <Typography variant="h6">{evento.nombre}</Typography>
+
+              {evento.fotoBase64 && (
+                <Box sx={{ textAlign: 'center', mb: 2 }}>
+                  <img
+                    src={evento.fotoBase64}
+                    alt="Evento"
+                    style={{
+                      maxWidth: '100%',
+                      height: '400px',
+                      objectFit: 'cover',
+                      borderRadius: '10px',
+                      boxShadow: '0 4px 10px rgba(0, 0, 0, 0.2)',
+                    }}
+                  />
+                </Box>
+              )}
+              
+              <Typography variant="body1" gutterBottom>
+                <strong>Descripción:</strong> {evento.descripcion}
+              </Typography>
+              <Typography variant="body1" gutterBottom>
+                <strong>Director:</strong> {evento.director}
+              </Typography>
+              <Typography variant="body1" gutterBottom>
+                <strong>Fecha:</strong> {evento.fecha}
+              </Typography>
+              <Typography variant="body1" gutterBottom>
+                <strong>Lugar:</strong> {evento.lugar}
+              </Typography>
+            </Box>
+          </ListItem>
+        ))}
+      </List>
+    </DialogContent>
+    <DialogActions>
+      <Button onClick={handleCloseDialog} color="primary">
+        Cerrar
+      </Button>
+    </DialogActions>
+  </Dialog>
+)}
+
     </Box>
   );
 };

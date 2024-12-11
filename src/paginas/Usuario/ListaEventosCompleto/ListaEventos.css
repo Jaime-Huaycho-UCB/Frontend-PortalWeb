@@ -2,3 +2,125 @@
   margin-bottom: 15% !important; /* Espaciado superior */
   padding: 5rem 2rem; /* Espaciado interno */
 }
+
+
+/* Contenedor del calendario */
+.calendar-container {
+  width: 100%;
+  height: 500px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  animation: fadeIn 1s ease;
+  position: relative;
+  padding: 10px;
+}
+
+/* Header del calendario */
+.rbc-toolbar {
+  background-color: #1b2951;
+  color: #fff;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  animation: slideIn 0.5s ease;
+}
+
+/* Botones del header */
+.rbc-btn-group button {
+  background-color: #f39c12;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  margin: 0 5px;
+  font-weight: bold;
+  border-radius: 5px;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.rbc-btn-group button:hover {
+  transform: scale(1.1);
+  background-color: #d35400;
+}
+
+/* Títulos del calendario */
+.rbc-toolbar-label {
+  font-size: 18px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+/* Estilo de los días */
+.rbc-day-bg {
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  transition: background-color 0.3s ease;
+}
+
+.rbc-day-bg:hover {
+  background-color: #f1f1f1;
+}
+
+/* Eventos */
+.rbc-event {
+  background-color: #3f51b5;
+  color: #fff;
+  padding: 5px;
+  border-radius: 5px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.rbc-event:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Tooltip de eventos */
+.rbc-overlay {
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 14px;
+  animation: fadeIn 0.3s ease;
+}
+
+/* Slots seleccionables */
+.rbc-slot-selection {
+  background-color: rgba(63, 81, 181, 0.2);
+  border: 2px dashed #3f51b5;
+}
+
+/* Footer del calendario */
+.calendar-footer {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 14px;
+  color: #666;
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

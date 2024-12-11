@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { obtenerPublicaciones } from '../../../librerias/PeticionesApi';
 import { AuthContext } from '../../../contextos/ContextoAutenticacion';
-import './Chasqui.css'
+import './Chasqui.css';
+import { Container, Row, Col, Card, Form, FormControl, Button } from 'react-bootstrap';
 
 const Publicaciones = () => {
   const { idUsuario, token } = useContext(AuthContext);
@@ -9,14 +10,18 @@ const Publicaciones = () => {
   const [contenidoExpandido, setContenidoExpandido] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [busqueda, setBusqueda] = useState('');
+  const [publicacionesFiltradas, setPublicacionesFiltradas] = useState([]);
 
   // Obtener publicaciones desde el backend
   const fetchPublicaciones = async () => {
     setLoading(true);
     setError(null);
     try {
-      const data = await obtenerPublicaciones(idUsuario, token);
-      setPublicaciones(data.publicaciones || []);
+      const data = await obtenerPublicaciones(0);
+      const publicaciones = data.publicaciones || [];
+      setPublicaciones(publicaciones);
+      setPublicacionesFiltradas(publicaciones); // Inicializar las publicaciones filtradas
     } catch (error) {
       console.error('Error al cargar publicaciones:', error);
       setError('No se pudieron cargar las publicaciones. Inténtalo de nuevo.');
@@ -26,8 +31,20 @@ const Publicaciones = () => {
   };
 
   useEffect(() => {
-    fetchPublicaciones();
+    fetchPublicaciones(0);
   }, []);
+
+  // Filtrar publicaciones en tiempo real
+  useEffect(() => {
+    if (!busqueda.trim()) {
+      setPublicacionesFiltradas(publicaciones); // Mostrar todas si no hay búsqueda
+    } else {
+      const filtradas = publicaciones.filter((pub) =>
+        pub.numero && pub.numero.toString().includes(busqueda)
+      );
+      setPublicacionesFiltradas(filtradas);
+    }
+  }, [busqueda, publicaciones]);
 
   // Alternar expansión de contenido
   const toggleExpandirContenido = (id) => {
@@ -39,6 +56,15 @@ const Publicaciones = () => {
 
   return (
     <div className="facebook-container2">
+      <Form className="d-flex mb-4" style={{ maxWidth: '500px', margin: '0 auto' }}>
+        <FormControl
+          type="search"
+          placeholder="Buscar por número..."
+          className="me-2"
+          value={busqueda}
+          onChange={(e) => setBusqueda(e.target.value)}
+        />
+      </Form>
       {loading ? (
         <div className="facebook-loading2">
           {Array.from({ length: 3 }).map((_, index) => (
@@ -48,7 +74,7 @@ const Publicaciones = () => {
       ) : error ? (
         <div className="facebook-error2">{error}</div>
       ) : (
-        publicaciones.map((publicacion) => (
+        publicacionesFiltradas.map((publicacion) => (
           <div className="facebook-post2" key={publicacion.id}>
             {/* Encabezado */}
             <div className="facebook-header2">

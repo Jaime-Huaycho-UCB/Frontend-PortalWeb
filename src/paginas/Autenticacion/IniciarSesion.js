@@ -5,6 +5,7 @@ import { Box, TextField, Button, Typography, Checkbox, FormControlLabel, Alert, 
 import { AuthContext } from '../../contextos/ContextoAutenticacion';
 import axios from 'axios';
 import './IniciarSesion.css';
+import { Link } from 'react-router-dom';
 
 const IniciarSesion = () => {
   const [email, setEmail] = useState('');
@@ -18,7 +19,8 @@ const IniciarSesion = () => {
 
     try {
       // const response = await axios.post('https://backend-portalweb-production.up.railway.app/usuario/inicioSesion', {
-        
+        console.log(email);
+        console.log(password);
       const response = await axios.post('http://192.168.1.132:8000/usuario/inicioSesion', {
         correo: email,
         contrasena: password,
@@ -79,9 +81,10 @@ const IniciarSesion = () => {
 
           <Box display="flex" justifyContent="space-between" alignItems="center" marginBottom={2}>
             <FormControlLabel control={<Checkbox className="login-checkbox" />} label="Recuérdame" />
-            <Button href="/recuperar-contrasena" variant="text" className="forgot-password">
+            <Button  component={Link} to="/recuperar" variant="text" className="forgot-password">
               ¿Olvidaste tu contraseña?
             </Button>
+           
           </Box>
 
           <Button type="submit" variant="contained" fullWidth className="login-button">
@@ -95,6 +98,13 @@ const IniciarSesion = () => {
             </Button>
           </Typography>
         </form>
+        <Button
+        onClick={() => navigate('/')} // Navega a la página de inicio
+        color="default"
+        variant="outlined"
+      >
+        Volver a Inicio
+      </Button>
       </Paper>
     </Box>
   );

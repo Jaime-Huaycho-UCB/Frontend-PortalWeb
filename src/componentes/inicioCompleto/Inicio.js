@@ -386,9 +386,7 @@ const Inicio = () => {
               style={{ backgroundImage: `url(${mosaic.image})` }}
             ></div>
             <div className="interactive-card-content33">
-              <div className="icon-wrapper33">
-                <img src={mosaic.icon} alt="Icon" className="card-icon33" />
-              </div>
+           
               <Typography className="interactive-card-title33">{mosaic.title}</Typography>
               <Typography className="interactive-card-description33">{mosaic.description}</Typography>
             </div>

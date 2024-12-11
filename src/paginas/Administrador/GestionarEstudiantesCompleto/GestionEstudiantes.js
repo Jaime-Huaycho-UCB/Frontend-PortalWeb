@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
 import {
-  Button, Dialog, DialogActions, DialogContent, DialogTitle, Card, CardContent,Typography, CardMedia, Grid, TextField, Select, MenuItem, FormControl, InputLabel, CircularProgress, Snackbar, Alert, Switch, FormControlLabel
+  Button, Dialog, DialogActions, DialogContent, DialogTitle, Card, CardContent,Typography, CardMedia, Grid, TextField, Select, MenuItem, FormControl, InputLabel, CircularProgress, Snackbar, Alert, Switch, FormControlLabel,Box
 } from '@mui/material';
 import {
-  obtenerEstudiantes, agregarEstudiante, actualizarEstudiante, eliminarEstudiante, obtenerNivelesAcademicos,obtenerFiltros
-} from '../../../librerias/PeticionesApi';
+  obtenerEstudiantes, agregarEstudiante, actualizarEstudiante, eliminarEstudiante, obtenerNivelesAcademicos,obtenerFiltros,manejarCambioFoto} from '../../../librerias/PeticionesApi';
 import { AuthContext } from '../../../contextos/ContextoAutenticacion';
 import { useNavigate } from 'react-router-dom';
 import './GestionEstudiantes.css';
@@ -447,29 +446,34 @@ const [filtroSeleccionado, setFiltroSeleccionado] = useState(0);
       <Typography variant="h4" align="center" gutterBottom>
         Filtrar Egresados
       </Typography>
-      <FormControl fullWidth margin="dense" className="select-field1">
-  <InputLabel>Filtrar</InputLabel>
+      <div className="filtro-estudiantes-container">
+      <FormControl fullWidth margin="dense" className="filtro-form-control6">
+  <div className="filtro-header">
+    <span className="filtro-icon">🔍</span>
+    <InputLabel className="filtro-label">Filtrar</InputLabel>
+  </div>
   <Select
-    value={filtroSeleccionado} // Estado que controla la selección actual
+    value={filtroSeleccionado}
     onChange={(e) => {
       const filtroId = e.target.value;
       setFiltroSeleccionado(filtroId); // Actualiza el filtro seleccionado
       cargarDatos(filtroId); // Llama a cargarDatos con el filtro correspondiente
     }}
+    className="filtro-select"
   >
-    {/* Opción por defecto */}
-    <MenuItem value={0}>Obtener Todo</MenuItem>
+    <MenuItem className="filtro-menu-item" value={0}>
+      Obtener Todo
+    </MenuItem>
     {filtros.map((filtro) => (
-      <MenuItem key={filtro.id} value={filtro.id}>
+      <MenuItem className="filtro-menu-item" key={filtro.id} value={filtro.id}>
         {filtro.cadena}
       </MenuItem>
     ))}
   </Select>
 </FormControl>
+</div>
 
-
-
-      <Grid container spacing={5} className="grid-estudiantes1" justifyContent="center">
+      <Grid container spacing={20} className="grid-estudiantes1" justifyContent="center">
   {estudiantes.map((estudiante) => (
     <Grid item xs={4} sm={4} md={4} key={estudiante.id}>
       <Card className="card1">
@@ -510,7 +514,7 @@ const [filtroSeleccionado, setFiltroSeleccionado] = useState(0);
 
 
 <Dialog open={show} onClose={handleClose}>
-  <DialogTitle>{isUpdating ? 'Actualizar Estudiante' : 'Agregar Estudiante'}</DialogTitle>
+  <DialogTitle className='titulo1'>{isUpdating ? 'Actualizar Estudiante' : 'Agregar Estudiante'}</DialogTitle>
   <DialogContent>
     <TextField
       label="Nombre"
@@ -562,6 +566,44 @@ const [filtroSeleccionado, setFiltroSeleccionado] = useState(0);
         ))}
       </Select>
     </FormControl>
+    {isUpdating && (
+      <FormControlLabel
+        control={<Switch checked={actualizarFoto} onChange={() => setActualizarFoto(!actualizarFoto)} />}
+        label="Actualizar Foto"
+      />
+    )}
+    {(!isUpdating || actualizarFoto) && (
+      <Box>
+        <Typography variant="subtitle1" gutterBottom>
+          Foto del Estudiante
+        </Typography>
+        <Button variant="contained" component="label">
+          Subir Foto
+          <input
+            type="file"
+            hidden
+            accept="image/*"
+            onChange={(e) => manejarCambioFoto(e, setFotoBase64)}
+          />
+        </Button>
+
+        {nuevoEstudiante.foto && (
+          <Box mt={2} textAlign="center">
+            <img
+              src={nuevoEstudiante.foto}
+              alt="Vista previa"
+              style={{
+                width: '150px',
+                height: '150px',
+                borderRadius: '50%',
+                objectFit: 'cover',
+                border: '2px solid #002855',
+              }}
+            />
+          </Box>
+        )}
+      </Box>
+    )}
   </DialogContent>
   <DialogActions>
     <Button onClick={handleClose} color="secondary">Cancelar</Button>

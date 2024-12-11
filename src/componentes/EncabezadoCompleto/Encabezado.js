@@ -21,7 +21,7 @@ import ScienceIcon from '@mui/icons-material/Science';
 import LocalLibraryIcon from '@mui/icons-material/LocalLibrary';
 import './Encabezado.css';
 import { AuthContext } from "../../contextos/ContextoAutenticacion.js";
-
+import { useNavigate } from 'react-router-dom';
 const Encabezado = () => {
   const { permiso, cerrarSesion } = useContext(AuthContext);
   const permisoInt = permiso !== null ? parseInt(permiso, 10) : -1;
@@ -35,6 +35,13 @@ const Encabezado = () => {
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+  const navigate = useNavigate();
+  
+
+  const handleCerrarSesion = () => {
+    cerrarSesion(); // Limpia el contexto
+    navigate('/iniciar-sesion'); // Redirige al inicio de sesión
   };
 
   return (
@@ -115,14 +122,7 @@ const Encabezado = () => {
               >
                 Crear Usuario 
               </Button>
-              <Button
-                startIcon={<EventIcon />}
-                className="nav-button"
-                component={Link}
-                to="/admin/crear-usuario"
-              >
-                Crear Usuario 
-              </Button>
+          
               <Button
                 startIcon={<PostAddIcon />}
                 className="nav-button"
@@ -147,6 +147,14 @@ const Encabezado = () => {
               >
                 Perfil
               </Button>
+              <Button
+  startIcon={<ExitToAppIcon />}
+  className="nav-button"
+  onClick={handleCerrarSesion}
+>
+  Cerrar Sesión
+</Button>
+
             </>
           ) : permisoInt === 0 ? (
             <>
@@ -175,6 +183,22 @@ const Encabezado = () => {
                 Eventos
               </Button>
               <Button
+                startIcon={<EventIcon />}
+                className="nav-button"
+                component={Link}
+                to="/admin/publicacion"
+              >
+                ChaskiPosta
+              </Button>
+              <Button
+                startIcon={<PostAddIcon />}
+                className="nav-button"
+                component={Link}
+                to="/admin/gestion-tesis"
+              >
+                Tesis
+              </Button>
+              <Button
                 startIcon={<PersonIcon />}
                 className="nav-button"
                 component={Link}
@@ -182,6 +206,14 @@ const Encabezado = () => {
               >
                 Perfil
               </Button>
+              <Button
+  startIcon={<ExitToAppIcon />}
+  className="nav-button"
+  onClick={handleCerrarSesion}
+>
+  Cerrar Sesión
+</Button>
+
               
             </>
           ) : (
@@ -222,7 +254,7 @@ const Encabezado = () => {
                 startIcon={<ScienceIcon />}
                 className="nav-button"
                 component={Link}
-                to="/noticias"
+                to="/Sociedad"
               >
                 Soc.Cientifica
               </Button>
@@ -234,6 +266,7 @@ const Encabezado = () => {
               >
                 Chasqui Postas
               </Button>
+              
               <Button
                 startIcon={<LocalLibraryIcon />}
                 className="nav-button"

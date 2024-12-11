@@ -25,6 +25,10 @@ import Publicaciones from './paginas/Administrador/PublicacionesCompleto/Publica
 import IconosFlotantes from './componentes/IconosFlotantesCompleto/IconosFlotantes';
 import Chasqui from './paginas/Usuario/ChaquiPostasCompleto/Chasqui';
 import Tesis from './paginas/Usuario/TesisCompleto/tesis';
+import Sociedad from './paginas/Usuario/SociedadCompleto/Sociedad';
+import RecuperarContrasena from './paginas/Autenticacion/Recuperar';
+import Validar from './paginas/Autenticacion/Vlidar';
+import CambiarContrasena from './paginas/Autenticacion/cambiarContrasena ';
 const RutaProtegida = ({ children, rolesPermitidos }) => {
   const { permiso } = useContext(AuthContext);
  
@@ -76,7 +80,9 @@ function App() {
           
           {/* Ruta de inicio de sesión SIN wrapper */}
           <Route path="/iniciar-sesion" element={<IniciarSesion />} />
-
+          <Route path='/recuperar' element={<RecuperarContrasena />}/>
+          <Route path='/validar' element={<Validar />}/>
+          <Route path='/cambiar' element={<CambiarContrasena />}/>
           {/* Rutas generales SIN wrapper */}
           <Route
             path="*"
@@ -91,6 +97,7 @@ function App() {
                     <Route path="/noticias" element={<ListaNoticias />} />
                     <Route path="/chasqui" element={<Chasqui />} />
                     <Route path="/Tesis" element={<Tesis />} />
+                    <Route path="/Sociedad" element={<Sociedad />} />
 
                     {/* Rutas protegidas */}
                     <Route path="/admin/gestion-docentes" element={

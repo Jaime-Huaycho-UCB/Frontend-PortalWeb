@@ -136,35 +136,35 @@ const ListaDocentes = () => {
 
       {/* Contenedor del filtro */}
       <div className="filtro-docentes-container">
-        <FormControl fullWidth className="filtro-form-control">
-          <div className="filtro-header">
-            <FilterList className="filtro-icon" />
-            <InputLabel className="filtro-label">Filtrar</InputLabel>
-          </div>
-          <Select
-            value={filtroSeleccionado}
-            onChange={(e) => {
-              const filtroId = e.target.value;
-              setFiltroSeleccionado(filtroId);
-              cargarDocentes(filtroId); // Actualiza los docentes según el filtro seleccionado
-            }}
-            className="filtro-select"
-          >
-            <MenuItem value={0} className="filtro-menu-item">
-              Obtener Todo
-            </MenuItem>
-            {titulos.map((titulo) => (
-              <MenuItem
-                key={titulo.id}
-                value={titulo.id}
-                className="filtro-menu-item"
-              >
-                {titulo.nombre}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      </div>
+  <div className="filtro-header">
+    <FilterList className="filtro-icon" />
+    <span className="filtro-label">Filtrar:</span>
+  </div>
+  <FormControl fullWidth className="filtro-form-control">
+    <Select
+      value={filtroSeleccionado}
+      onChange={(e) => {
+        const filtroId = e.target.value;
+        setFiltroSeleccionado(filtroId);
+        cargarDocentes(filtroId); // Actualiza los docentes según el filtro seleccionado
+      }}
+      className="filtro-select"
+    >
+      <MenuItem value={0} className="filtro-menu-item">
+        Obtener Todo
+      </MenuItem>
+      {titulos.map((titulo) => (
+        <MenuItem
+          key={titulo.id}
+          value={titulo.id}
+          className="filtro-menu-item"
+        >
+          {titulo.nombre}
+        </MenuItem>
+      ))}
+    </Select>
+  </FormControl>
+</div>
 
       {/* Grid de docentes */}
       <section className="docentes-grid">
@@ -183,7 +183,7 @@ const ListaDocentes = () => {
               >
                 <figure className="card-image-section">
                   <img
-                    src={docente.foto || "/ruta/a/imagen-placeholder.jpg"}
+                    src={docente.foto  || process.env.PUBLIC_URL + '/sin.webp'}
                     alt={docente.nombre}
                     className="docente-image"
                   />

@@ -312,8 +312,8 @@ const GestionDocentes = () => {
     };
   
     try {
+      console.log(docenteIdActualizar);
       const response = await actualizarDocente(docenteIdActualizar, docenteData, idUsuario, token);
-  
       if (!response.salida) {
         if (response.mensaje === 'TKIN') {
           Swal.fire({
@@ -373,30 +373,37 @@ const GestionDocentes = () => {
         Filtrar Docentes
       </Typography>
       <div className="filtro-docentes-container">
-      <FormControl fullWidth className="filtro-form-control">
-        <div className="filtro-header">
-          <FilterList className="filtro-icon" />
-          <InputLabel className="filtro-label">Filtrar</InputLabel>
-        </div>
-        <Select
-          value={filtroSeleccionado}
-          onChange={(e) => {
-            const filtroId = e.target.value;
-            setFiltroSeleccionado(filtroId);
-            cargarDocentes(filtroId);
-          }}
-          className="filtro-select"
+  <div className="filtro-header">
+    <FilterList className="filtro-icon" />
+    <span className="filtro-label">Filtrar:</span>
+  </div>
+  <FormControl fullWidth className="filtro-form-control">
+    <Select
+      value={filtroSeleccionado}
+      onChange={(e) => {
+        const filtroId = e.target.value;
+        setFiltroSeleccionado(filtroId);
+        cargarDocentes(filtroId); // Actualiza los docentes según el filtro seleccionado
+      }}
+      className="filtro-select"
+    >
+      <MenuItem value={0} className="filtro-menu-item">
+        Obtener Todo
+      </MenuItem>
+      {titulos.map((titulo) => (
+        <MenuItem
+          key={titulo.id}
+          value={titulo.id}
+          className="filtro-menu-item"
         >
-          <MenuItem value={0} className="filtro-menu-item">Obtener Todo</MenuItem>
-          {titulos.map((titulo) => (
-            <MenuItem key={titulo.id} value={titulo.id} className="filtro-menu-item">
-              {titulo.nombre}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-    </div>
-    
+          {titulo.nombre}
+        </MenuItem>
+      ))}
+    </Select>
+  </FormControl>
+</div>
+
+    <div className='centrear'>
       <Row>
         {docentes.map((docente) => (
           <Col md={4} key={docente.id}>
@@ -421,7 +428,7 @@ const GestionDocentes = () => {
           </Col>
         ))}
       </Row>
-
+        </div>
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton className="modal-header">
           <Modal.Title>{isUpdating ? 'Actualizar Docente' : 'Agregar Docente'}</Modal.Title>

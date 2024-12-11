@@ -41,9 +41,7 @@ export const AuthProvider = ({ children }) => {
     });
     localStorage.clear();
 
-    if (navigate) {
-      navigate('/iniciar-sesion'); // Redirige al inicio de sesión
-    }
+  
   };
 
   const toggleTema = () => {

@@ -27,6 +27,8 @@
     --backgraund-color-tercero: #ff6a00;
     --background-color-card:linear-gradient(to top, #ffffff, #f3f4f6) ;
     --backgraund-color-cuarto: rgba(255, 106, 0, 0.7); /* Naranja semitransparente */
+    --text-color-octavo: #ffffff;
+    --text-color-noveno: #1976d2;
 
 
   }
@@ -49,6 +51,8 @@
     --text-color-sexto: #d8a87a;
     --text-color-septimo: #ffffff;
     --backgraund-color-cuarto: rgba(47, 54, 64, 0.6);
+    --text-color-octavo: #002855;
+    --text-color-noveno: #002855;
   }
   
   

@@ -34,7 +34,7 @@
 
 .gestion-estudiantes-container5 .grid-estudiantes5 {
   inline-size: 100% !important;
-  max-inline-size: 1200px !important;
+  max-inline-size: 1300px !important;
   display: flex !important;
   flex-wrap: wrap !important;
   justify-content: center !important;
@@ -42,12 +42,12 @@
 }
 
 .gestion-estudiantes-container5 .card5 {
-  background: var(--text-color-septimo) !important;
+  background: var(--text-color-octavo) !important;
   border-radius: 20px !important;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
   transition: all 0.3s ease !important;
   overflow: hidden !important;
-  height: 420px !important;
+  height: 450px !important;
   position: relative !important;
 }
 
@@ -59,7 +59,7 @@
 .gestion-estudiantes-container5 .card-content5 {
   padding: 20px !important;
   text-align: center !important;
-  color: var(--background-color) !important;
+  color: var(--text-color-septimo) !important;
 }
 .gestion-estudiantes-container5 .card-media5 img {
   inline-size: 100% !important;
@@ -80,7 +80,7 @@
 }
 
 .egresado-nombre3 {
-  font-size: 1.5rem !important;
+  font-size: 1.6rem !important;
   font-weight: bold !important;
   margin-bottom: 10px !important;
   color: var(--backgraund-color-cuarto) !important;

@@ -113,24 +113,33 @@ const ListaEgresados = () => {
       <Typography variant="h4" align="center" gutterBottom>
         Filtrar Egresados
       </Typography>
-      <FormControl fullWidth margin="dense" className="select-field1">
-        <InputLabel>Filtrar</InputLabel>
-        <Select
-          value={filtroSeleccionado}
-          onChange={(e) => {
-            const filtroId = e.target.value;
-            setFiltroSeleccionado(filtroId);
-            cargarDatos(filtroId);
-          }}
-        >
-          <MenuItem value={0}>Obtener Todo</MenuItem>
-          {filtros.map((filtro) => (
-            <MenuItem key={filtro.id} value={filtro.id}>
-              {filtro.cadena}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
+      <div className="filtro-estudiantes-container">
+      <FormControl fullWidth margin="dense" className="filtro-form-control6">
+  <div className="filtro-header">
+    <span className="filtro-icon">🔍</span>
+    <InputLabel className="filtro-label">Filtrar</InputLabel>
+  </div>
+  <Select
+    value={filtroSeleccionado}
+    onChange={(e) => {
+      const filtroId = e.target.value;
+      setFiltroSeleccionado(filtroId); // Actualiza el filtro seleccionado
+      cargarDatos(filtroId); // Llama a cargarDatos con el filtro correspondiente
+    }}
+    className="filtro-select"
+  >
+    <MenuItem className="filtro-menu-item" value={0}>
+      Obtener Todo
+    </MenuItem>
+    {filtros.map((filtro) => (
+      <MenuItem className="filtro-menu-item" key={filtro.id} value={filtro.id}>
+        {filtro.cadena}
+      </MenuItem>
+    ))}
+  </Select>
+</FormControl>
+</div>
+
 
       {/* Grid de estudiantes */}
       <Grid container spacing={5} className="grid-estudiantes5" justifyContent="center">
