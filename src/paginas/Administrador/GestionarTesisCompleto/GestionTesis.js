@@ -8,6 +8,7 @@ import { Worker, Viewer } from '@react-pdf-viewer/core';
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import styled, { keyframes } from 'styled-components';
 import Swal from 'sweetalert2';
+import { set } from 'date-fns';
 // Animations and Styled Components
 const fadeIn = keyframes`
   from { opacity: 0; transform: translateY(20px); }
@@ -59,12 +60,7 @@ const GestionTesis = () => {
         setTesisList(response.tesises);
         console.log(response.tesises);
       } else {
-        Swal.fire({
-          title: 'Error al cargar las tesis',
-          text: response.mensaje,
-          icon: 'error',
-          confirmButtonText: 'Aceptar'
-        });
+        setTesisList([]);
       }
     } catch (error) {
       console.error('Error al obtener tesis:', error);
